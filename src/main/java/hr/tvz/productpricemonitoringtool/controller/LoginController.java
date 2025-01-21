@@ -8,6 +8,8 @@ import hr.tvz.productpricemonitoringtool.util.UserSession;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
@@ -16,7 +18,8 @@ public class LoginController  {
     @FXML public TextField emailTextField;
     @FXML public PasswordField passwordPasswordField;
 
-    UserRepository userRepository = new UserRepository();
+    private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private final UserRepository userRepository = new UserRepository();
 
     public void handleLogin() {
         String email = emailTextField.getText();
@@ -25,12 +28,12 @@ public class LoginController  {
         Optional<User> user = userRepository.findByEmailAndPassword(email, password);
         if (user.isEmpty()) {
             AlertDialog.showErrorDialog("Error", "Invalid email or password");
-            // TODO: Add logger
+            logger.error("Invalid email or password");
             return;
         }
 
         UserSession.setLoggedInUser(user.get());
-        SceneLoader.loadScene("dashboard", "Product Price Monitoring Tool");
-        // TODO: Add logger
+        logger.info("User with ID {} logged in", user.get().getId());
+        SceneLoader.loadScene("dashboard", "Dashboard");
     }
 }

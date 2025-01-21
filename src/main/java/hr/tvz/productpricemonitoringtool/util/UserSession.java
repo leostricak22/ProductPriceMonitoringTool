@@ -8,6 +8,8 @@ public class UserSession {
 
     private static Optional<User> loggedInUser;
 
+    private UserSession() {}
+
     public static void setLoggedInUser(User user) {
         loggedInUser = Optional.of(user);
     }

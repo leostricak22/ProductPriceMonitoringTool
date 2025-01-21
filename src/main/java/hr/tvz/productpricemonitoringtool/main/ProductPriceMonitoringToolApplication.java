@@ -1,28 +1,18 @@
 package hr.tvz.productpricemonitoringtool.main;
 
-import hr.tvz.productpricemonitoringtool.model.User;
-import hr.tvz.productpricemonitoringtool.util.Constants;
-import hr.tvz.productpricemonitoringtool.util.FXMLLoaderHelper;
+import hr.tvz.productpricemonitoringtool.util.SceneLoader;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class ProductPriceMonitoringToolApplication extends Application {
 
     private static Stage mainStage;
 
     @Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = FXMLLoaderHelper.fxmlFilePath("login.fxml");
-        Scene scene = new Scene(fxmlLoader.load(), Constants.SCENE_WIDTH, Constants.SCENE_HEIGHT);
-
+    public void start(Stage stage) {
         setMainStage(stage);
+        SceneLoader.loadScene("login", "Login");
 
-        stage.setTitle("Pretraga kategorija");
-        stage.setScene(scene);
         stage.show();
     }
 

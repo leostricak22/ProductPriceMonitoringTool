@@ -21,10 +21,13 @@ public class UserRepository extends AbstractRepository<User> {
     @Override
     public Set<User> findAll() throws RepositoryAccessException {
         Set<User> users = new HashSet<>();
+        String query = """
+        SELECT id, name, email, password, role FROM "user";
+        """;
 
-        try (Connection connection = DatabaseUtil.connectToDatabase()) {
-            Statement stmt = connection.createStatement();
-            ResultSet resultSet = stmt.executeQuery("SELECT * FROM \"user\";");
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+             Statement stmt = connection.createStatement()) {
+            ResultSet resultSet = stmt.executeQuery(query);
 
             while (resultSet.next()) {
                 User category = ObjectMapper.mapResultSetToCategory(resultSet);
@@ -39,12 +42,16 @@ public class UserRepository extends AbstractRepository<User> {
 
     @Override
     public void save(Set<User> entities) throws RepositoryAccessException {
-
+        // Not implemented
     }
 
     public Optional<User> findByEmailAndPassword(String email, String password) {
-        try (Connection connection = DatabaseUtil.connectToDatabase()) {
-            PreparedStatement stmt = connection.prepareStatement("SELECT * FROM \"user\" WHERE email = ? AND password = ?;");
+        String query = """
+        SELECT id, name, email, password, role FROM "user" WHERE email = ? AND password = ?;
+        """;
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, email);
             stmt.setString(2, password);
 

@@ -11,7 +11,9 @@ public class DatabaseUtil {
 
     public static Connection connectToDatabase() throws IOException, SQLException {
         Properties props = new Properties();
-        props.load(new FileReader(Constants.DATABASE_PROPERTIES_FILE));
+        try (FileReader reader = new FileReader(Constants.DATABASE_PROPERTIES_FILE)) {
+            props.load(reader);
+        }
 
         return DriverManager.getConnection(
                 props.getProperty("databaseUrl"),

@@ -9,6 +9,8 @@ import java.util.HashSet;
 
 public class ObjectMapper {
 
+    private ObjectMapper() {}
+
     public static User mapResultSetToCategory(ResultSet resultSet) throws SQLException {
         return new User.Builder(resultSet.getLong("id"), resultSet.getString("name"))
                 .email(resultSet.getString("email"))

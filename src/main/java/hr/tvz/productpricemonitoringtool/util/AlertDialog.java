@@ -5,6 +5,8 @@ import javafx.scene.control.ButtonType;
 
 public class AlertDialog {
 
+    private AlertDialog() {}
+
     public static void showErrorDialog(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);

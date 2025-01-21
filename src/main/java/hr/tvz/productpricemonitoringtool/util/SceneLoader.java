@@ -3,10 +3,16 @@ package hr.tvz.productpricemonitoringtool.util;
 import hr.tvz.productpricemonitoringtool.main.ProductPriceMonitoringToolApplication;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
 public class SceneLoader {
+
+    private static final Logger logger = LoggerFactory.getLogger(SceneLoader.class);
+
+    private SceneLoader() {}
 
     public static void loadScene(String fxmlFileName, String title) {
         try {
@@ -18,9 +24,8 @@ public class SceneLoader {
             ProductPriceMonitoringToolApplication.getMainStage().setScene(scene);
             ProductPriceMonitoringToolApplication.getMainStage().show();
         } catch (IOException e) {
-            e.printStackTrace();
             AlertDialog.showErrorDialog("Error", "Error loading scene: " + fxmlFileName);
-            // TODO: Add logger
+            logger.error("Error loading scene: {}", fxmlFileName, e);
         }
     }
 }
