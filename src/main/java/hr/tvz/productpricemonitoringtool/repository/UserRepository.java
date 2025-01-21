@@ -30,8 +30,8 @@ public class UserRepository extends AbstractRepository<User> {
             ResultSet resultSet = stmt.executeQuery(query);
 
             while (resultSet.next()) {
-                User category = ObjectMapper.mapResultSetToCategory(resultSet);
-                users.add(category);
+                User user = ObjectMapper.mapResultSetToCategory(resultSet);
+                users.add(user);
             }
 
             return users;

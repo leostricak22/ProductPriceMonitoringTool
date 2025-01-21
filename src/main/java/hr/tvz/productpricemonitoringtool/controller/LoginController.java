@@ -36,4 +36,8 @@ public class LoginController  {
         logger.info("User with ID {} logged in", user.get().getId());
         SceneLoader.loadScene("dashboard", "Dashboard");
     }
+
+    public void handleRegisterOpen() {
+        SceneLoader.loadScene("register", "Register");
+    }
 }
