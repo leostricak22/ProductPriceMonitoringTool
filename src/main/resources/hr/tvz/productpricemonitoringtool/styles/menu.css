@@ -59,3 +59,11 @@
 .menu:hover, .menu:showing {
     -fx-background-color: darkgray;
 }
+
+#userProfilePictureImageView {
+    -fx-border-radius: 50%; /* Applies a round border */
+    -fx-background-radius: 50%; /* Ensures the background matches the round shape */
+    -fx-clip-shape: "circle"; /* Clip the content to make it round */
+    -fx-effect: null; /* Ensures no shadow affects the circle shape */
+    -fx-background-color: transparent; /* Background stays transparent */
+}

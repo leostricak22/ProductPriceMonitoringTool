@@ -45,6 +45,38 @@ public class UserRepository extends AbstractRepository<User> {
         // Not implemented
     }
 
+    public void update(User user) {
+        String query = """
+        UPDATE "user" SET name = ? WHERE id = ?;
+        """;
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, user.getName());
+            stmt.setLong(2, user.getId());
+
+            stmt.executeUpdate();
+        } catch (IOException | SQLException e) {
+            throw new RepositoryAccessException(e);
+        }
+    }
+
+    public void updatePassword(User user) {
+        String query = """
+        UPDATE "user" SET password = ? WHERE id = ?;
+        """;
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, user.getPassword());
+            stmt.setLong(2, user.getId());
+
+            stmt.executeUpdate();
+        } catch (IOException | SQLException e) {
+            throw new RepositoryAccessException(e);
+        }
+    }
+
     public Optional<User> findByEmailAndPassword(String email, String password) {
         String query = """
         SELECT id, name, email, password, role FROM "user" WHERE email = ? AND password = ?;

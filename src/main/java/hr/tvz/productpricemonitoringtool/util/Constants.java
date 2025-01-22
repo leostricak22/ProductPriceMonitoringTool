@@ -1,5 +1,7 @@
 package hr.tvz.productpricemonitoringtool.util;
 
+import java.util.List;
+
 public class Constants {
 
     private Constants() {}
@@ -12,4 +14,6 @@ public class Constants {
     public static final Integer SCENE_HEIGHT = 700;
     public static final Integer SCENE_MIN_WIDTH = 480;
     public static final Integer SCENE_MIN_HEIGHT = 600;
+    public static final List<String> IMAGE_EXTENSIONS = List.of("*.jpg", "*.jpeg", "*.png");
+    public static final String USER_PROFILE_PICTURES_PATH = "files/user/";
 }
