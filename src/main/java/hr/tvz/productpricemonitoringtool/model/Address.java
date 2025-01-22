@@ -1,6 +1,6 @@
 package hr.tvz.productpricemonitoringtool.model;
 
-public class Address {
+public class Address extends Entity {
 
     private String street;
     private String houseNumber;
@@ -9,6 +9,7 @@ public class Address {
     private String country;
 
     private Address(Builder builder) {
+        super(builder.id, builder.name);
         this.street = builder.street;
         this.houseNumber = builder.houseNumber;
         this.city = builder.city;
@@ -58,11 +59,18 @@ public class Address {
 
     public static class Builder {
 
+        private final Long id;
+        private final String name;
         private String street;
         private String houseNumber;
         private String city;
         private String postalCode;
         private String country;
+
+        public Builder(Long id) {
+            this.id = id;
+            this.name = "Address-" + id;
+        }
 
         public Builder street(String street) {
             this.street = street;
