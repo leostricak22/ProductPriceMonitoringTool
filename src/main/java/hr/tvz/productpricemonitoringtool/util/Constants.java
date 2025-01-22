@@ -10,4 +10,6 @@ public class Constants {
             "./src/main/resources/database.properties";
     public static final Integer SCENE_WIDTH = 1065;
     public static final Integer SCENE_HEIGHT = 700;
+    public static final Integer SCENE_MIN_WIDTH = 480;
+    public static final Integer SCENE_MIN_HEIGHT = 600;
 }

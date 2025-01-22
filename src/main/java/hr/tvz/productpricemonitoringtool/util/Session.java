@@ -4,11 +4,11 @@ import hr.tvz.productpricemonitoringtool.model.User;
 
 import java.util.Optional;
 
-public class UserSession {
+public class Session {
 
     private static Optional<User> loggedInUser;
 
-    private UserSession() {}
+    private Session() {}
 
     public static void setLoggedInUser(User user) {
         loggedInUser = Optional.of(user);

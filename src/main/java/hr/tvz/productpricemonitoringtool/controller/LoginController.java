@@ -4,7 +4,7 @@ import hr.tvz.productpricemonitoringtool.model.User;
 import hr.tvz.productpricemonitoringtool.repository.UserRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
 import hr.tvz.productpricemonitoringtool.util.SceneLoader;
-import hr.tvz.productpricemonitoringtool.util.UserSession;
+import hr.tvz.productpricemonitoringtool.util.Session;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
@@ -32,7 +32,7 @@ public class LoginController  {
             return;
         }
 
-        UserSession.setLoggedInUser(user.get());
+        Session.setLoggedInUser(user.get());
         logger.info("User with ID {} logged in", user.get().getId());
         SceneLoader.loadScene("dashboard", "Dashboard");
     }

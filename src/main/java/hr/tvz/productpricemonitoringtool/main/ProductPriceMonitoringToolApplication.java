@@ -1,5 +1,6 @@
 package hr.tvz.productpricemonitoringtool.main;
 
+import hr.tvz.productpricemonitoringtool.util.Constants;
 import hr.tvz.productpricemonitoringtool.util.SceneLoader;
 import javafx.application.Application;
 import javafx.stage.Stage;
@@ -13,6 +14,8 @@ public class ProductPriceMonitoringToolApplication extends Application {
         setMainStage(stage);
         SceneLoader.loadScene("login", "Login");
 
+        stage.setMinWidth(Constants.SCENE_MIN_WIDTH);
+        stage.setMinHeight(Constants.SCENE_MIN_HEIGHT);
         stage.show();
     }
 
