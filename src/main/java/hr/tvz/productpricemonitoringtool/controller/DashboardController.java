@@ -41,6 +41,6 @@ public class DashboardController {
     }
 
     public void handleAddNewCompany() {
-        SceneLoader.loadScene("add_company", "Add Company");
+        SceneLoader.loadScene("company_add", "Add Company");
     }
 }

@@ -15,7 +15,7 @@
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
    </columnConstraints>
    <rowConstraints>
-      <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="50.0" minHeight="10.0" prefHeight="75.0" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="349.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
@@ -54,7 +54,7 @@
                      </font>
                   </Label>
                   <Label text="or" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                  <Button fx:id="handleAddNewCompany" mnemonicParsing="false" text="Add new" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                  <Button mnemonicParsing="false" onAction="#handleAddNewCompany" text="Add new" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                </children>
             </GridPane>
          </children>
