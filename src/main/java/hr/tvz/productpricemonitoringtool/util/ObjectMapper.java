@@ -9,7 +9,6 @@ import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
 
 public class ObjectMapper {
 

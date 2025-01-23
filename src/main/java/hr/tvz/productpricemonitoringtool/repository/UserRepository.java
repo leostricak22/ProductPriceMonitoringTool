@@ -7,6 +7,7 @@ import hr.tvz.productpricemonitoringtool.util.ObjectMapper;
 
 import java.io.IOException;
 import java.sql.*;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -41,8 +42,8 @@ public class UserRepository extends AbstractRepository<User> {
     }
 
     @Override
-    public void save(Set<User> entities) throws RepositoryAccessException {
-        // Not implemented
+    public Set<User> save(Set<User> entities) throws RepositoryAccessException {
+        return Collections.emptySet();
     }
 
     public void update(User user) {

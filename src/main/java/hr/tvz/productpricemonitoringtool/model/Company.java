@@ -2,11 +2,19 @@ package hr.tvz.productpricemonitoringtool.model;
 
 public class Company extends Entity {
 
-    Address address;
+    private Address address;
 
     public Company(Builder builder) {
         super(builder.id, builder.name);
         this.address = builder.address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public Address getAddress() {
+        return address;
     }
 
     public static class Builder {
