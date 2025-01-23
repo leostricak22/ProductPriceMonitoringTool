@@ -1,3 +1,11 @@
+#borderPane {
+    -fx-background-color: #0275d8;
+}
+
+.menu-bar {
+    -fx-background-color: #0275d8;
+}
+
 .menu-bar {
     -fx-padding: 0;
     -fx-background-insets: 0;
@@ -7,18 +15,20 @@
     -fx-padding: 0;
     -fx-background-insets: 0;
     -fx-alignment: CENTER;
-    -fx-min-height: 50px;
-    -fx-pref-height: 50px;
-    -fx-max-height: 50px;
-    -fx-min-width: 75px;
-    -fx-pref-width: 75px;
-    -fx-max-width: 75px;
+    -fx-min-height: 75px;
+    -fx-pref-height: 75px;
+    -fx-max-height: 75px;
+    -fx-min-width: 100px;
+    -fx-pref-width: 100px;
+    -fx-max-width: 100px;
 }
 
 .menu-bar .menu .label {
     -fx-alignment: CENTER;
     -fx-padding: 0;
-    -fx-text-fill: black;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 16;
 }
 
 .menu-item {
@@ -30,40 +40,32 @@
     -fx-min-height: 50px;
     -fx-pref-height: 50px;
     -fx-max-height: 50px;
-    -fx-min-width: 75px;
-    -fx-pref-width: 75px;
-    -fx-max-width: 75px;
+    -fx-min-width: 100px;
+    -fx-pref-width: 100px;
+    -fx-max-width: 100px;
 }
 
 .menu-item .label {
     -fx-alignment: CENTER;
     -fx-padding: 0;
-    -fx-text-fill: black;
+    -fx-text-fill: white;
     -fx-text-alignment: CENTER;
+    -fx-min-width: 100px;
+    -fx-pref-width: 100px;
+    -fx-max-width: 100px;
 }
 
 .context-menu {
     -fx-padding: 0;
     -fx-alignment: CENTER;
     -fx-text-alignment: CENTER;
-}
-
-.context-menu:hover .menu-item {
-    -fx-background-color: darkgray;
+    -fx-background-color: #0275d8;
 }
 
 .menu-item:focused {
-    -fx-background-color: darkgray;
+    -fx-background-color: #044e8e;
 }
 
 .menu:hover, .menu:showing {
-    -fx-background-color: darkgray;
-}
-
-#userProfilePictureImageView {
-    -fx-border-radius: 50%; /* Applies a round border */
-    -fx-background-radius: 50%; /* Ensures the background matches the round shape */
-    -fx-clip-shape: "circle"; /* Clip the content to make it round */
-    -fx-effect: null; /* Ensures no shadow affects the circle shape */
-    -fx-background-color: transparent; /* Background stays transparent */
+    -fx-background-color: #044e8e;
 }

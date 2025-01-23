@@ -1,0 +1,42 @@
+#topBar {
+    -fx-background-color: #0275d8;
+}
+
+#topBar .label {
+    -fx-font-family: "Comic Sans MS";
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.sectionHeading {
+    -fx-font-family: "Gill Sans", sans-serif;
+    -fx-font-weight: bold;
+    -fx-font-size: 30;
+}
+
+.formLabel {
+    -fx-font-family: "Gill Sans", sans-serif;
+    -fx-font-size: 16;
+}
+
+.noAccountLabel {
+    -fx-font-family: "Gill Sans", sans-serif;
+    -fx-font-size: 14;
+}
+
+.button {
+    -fx-font-family: "Gill Sans", sans-serif;
+    -fx-font-size: 16;
+    -fx-background-color: #0275d8;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.button:hover {
+    -fx-background-color: #0056b3;
+    -fx-cursor: hand;
+}
+
+.button:selected, .button:pressed, .button:focused {
+    -fx-background-color: #0056b3;
+}
