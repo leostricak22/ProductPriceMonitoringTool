@@ -11,7 +11,6 @@ import javafx.scene.shape.Circle;
 
 import java.util.Optional;
 
-
 public class MenuController {
 
     @FXML public Circle userProfilePictureCircle;

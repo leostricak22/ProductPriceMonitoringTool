@@ -8,13 +8,14 @@ import hr.tvz.productpricemonitoringtool.util.ObjectMapper;
 import java.io.IOException;
 import java.sql.*;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public class CompanyRepository extends AbstractRepository<Company> {
 
     @Override
-    public Company findById(Long id) throws RepositoryAccessException {
-        return null;
+    public Optional<Company> findById(Long id) throws RepositoryAccessException {
+        return Optional.empty();
     }
 
     @Override

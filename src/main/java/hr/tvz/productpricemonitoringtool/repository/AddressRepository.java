@@ -9,12 +9,13 @@ import hr.tvz.productpricemonitoringtool.util.ObjectMapper;
 import java.io.IOException;
 import java.sql.*;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 public class AddressRepository extends AbstractRepository<Address> {
 
     @Override
-    public Address findById(Long id) throws RepositoryAccessException {
+    public Optional<Address> findById(Long id) throws RepositoryAccessException {
         String query = """
         SELECT id, street, city, postal_code, country, house_number
         FROM "address" WHERE ID = ?;
@@ -27,10 +28,10 @@ public class AddressRepository extends AbstractRepository<Address> {
             ResultSet resultSet = stmt.executeQuery();
 
             if (resultSet.next()) {
-                return ObjectMapper.mapResultSetToAddress(resultSet);
-            } else {
-                throw new RepositoryAccessException("Address with id " + id + " not found");
+                return Optional.of(ObjectMapper.mapResultSetToAddress(resultSet));
             }
+
+            return Optional.empty();
         } catch (IOException | SQLException e) {
             throw new RepositoryAccessException(e);
         }

@@ -4,11 +4,12 @@ import hr.tvz.productpricemonitoringtool.exception.RepositoryAccessException;
 import hr.tvz.productpricemonitoringtool.exception.RepositoryQueryException;
 import hr.tvz.productpricemonitoringtool.model.Entity;
 
+import java.util.Optional;
 import java.util.Set;
 
 public abstract class AbstractRepository <T extends Entity> {
 
-    public abstract T findById(Long id) throws RepositoryAccessException;
+    public abstract Optional<T> findById(Long id) throws RepositoryAccessException;
     public abstract Set<T> findAll() throws RepositoryAccessException;
     public abstract Set<T> save(Set<T> entities) throws RepositoryAccessException;
 

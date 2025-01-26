@@ -13,7 +13,6 @@ public class CompanyDashboardController {
     @FXML
     public Label companyNameLabel;
 
-
     public void initialize() {
         Company selectedCompany;
         selectedCompany = Session.getSelectedCompany().orElseThrow(() -> new RuntimeException("No company selected."));
@@ -23,5 +22,9 @@ public class CompanyDashboardController {
     public void handleCompanyLogout() {
         Session.setSelectedCompany(Optional.empty());
         SceneLoader.loadScene("dashboard", "Dashboard");
+    }
+
+    public void handleAddProductRedirect() {
+        SceneLoader.loadScene("product_add", "Add Product");
     }
 }

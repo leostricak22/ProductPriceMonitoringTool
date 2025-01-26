@@ -15,8 +15,8 @@ import java.util.Set;
 public class UserRepository extends AbstractRepository<User> {
 
     @Override
-    public User findById(Long id) throws RepositoryAccessException {
-        return null;
+    public Optional<User> findById(Long id) throws RepositoryAccessException {
+        return Optional.empty();
     }
 
     @Override
