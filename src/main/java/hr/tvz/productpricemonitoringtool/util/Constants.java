@@ -10,6 +10,8 @@ public class Constants {
             "file:./src/main/resources/hr/tvz/productpricemonitoringtool/";
     public static final String DATABASE_PROPERTIES_FILE =
             "./src/main/resources/database.properties";
+    public static final String APPLICATION_ICON =
+            "file:./src/main/resources/hr/tvz/productpricemonitoringtool/images/logo.png";
     public static final Integer SCENE_WIDTH = 1065;
     public static final Integer SCENE_HEIGHT = 700;
     public static final Integer SCENE_MIN_WIDTH = 480;

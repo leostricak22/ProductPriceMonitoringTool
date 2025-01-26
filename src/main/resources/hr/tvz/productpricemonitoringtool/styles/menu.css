@@ -1,9 +1,9 @@
 #borderPane {
-    -fx-background-color: #0275d8;
+    -fx-background-color: #705E46;
 }
 
 .menu-bar {
-    -fx-background-color: #0275d8;
+    -fx-background-color: #705E46;
 }
 
 .menu-bar {
@@ -59,13 +59,13 @@
     -fx-padding: 0;
     -fx-alignment: CENTER;
     -fx-text-alignment: CENTER;
-    -fx-background-color: #0275d8;
+    -fx-background-color: #705E46;
 }
 
 .menu-item:focused {
-    -fx-background-color: #044e8e;
+    -fx-background-color: #554633;
 }
 
 .menu:hover, .menu:showing {
-    -fx-background-color: #044e8e;
+    -fx-background-color: #554633;
 }

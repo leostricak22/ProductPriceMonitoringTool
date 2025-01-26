@@ -1,5 +1,5 @@
 #topBar {
-    -fx-background-color: #0275d8;
+    -fx-background-color: #705e46;
 }
 
 #topBar .label {
@@ -22,21 +22,4 @@
 .noAccountLabel {
     -fx-font-family: "Gill Sans", sans-serif;
     -fx-font-size: 14;
-}
-
-.button {
-    -fx-font-family: "Gill Sans", sans-serif;
-    -fx-font-size: 16;
-    -fx-background-color: #0275d8;
-    -fx-text-fill: white;
-    -fx-font-weight: bold;
-}
-
-.button:hover {
-    -fx-background-color: #0056b3;
-    -fx-cursor: hand;
-}
-
-.button:selected, .button:pressed, .button:focused {
-    -fx-background-color: #0056b3;
 }

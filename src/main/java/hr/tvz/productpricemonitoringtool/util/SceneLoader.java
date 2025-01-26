@@ -18,7 +18,7 @@ public class SceneLoader {
         try {
             FXMLLoader fxmlLoader = FXMLLoaderHelper.fxmlFilePath(fxmlFileName + ".fxml");
 
-            Scene scene = new Scene(fxmlLoader.load(), Constants.SCENE_WIDTH, Constants.SCENE_HEIGHT);
+            Scene scene = new Scene(fxmlLoader.load());
 
             ProductPriceMonitoringToolApplication.getMainStage().setTitle(title);
             ProductPriceMonitoringToolApplication.getMainStage().setScene(scene);

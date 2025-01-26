@@ -6,42 +6,65 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.SVGPath?>
 
-<BorderPane id="borderPane" fx:id="borderPane" maxWidth="Infinity" prefHeight="75" prefWidth="800" stylesheets="@styles/menu.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.tvz.productpricemonitoringtool.controller.MenuController">
+<BorderPane id="borderPane" fx:id="borderPane" maxWidth="Infinity" prefHeight="75" prefWidth="800" stylesheets="@styles/menu.css, @styles/main.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.tvz.productpricemonitoringtool.controller.MenuController">
     <right>
         <HBox alignment="CENTER_RIGHT" spacing="15">
             <SVGPath content="M9.35419 21C10.0593 21.6224 10.9856 22 12 22C13.0145 22 13.9407 21.6224 14.6458 21M18 8C18 6.4087 17.3679 4.88258 16.2427 3.75736C15.1174 2.63214 13.5913 2 12 2C10.4087 2 8.8826 2.63214 7.75738 3.75736C6.63216 4.88258 6.00002 6.4087 6.00002 8C6.00002 11.0902 5.22049 13.206 4.34968 14.6054C3.61515 15.7859 3.24788 16.3761 3.26134 16.5408C3.27626 16.7231 3.31488 16.7926 3.46179 16.9016C3.59448 17 4.19261 17 5.38887 17H18.6112C19.8074 17 20.4056 17 20.5382 16.9016C20.6852 16.7926 20.7238 16.7231 20.7387 16.5408C20.7522 16.3761 20.3849 15.7859 19.6504 14.6054C18.7795 13.206 18 11.0902 18 8Z" fill="white">
-            <cursor>
-               <Cursor fx:constant="HAND" />
-            </cursor></SVGPath>
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor>
+            </SVGPath>
             <Circle fx:id="userProfilePictureCircle" onMouseClicked="#handleUserEditRedirect" radius="30.0" smooth="true">
-            <HBox.margin>
-               <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-            </HBox.margin>
-            <cursor>
-               <Cursor fx:constant="HAND" />
-            </cursor></Circle>
+                <HBox.margin>
+                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                </HBox.margin>
+                <cursor>
+                    <Cursor fx:constant="HAND" />
+                </cursor>
+            </Circle>
         </HBox>
     </right>
    <left>
-       <MenuBar maxHeight="75.0" prefHeight="75.0">
-           <Menu>
-               <graphic>
-                   <Label onMouseClicked="#handleDashboardRedirect" style="-fx-pref-height: 50px" text="Dashboard" />
-               </graphic>
-           </Menu>
-           <Menu fx:id="companyMenu" mnemonicParsing="false" text="Company">
-                <MenuItem mnemonicParsing="false" styleClass="menuItemClass" text="Edit" />
-                <MenuItem mnemonicParsing="false" text="Staff" />
-           </Menu>
-           <Menu fx:id="productsMenu" mnemonicParsing="false" text="Products">
-               <MenuItem mnemonicParsing="false" text="Search" />
-               <MenuItem mnemonicParsing="false" text="Add" />
-           </Menu>
-       </MenuBar>
+      <GridPane prefHeight="75.0" prefWidth="360.0" BorderPane.alignment="CENTER">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="75.0" minWidth="75.0" prefWidth="75.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="285.0" minWidth="10.0" prefWidth="235.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+              <MenuBar maxHeight="75.0" prefHeight="75.0" GridPane.columnIndex="1">
+                  <Menu>
+                      <graphic>
+                          <Label onMouseClicked="#handleDashboardRedirect" style="-fx-pref-height: 50px" text="Dashboard" />
+                      </graphic>
+                  </Menu>
+                  <Menu fx:id="companyMenu" mnemonicParsing="false" text="Company">
+                      <MenuItem mnemonicParsing="false" styleClass="menuItemClass" text="Edit" />
+                      <MenuItem mnemonicParsing="false" text="Staff" />
+                  </Menu>
+                  <Menu fx:id="productsMenu" mnemonicParsing="false" text="Products">
+                      <MenuItem mnemonicParsing="false" text="Search" />
+                      <MenuItem mnemonicParsing="false" text="Add" />
+                  </Menu>
+              </MenuBar>
+            <ImageView fitHeight="75.0" fitWidth="75.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@images/logo.png" />
+               </image>
+            </ImageView>
+         </children>
+      </GridPane>
    </left>
 </BorderPane>
