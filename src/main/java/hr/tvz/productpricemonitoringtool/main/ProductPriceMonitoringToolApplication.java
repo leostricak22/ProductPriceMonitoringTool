@@ -6,9 +6,6 @@ import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
 public class ProductPriceMonitoringToolApplication extends Application {
 
     private static Stage mainStage;
@@ -21,7 +18,6 @@ public class ProductPriceMonitoringToolApplication extends Application {
         stage.setWidth(Constants.SCENE_WIDTH);
         stage.setHeight(Constants.SCENE_HEIGHT);
         stage.setMaximized(true);
-        //stage.getIcons().add(new Image("file:logo.png"));
         stage.getIcons().add(new Image(Constants.APPLICATION_ICON));
 
         stage.setMinWidth(Constants.SCENE_MIN_WIDTH);

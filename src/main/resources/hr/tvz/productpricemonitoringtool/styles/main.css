@@ -1,16 +1,18 @@
 .button {
     -fx-font-family: "Gill Sans", sans-serif;
     -fx-font-size: 16;
-    -fx-background-color: #d6b588;
-    -fx-text-fill: white;
+    -fx-background-color: #2d5b67;
+    -fx-text-fill: #ffffff;
     -fx-font-weight: bold;
 }
 
 .button:hover {
-    -fx-background-color: #705e46;
+    -fx-background-color: #2d5b67;
     -fx-cursor: hand;
+    -fx-text-fill: white;
 }
 
 .button:selected, .button:pressed, .button:focused {
-    -fx-background-color: #705e46;
+    -fx-background-color: #2d5b67;
+    -fx-text-fill: white;
 }

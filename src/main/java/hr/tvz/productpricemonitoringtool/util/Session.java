@@ -1,6 +1,7 @@
 package hr.tvz.productpricemonitoringtool.util;
 
 import hr.tvz.productpricemonitoringtool.exception.AuthenticationException;
+import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.User;
 import javafx.scene.image.Image;
 
@@ -9,7 +10,8 @@ import java.util.Optional;
 
 public class Session {
 
-    private static Optional<User> loggedInUser;
+    private static Optional<User> loggedInUser = Optional.empty();
+    private static Optional<Company> selectedCompany = Optional.empty();
 
     private Session() {}
 
@@ -19,6 +21,18 @@ public class Session {
 
     public static Optional<User> getLoggedInUser() {
         return loggedInUser;
+    }
+
+    public static void setSelectedCompany(Company company) {
+        selectedCompany = Optional.of(company);
+    }
+
+    public static void setSelectedCompany(Optional<Company> company) {
+        selectedCompany = company;
+    }
+
+    public static Optional<Company> getSelectedCompany() {
+        return selectedCompany;
     }
 
     public static Image getUserProfilePicture() {

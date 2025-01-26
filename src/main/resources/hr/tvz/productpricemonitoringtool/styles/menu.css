@@ -1,9 +1,9 @@
 #borderPane {
-    -fx-background-color: #705E46;
+    -fx-background-color: #4f7f8c;
 }
 
 .menu-bar {
-    -fx-background-color: #705E46;
+    -fx-background-color: #4f7f8c;
 }
 
 .menu-bar {
@@ -59,7 +59,7 @@
     -fx-padding: 0;
     -fx-alignment: CENTER;
     -fx-text-alignment: CENTER;
-    -fx-background-color: #705E46;
+    -fx-background-color: #0D2149;
 }
 
 .menu-item:focused {

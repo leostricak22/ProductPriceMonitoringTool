@@ -18,6 +18,8 @@ public class DashboardController {
     public FlowPane companyFlowPane;
 
     public void initialize() {
+        Session.setSelectedCompany(Optional.empty());
+
         Optional<User> user = Session.getLoggedInUser();
         if (user.isEmpty()) {
             SceneLoader.loadScene("login", "Login");
@@ -30,6 +32,8 @@ public class DashboardController {
             Button companyButton = new Button(company.getName());
             companyButton.getStyleClass().add("company-button");
             companyButton.setOnAction(event -> {
+                Session.setSelectedCompany(company);
+                SceneLoader.loadScene("company_dashboard", company.getName());
             });
             companyFlowPane.getChildren().add(companyButton);
         }
