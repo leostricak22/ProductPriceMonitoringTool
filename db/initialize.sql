@@ -95,3 +95,19 @@ INSERT INTO "category" (name, parent_category_id) VALUES ('Windows', 3);
 INSERT INTO "category" (name, parent_category_id) VALUES ('Office', 3);
 INSERT INTO "category" (name, parent_category_id) VALUES ('Visual Studio', 3);
 INSERT INTO "category" (name, parent_category_id) VALUES ('Gaming PCs', 5);
+
+INSERT INTO "product" (name, category_id) VALUES ('MacBook Pro', 4);
+INSERT INTO "product" (name, category_id) VALUES ('MacBook Air', 4);
+INSERT INTO "product" (name, category_id) VALUES ('iMac', 5);
+INSERT INTO "product" (name, category_id) VALUES ('Mac Mini', 5);
+INSERT INTO "product" (name, category_id) VALUES ('LG 27UL850-W', 6);
+INSERT INTO "product" (name, category_id) VALUES ('Dell U2718Q', 6);
+
+INSERT INTO "company_product" (company_id, product_id) VALUES (1, 1);
+INSERT INTO "company_product" (company_id, product_id) VALUES (2, 1);
+INSERT INTO "company_product" (company_id, product_id) VALUES (1, 2);
+INSERT INTO "company_product" (company_id, product_id) VALUES (2, 2);
+INSERT INTO "company_product" (company_id, product_id) VALUES (1, 3);
+INSERT INTO "company_product" (company_id, product_id) VALUES (1, 4);
+INSERT INTO "company_product" (company_id, product_id) VALUES (1, 5);
+INSERT INTO "company_product" (company_id, product_id) VALUES (1, 6);

@@ -1,10 +1,7 @@
 package hr.tvz.productpricemonitoringtool.util;
 
 import hr.tvz.productpricemonitoringtool.enumeration.Role;
-import hr.tvz.productpricemonitoringtool.model.Address;
-import hr.tvz.productpricemonitoringtool.model.Category;
-import hr.tvz.productpricemonitoringtool.model.Company;
-import hr.tvz.productpricemonitoringtool.model.User;
+import hr.tvz.productpricemonitoringtool.model.*;
 import hr.tvz.productpricemonitoringtool.repository.AddressRepository;
 import hr.tvz.productpricemonitoringtool.repository.CategoryRepository;
 import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
@@ -50,6 +47,15 @@ public class ObjectMapper {
         return new Category.Builder(resultSet.getLong("id"))
                 .name(resultSet.getString("name"))
                 .parentCategory(categoryRepository.findById(resultSet.getLong("parent_category_id")))
+                .build();
+    }
+
+    public static Product mapResultSetToProduct(ResultSet resultSet) throws SQLException {
+        return new Product.Builder(resultSet.getLong("id"))
+                .name(resultSet.getString("name"))
+                .category(categoryRepository.findById(resultSet.getLong("category_id"))
+                        .orElseThrow(() -> new SQLException("Category not found")))
+                .companies(companyRepository.findAllByProductId(resultSet.getLong("id")))
                 .build();
     }
 }

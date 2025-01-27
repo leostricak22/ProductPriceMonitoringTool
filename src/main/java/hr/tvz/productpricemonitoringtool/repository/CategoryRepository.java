@@ -74,6 +74,23 @@ public class CategoryRepository extends AbstractRepository<Category> {
                 .toList());
     }
 
+    public List<Category> findAllByParentCategoryRecursively(Optional<Category> category) throws RepositoryAccessException {
+        List<Category> subCategories = new ArrayList<>(findAllByParentCategory(category));
+        List<Category> allCategories = new ArrayList<>(subCategories);
+        category.ifPresent(allCategories::add);
+
+        while (!subCategories.isEmpty()) {
+            List<Category> temp = new ArrayList<>();
+            for (Category subCategory : subCategories) {
+                temp.addAll(findAllByParentCategory(Optional.of(subCategory)));
+            }
+            subCategories = temp;
+            allCategories.addAll(subCategories);
+        }
+
+        return allCategories;
+    }
+
     public String findCategoryHierarchy(Long categoryId) throws RepositoryAccessException {
         Set<Category> categories = findAll();
 

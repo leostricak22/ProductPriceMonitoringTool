@@ -98,6 +98,31 @@ public class CompanyRepository extends AbstractRepository<Company> {
         }
     }
 
+    public Set<Company> findAllByProductId(Long productId) throws RepositoryAccessException {
+        Set<Company> companies = new HashSet<>();
+        String query = """
+        SELECT c.id, c.name, c.address_id
+        FROM "company" c
+        JOIN "company_product" cp ON c.id = cp.company_id
+        WHERE cp.product_id = ?;
+        """;
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setLong(1, productId);
+            ResultSet resultSet = stmt.executeQuery();
+
+            while (resultSet.next()) {
+                Company company = ObjectMapper.mapResultSetToCompany(resultSet);
+                companies.add(company);
+            }
+
+            return companies;
+        } catch (IOException | SQLException e) {
+            throw new RepositoryAccessException(e);
+        }
+    }
+
     public void addUser(Long userId, Long companyId) throws RepositoryAccessException {
         String query = """
         INSERT INTO "user_company" (user_id, company_id)
