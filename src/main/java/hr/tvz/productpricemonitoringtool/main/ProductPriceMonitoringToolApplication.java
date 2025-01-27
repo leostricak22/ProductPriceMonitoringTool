@@ -1,6 +1,5 @@
 package hr.tvz.productpricemonitoringtool.main;
 
-import hr.tvz.productpricemonitoringtool.repository.CategoryRepository;
 import hr.tvz.productpricemonitoringtool.util.Constants;
 import hr.tvz.productpricemonitoringtool.util.SceneLoader;
 import javafx.application.Application;
@@ -10,8 +9,6 @@ import javafx.stage.Stage;
 public class ProductPriceMonitoringToolApplication extends Application {
 
     private static Stage mainStage;
-
-    CategoryRepository categoryRepository = new CategoryRepository();
 
     @Override
     public void start(Stage stage) {

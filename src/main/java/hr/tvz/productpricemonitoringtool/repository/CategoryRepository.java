@@ -10,9 +10,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class CategoryRepository extends AbstractRepository<Category> {
 
@@ -63,6 +61,17 @@ public class CategoryRepository extends AbstractRepository<Category> {
     @Override
     public Set<Category> save(Set<Category> entities) throws RepositoryAccessException {
         return Set.of();
+    }
+
+    public List<Category> findAllByParentCategory(Optional<Category> category) throws RepositoryAccessException {
+        List<Category> categories = new ArrayList<>(findAll());
+
+        return category.map(value -> categories.stream()
+                .filter(c -> c.getParentCategory().isPresent() &&
+                        c.getParentCategory().get().getId().equals(value.getId()))
+                .toList()).orElseGet(() -> categories.stream()
+                .filter(c -> c.getParentCategory().isEmpty())
+                .toList());
     }
 
     public String findCategoryHierarchy(Long categoryId) throws RepositoryAccessException {

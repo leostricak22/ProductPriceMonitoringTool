@@ -46,4 +46,11 @@ public class MenuController {
     public void handleUserEditRedirect() {
         SceneLoader.loadScene("user_edit", "Edit User");
     }
+
+    public void handleProductSearchRedirect() {
+        SceneLoader.loadProductSearchScene(
+                "product_search",
+                "Product Search",
+                Optional.empty());
+    }
 }
