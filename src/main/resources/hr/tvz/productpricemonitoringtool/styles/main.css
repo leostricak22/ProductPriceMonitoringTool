@@ -1,3 +1,12 @@
+* {
+    --primary-color: #0d2149;
+    --secondary-color: #208aae;
+    --tertiary-color: #f9ebe0;
+    --quaternary-color: #60492c;
+
+    --primary-color-hover: #091836;
+}
+
 .button {
     -fx-font-family: "Gill Sans", sans-serif;
     -fx-font-size: 16;
