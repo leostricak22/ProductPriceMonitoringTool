@@ -1,0 +1,8 @@
+.search-text-field {
+    -fx-padding: 5 20 5 40;
+    -fx-background-image: url("../images/icons/search.png");
+    -fx-background-position: left 10px center;
+    -fx-background-repeat: no-repeat;
+    -fx-background-size: 16px;
+}
+

@@ -1,0 +1,89 @@
+@font-face {
+    font-family: 'Lilita One';
+    src: url('../fonts/LilitaOne-Regular.ttf');
+}
+
+.menu-container {
+    -fx-background-color: #526997;
+    -fx-border-width: 2;
+    -fx-border-radius: 0 25 0 0;
+    -fx-background-radius: 0 25 0 0;
+}
+
+.menu-item, .menu-button {
+    -fx-padding: 0.0em;
+    -fx-text-fill: white;
+    -fx-font-size: 1.1em;
+    -fx-font-weight: bold;
+    -fx-font-family: "Gill Sans", sans-serif;
+    -fx-background-color: #526997;
+    -fx-border-color: #526997;
+    -fx-min-height: 75;
+    -fx-pref-height: 75;
+    -fx-max-height: 75;
+}
+
+.menu-button {
+    -fx-min-width: 350;
+    -fx-pref-width: 350;
+    -fx-max-width: 350;
+}
+
+.menu-item {
+    -fx-min-width: 150;
+    -fx-pref-width: 150;
+    -fx-max-width: 150;
+}
+
+.menu-button .label {
+    -fx-text-fill: white;
+    -fx-font-family: 'Lilita One';
+    -fx-font-size: 1.5em;
+}
+
+.menu-item .label {
+    -fx-alignment: CENTER;
+    -fx-padding: 0;
+    -fx-text-fill: white;
+    -fx-text-alignment: CENTER;
+    -fx-min-width: 150;
+    -fx-pref-width: 150;
+    -fx-max-width: 150;
+    -fx-font: 1.3em "Lilita One";
+}
+
+.menu-button .arrow {
+    -fx-opacity: 0;
+    -fx-max-width: 0;
+    -fx-max-height: 0;
+    -fx-padding: 0;
+}
+
+.menu-button .label {
+    -fx-text-fill: white;
+}
+
+.menu-button:focused {
+    -fx-background-color: #44567A;
+    -fx-border-color: #44567A;
+}
+
+.menu-button:hover {
+    -fx-background-color: #44567A;
+    -fx-border-color: #44567A;
+}
+
+.menu-item:hover {
+    -fx-background-color: #44567A;
+    -fx-border-color: #44567A;
+}
+
+.menu-item:focused {
+    -fx-background-color: #44567A;
+    -fx-border-color: #44567A;
+}
+
+.context-menu {
+    -fx-padding: 0;
+    -fx-background-color: #526997;
+}
