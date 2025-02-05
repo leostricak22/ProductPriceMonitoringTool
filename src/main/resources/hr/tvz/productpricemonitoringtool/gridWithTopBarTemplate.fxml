@@ -12,7 +12,7 @@
   <rowConstraints>
     <RowConstraints minHeight="10.0" prefHeight="720.0" vgrow="SOMETIMES" />
   </rowConstraints>
-    <fx:include source="menuTest.fxml" GridPane.columnIndex="0" />
+    <fx:include source="menu.fxml" GridPane.columnIndex="0" />
    <GridPane fx:id="contentGridPane" style="-fx-background-color: white; -fx-padding: 0 40 20 40;" GridPane.columnIndex="1">
      <columnConstraints>
        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="400.0" prefWidth="100.0" />
