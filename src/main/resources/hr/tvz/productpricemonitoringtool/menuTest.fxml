@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.MenuButton?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-<VBox maxWidth="350.0" minWidth="350.0" prefHeight="720" prefWidth="350.0" styleClass="menu-container" stylesheets="@styles/menuTest.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.tvz.productpricemonitoringtool.controller.MenuTestController">
+<VBox maxHeight="Infinity" maxWidth="350.0" minWidth="350.0" prefHeight="720.0" prefWidth="350.0" styleClass="menu-container" stylesheets="@styles/menuTest.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.tvz.productpricemonitoringtool.controller.MenuTestController">
     <children>
         <ImageView fitHeight="100.0" fitWidth="320.0" pickOnBounds="true" preserveRatio="true">
             <image>
@@ -16,18 +18,40 @@
             <VBox.margin>
                 <Insets bottom="40.0" left="15.0" right="15.0" top="40.0" />
             </VBox.margin></ImageView>
-        <MenuButton popupSide="RIGHT" prefWidth="100" text="Eats">
+
+        <MenuButton>
+            <graphic>
+                <Label onMouseClicked="#handleDashboardRedirect" styleClass="dashboardMenuButtonLabel" style="-fx-font-size: 1.1em;" text="Dashboard" />
+            </graphic>
+        </MenuButton>
+
+        <MenuButton fx:id="companyMenuButton" popupSide="RIGHT" prefWidth="100" text="Company">
             <items>
-                <MenuItem text="Burger" />
-                <MenuItem text="Hot Dog" />
+                <MenuItem text="Edit" />
+                <MenuItem text="Staff" />
             </items>
         </MenuButton>
 
-        <MenuButton popupSide="RIGHT" prefWidth="100" text="Drinks">
+        <MenuButton fx:id="productsMenuButton" popupSide="RIGHT" prefWidth="100" text="Products">
             <items>
-                <MenuItem text="Juice" />
-                <MenuItem text="Milk" />
+                <MenuItem onAction="#handleProductSearchRedirect" text="Search" />
+                <MenuItem text="Add" />
             </items>
         </MenuButton>
+      <VBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" prefHeight="362.0" prefWidth="350.0" VBox.vgrow="ALWAYS">
+         <children>
+            <Label fx:id="companyNameLabel" text="Currently in: " textFill="WHITE">
+               <font>
+                  <Font name="Impact" size="16.0" />
+               </font>
+            </Label>
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+         <padding>
+            <Insets bottom="15.0" />
+         </padding>
+      </VBox>
     </children>
 </VBox>

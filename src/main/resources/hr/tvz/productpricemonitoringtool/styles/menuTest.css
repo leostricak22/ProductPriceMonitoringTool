@@ -71,11 +71,13 @@
 .menu-button:hover {
     -fx-background-color: #44567A;
     -fx-border-color: #44567A;
+    -fx-cursor: hand;
 }
 
 .menu-item:hover {
     -fx-background-color: #44567A;
     -fx-border-color: #44567A;
+    -fx-cursor: hand;
 }
 
 .menu-item:focused {
@@ -86,4 +88,15 @@
 .context-menu {
     -fx-padding: 0;
     -fx-background-color: #526997;
+}
+
+#companyNameLabel, #companyNameTextLabel {
+    -fx-font-size: 1.5em;
+    -fx-font-family: 'Lilita One';
+    -fx-text-fill: white;
+}
+
+.dashboardMenuButtonLabel {
+    -fx-pref-height: 50px;
+    -fx-pref-width: 350px;
 }

@@ -8,99 +8,75 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane maxHeight="-Infinity"
-          maxWidth="-Infinity"
-          minHeight="250.0"
-          minWidth="-Infinity"
-          prefHeight="400.0"
-          prefWidth="1065.0"
-          stylesheets="@styles/auth.css, @styles/main.css"
-          xmlns="http://javafx.com/javafx/23.0.1"
-          xmlns:fx="http://javafx.com/fxml/1"
-          fx:controller="hr.tvz.productpricemonitoringtool.controller.LoginController">
+<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="250.0" minWidth="-Infinity" prefHeight="400.0" prefWidth="1065.0" style="-fx-background-color: white;" stylesheets="@styles/auth.css, @styles/main.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.tvz.productpricemonitoringtool.controller.LoginController">
 
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="300.0" prefWidth="300.0"/>
-        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="300.0" prefWidth="300.0" />
+        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints maxHeight="75.0" minHeight="75.0" prefHeight="75.0" vgrow="SOMETIMES"/>
-        <RowConstraints maxHeight="200.0" minHeight="75.0" prefHeight="75.0" vgrow="SOMETIMES"/>
-        <RowConstraints maxHeight="150.0" minHeight="150.0" prefHeight="150.0" vgrow="SOMETIMES"/>
-        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="137.0" vgrow="SOMETIMES"/>
+        <RowConstraints maxHeight="200.0" minHeight="75.0" prefHeight="75.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="198.0" minHeight="150.0" prefHeight="198.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="108.0" vgrow="SOMETIMES" />
     </rowConstraints>
     <children>
-        <GridPane maxHeight="175.0" minHeight="125.0" GridPane.columnIndex="1" GridPane.rowIndex="2">
+        <GridPane maxHeight="175.0" minHeight="125.0" styleClass="authForm" GridPane.columnIndex="1" GridPane.rowIndex="1">
             <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
             </columnConstraints>
             <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
                 <Label styleClass="formLabel" text="Email" GridPane.valignment="BOTTOM">
                     <GridPane.margin>
-                        <Insets bottom="5.0" left="15.0" right="15.0"/>
+                        <Insets bottom="5.0" left="15.0" right="15.0" />
                     </GridPane.margin>
                 </Label>
                 <TextField fx:id="emailTextField" prefHeight="40.0" prefWidth="355.0" GridPane.rowIndex="1">
                     <GridPane.margin>
-                        <Insets bottom="5.0" left="15.0" right="15.0"/>
+                        <Insets bottom="5.0" left="15.0" right="15.0" />
                     </GridPane.margin>
                 </TextField>
                 <Label styleClass="formLabel" text="Password" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
                     <GridPane.margin>
-                        <Insets bottom="5.0" left="15.0" right="15.0"/>
+                        <Insets bottom="5.0" left="15.0" right="15.0" />
                     </GridPane.margin>
                 </Label>
                 <PasswordField fx:id="passwordPasswordField" prefHeight="40.0" prefWidth="355.0" GridPane.rowIndex="3">
                     <GridPane.margin>
-                        <Insets bottom="5.0" left="15.0" right="15.0"/>
+                        <Insets bottom="5.0" left="15.0" right="15.0" />
                     </GridPane.margin>
                 </PasswordField>
             </children>
         </GridPane>
-        <Button mnemonicParsing="false" onAction="#handleLogin" prefHeight="35.0" prefWidth="447.0" text="Login"
-                GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP">
+        <Button mnemonicParsing="false" onAction="#handleLogin" prefHeight="35.0" prefWidth="447.0" text="Login" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
             <GridPane.margin>
-                <Insets left="15.0" right="15.0" top="45.0"/>
+                <Insets left="15.0" right="15.0" top="45.0" />
             </GridPane.margin>
         </Button>
-        <Label styleClass="sectionHeading" text="Login" GridPane.columnIndex="1" GridPane.halignment="CENTER"
-               GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+        <Label styleClass="sectionHeading" text="Login" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
             <GridPane.margin>
-                <Insets/>
+                <Insets />
             </GridPane.margin>
             <font>
-                <Font size="25.0"/>
+                <Font name="Microsoft Yi Baiti" size="25.0" />
             </font>
         </Label>
-        <Label onMouseClicked="#handleRegisterOpen" styleClass="noAccountLabel"
-               text="Don't have an account? Click here." GridPane.columnIndex="1" GridPane.rowIndex="3"
-               GridPane.valignment="TOP">
+        <Label onMouseClicked="#handleRegisterOpen" styleClass="noAccountLabel" text="Don't have an account? Click here." GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.valignment="TOP">
             <GridPane.margin>
-                <Insets left="15.0"/>
+                <Insets left="15.0" />
             </GridPane.margin>
             <cursor>
-                <Cursor fx:constant="HAND"/>
+                <Cursor fx:constant="HAND" />
             </cursor>
         </Label>
-        <Pane id="topBar" prefHeight="200.0" prefWidth="200.0" GridPane.columnSpan="3">
-            <children>
-                <Label layoutX="14.0" layoutY="19.0" text="Product Price Monitoring Tool" textFill="WHITE">
-                    <font>
-                        <Font size="26.0"/>
-                    </font>
-                </Label>
-            </children>
-        </Pane>
     </children>
 </GridPane>

@@ -1,5 +1,6 @@
-#topBar {
-    -fx-background-color: #4f7f8c;
+@font-face {
+    font-family: 'Lilita One';
+    src: url('../fonts/LilitaOne-Regular.ttf');
 }
 
 #topBar .label {
@@ -9,9 +10,8 @@
 }
 
 .sectionHeading {
-    -fx-font-family: "Gill Sans", sans-serif;
-    -fx-font-weight: bold;
-    -fx-font-size: 30;
+    -fx-font-family: "Lilita One";
+    -fx-font-size: 36;
 }
 
 .formLabel {
@@ -22,4 +22,10 @@
 .noAccountLabel {
     -fx-font-family: "Gill Sans", sans-serif;
     -fx-font-size: 14;
+}
+
+.authForm {
+    -fx-border-color: #526997;
+    -fx-border-width: 2px 0 0 0;
+    -fx-border-style: solid;
 }
