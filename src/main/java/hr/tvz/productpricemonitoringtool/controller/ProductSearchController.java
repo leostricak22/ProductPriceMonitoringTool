@@ -1,13 +1,17 @@
 package hr.tvz.productpricemonitoringtool.controller;
 
-import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.model.Category;
 import hr.tvz.productpricemonitoringtool.model.Product;
 import hr.tvz.productpricemonitoringtool.repository.CategoryRepository;
 import hr.tvz.productpricemonitoringtool.repository.ProductRepository;
+import hr.tvz.productpricemonitoringtool.thread.FetchProductsByCategoriesThread;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
 import hr.tvz.productpricemonitoringtool.util.Constants;
-import hr.tvz.productpricemonitoringtool.util.SceneLoader;
+import hr.tvz.productpricemonitoringtool.util.ProgressBarUtil;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
+import javafx.application.Platform;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -15,34 +19,115 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.Instant;
+import java.util.*;
 
 public class ProductSearchController {
 
+    @FXML public GridPane mainPane;
     @FXML public FlowPane categoryFlowPane;
     @FXML public FlowPane productsFlowPane;
     @FXML public Label hierarchyLabel;
+
+    private Optional<Category> parentCategory = Optional.empty();
 
     private final CategoryRepository categoryRepository = new CategoryRepository();
     private final ProductRepository productRepository = new ProductRepository();
 
     public void initialize(Optional<Category> parentCategory) {
-        categoryFlowPane.getChildren().clear();
+        this.parentCategory = parentCategory;
+
+        loadProducts();
+    }
+
+    public void loadProducts() {
+        List<Product> products = new ArrayList<>();
         List<Category> categories = new ArrayList<>();
+        String hierarchy = "";
+        Boolean success = false;
 
-        try {
-            categories.addAll(categoryRepository.findAllByParentCategory(parentCategory));
-        } catch (DatabaseConnectionActiveException e) {
-            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
-                    Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
-            handleDashboardRedirect();
-        }
+        FetchProductsByCategoriesThread fetchProductsThread = new FetchProductsByCategoriesThread(productRepository,
+                categoryRepository,
+                products,
+                categories,
+                parentCategory,
+                hierarchy,
+                success);
+        Thread thread = new Thread(fetchProductsThread);
+        thread.start();
 
-        categories.sort((c1, c2) -> c1.getName().compareToIgnoreCase(c2.getName()));
+        ProgressBarUtil progressBar = new ProgressBarUtil(mainPane);
 
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() {
+                BigDecimal counter = BigDecimal.ZERO;
+                Instant startTime = Instant.now();
+
+                while (thread.isAlive()) {
+                    try {
+                        Thread.sleep(50);
+
+                        if (Instant.now().minusSeconds(Constants.MAX_DB_CONNECTION_WAIT_TIME_IN_SECONDS).isAfter(startTime)) {
+                            thread.interrupt();
+                        }
+
+                        counter = ProgressBarUtil.imitateProgressCounter(counter);
+
+                        progressBar.update(BigDecimal.valueOf(counter.divide(BigDecimal.valueOf(100),
+                                RoundingMode.HALF_UP).doubleValue()));
+                    } catch (InterruptedException e) {
+                        thread.interrupt();
+                        return null;
+                    }
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                if (Boolean.FALSE.equals(fetchProductsThread.getSuccess())) {
+                    progressBar.remove();
+                    AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
+                            "Error while fetching products from database");
+                    return;
+                }
+
+                super.succeeded();
+
+                Platform.runLater(() -> progressBar.update(BigDecimal.ONE));
+
+                Timeline timeline = new Timeline(new KeyFrame(Duration.millis(200), e -> {
+                    progressBar.remove();
+                    categoryFlowPane.getChildren().clear();
+                    productsFlowPane.getChildren().clear();
+
+                    createCategorySectionButtons(categories);
+                    addProductPanes(products);
+                    hierarchyLabel.setText(hierarchy);
+                }));
+                timeline.setCycleCount(1);
+                timeline.play();
+            }
+
+            @Override
+            protected void failed() {
+                super.failed();
+                progressBar.remove();
+                AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
+                        "Error while fetching products from database");
+            }
+        };
+
+        new Thread(task).start();
+    }
+
+    private void createCategorySectionButtons(List<Category> categories) {
         if (parentCategory.isPresent()) {
             Button backButton = new Button("<");
             backButton.setOnAction(event -> initialize(parentCategory.flatMap(Category::getParentCategory)));
@@ -54,40 +139,16 @@ public class ProductSearchController {
             categoryButton.setOnAction(event -> initialize(Optional.of(category)));
             categoryFlowPane.getChildren().add(categoryButton);
         }
+    }
 
-        parentCategory.ifPresentOrElse(
-                category -> {
-                    try {
-                        hierarchyLabel.setText(categoryRepository.findCategoryHierarchy(category.getId()));
-                    } catch (DatabaseConnectionActiveException e) {
-                        AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
-                                Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
-                        handleDashboardRedirect();
-                    }
-                },
-                () -> hierarchyLabel.setText("")
-        );
-
-        productsFlowPane.getChildren().clear();
-
-        List<Product> products = new ArrayList<>();
-        try {
-            products = new ArrayList<>(productRepository.findAllByCategory(parentCategory));
-        } catch (DatabaseConnectionActiveException e) {
-            AlertDialog.showErrorDialog("Error", "Database connection is active. Please try again later.");
-            handleDashboardRedirect();
-        }
-
-        products.sort((p1, p2) -> p1.getName().compareToIgnoreCase(p2.getName()));
-
+    private void addProductPanes(List<Product> products) {
         products.forEach(product -> {
             Pane productPane = createProductPane(product);
             productsFlowPane.getChildren().add(productPane);
         });
-
     }
 
-    public GridPane createProductPane(Product product) {
+    private GridPane createProductPane(Product product) {
         GridPane pane = new GridPane();
 
         ImageView imageView = new ImageView(product.getImage());
@@ -103,9 +164,5 @@ public class ProductSearchController {
         GridPane.setRowIndex(label, 1);
 
         return pane;
-    }
-
-    public void handleDashboardRedirect() {
-        SceneLoader.loadScene("dashboard", "Dashboard");
     }
 }

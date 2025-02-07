@@ -63,7 +63,7 @@ public class FileUtil {
     }
 
     public static Image cropImageToSquare(Image image) {
-        double originalWidth = image.getWidth();
+        /*double originalWidth = image.getWidth();
         double originalHeight = image.getHeight();
 
         double squareSize = Math.min(originalWidth, originalHeight);
@@ -80,5 +80,7 @@ public class FileUtil {
                 (int) squareSize,
                 (int) squareSize
         );
+         */
+        return image;
     }
 }
