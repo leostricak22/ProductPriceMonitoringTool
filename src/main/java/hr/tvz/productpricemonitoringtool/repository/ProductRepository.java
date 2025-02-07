@@ -1,8 +1,10 @@
 package hr.tvz.productpricemonitoringtool.repository;
 
+import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.exception.RepositoryAccessException;
 import hr.tvz.productpricemonitoringtool.model.Category;
 import hr.tvz.productpricemonitoringtool.model.Product;
+import hr.tvz.productpricemonitoringtool.model.dbo.ProductDBO;
 import hr.tvz.productpricemonitoringtool.util.DatabaseUtil;
 import hr.tvz.productpricemonitoringtool.util.ObjectMapper;
 
@@ -21,39 +23,66 @@ public class ProductRepository extends AbstractRepository<Product> {
     private final CategoryRepository categoryRepository = new CategoryRepository();
 
     @Override
-    public Optional<Product> findById(Long id) throws RepositoryAccessException {
+    public Optional<Product> findById(Long id) throws RepositoryAccessException, DatabaseConnectionActiveException {
         return Optional.empty();
     }
 
     @Override
-    public Set<Product> findAll() throws RepositoryAccessException {
-        Set<Product> products = new HashSet<>();
+    public synchronized Set<Product> findAll() throws RepositoryAccessException, DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
         String query = """
         SELECT id, name, category_id FROM "product";
         """;
+
+        Set<ProductDBO> productsDBO = new HashSet<>();
 
         try (Connection connection = DatabaseUtil.connectToDatabase();
              Statement stmt = connection.createStatement()) {
             ResultSet resultSet = stmt.executeQuery(query);
             while (resultSet.next()) {
-                Product product = ObjectMapper.mapResultSetToProduct(resultSet);
-                products.add(product);
+                productsDBO.add(ObjectMapper.mapResultSetToProductDBO(resultSet));
             }
-            return products;
         } catch (SQLException | IOException e) {
             throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
         }
+
+        return ObjectMapper.mapProductDBOToProduct(productsDBO);
     }
 
-    public Set<Product> findAllByCategory(Optional<Category> category) throws RepositoryAccessException {
+    public synchronized Set<Product> findAllByCategory(Optional<Category> category) throws RepositoryAccessException, DatabaseConnectionActiveException {
         List<Category> allCategories = categoryRepository.findAllByParentCategoryRecursively(category);
 
-        Set<Product> products = new HashSet<>();
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
         String query = """
         SELECT p.id, p.name, p.category_id
         FROM "product" p
         WHERE p.category_id = ?;
         """;
+
+        Set<ProductDBO> productsDBO = new HashSet<>();
 
         try (Connection connection = DatabaseUtil.connectToDatabase();
              var stmt = connection.prepareStatement(query)) {
@@ -62,19 +91,21 @@ public class ProductRepository extends AbstractRepository<Product> {
                 stmt.setLong(1, c.getId());
                 ResultSet resultSet = stmt.executeQuery();
                 while (resultSet.next()) {
-                    Product product = ObjectMapper.mapResultSetToProduct(resultSet);
-                    products.add(product);
+                    productsDBO.add(ObjectMapper.mapResultSetToProductDBO(resultSet));
                 }
             }
-
-            return products;
         } catch (SQLException | IOException e) {
             throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
         }
+
+        return ObjectMapper.mapProductDBOToProduct(productsDBO);
     }
 
     @Override
-    public Set<Product> save(Set<Product> entities) throws RepositoryAccessException {
+    public Set<Product> save(Set<Product> entities) throws RepositoryAccessException, DatabaseConnectionActiveException {
         return Set.of();
     }
 }

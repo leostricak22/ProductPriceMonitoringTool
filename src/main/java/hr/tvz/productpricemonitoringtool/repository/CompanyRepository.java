@@ -1,7 +1,9 @@
 package hr.tvz.productpricemonitoringtool.repository;
 
+import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.exception.RepositoryAccessException;
 import hr.tvz.productpricemonitoringtool.model.Company;
+import hr.tvz.productpricemonitoringtool.model.dbo.CompanyDBO;
 import hr.tvz.productpricemonitoringtool.util.DatabaseUtil;
 import hr.tvz.productpricemonitoringtool.util.ObjectMapper;
 
@@ -19,29 +21,54 @@ public class CompanyRepository extends AbstractRepository<Company> {
     }
 
     @Override
-    public Set<Company> findAll() throws RepositoryAccessException {
-        Set<Company> companies = new HashSet<>();
+    public synchronized Set<Company> findAll() throws RepositoryAccessException, DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
         String query = """
         SELECT id, name, address_id FROM "company";
         """;
+
+        Set<CompanyDBO> companiesDBO = new HashSet<>();
 
         try (Connection connection = DatabaseUtil.connectToDatabase();
              Statement stmt = connection.createStatement()) {
             ResultSet resultSet = stmt.executeQuery(query);
 
             while (resultSet.next()) {
-                Company company = ObjectMapper.mapResultSetToCompany(resultSet);
-                companies.add(company);
+                companiesDBO.add(ObjectMapper.mapResultSetToCompanyDBO(resultSet));
             }
 
-            return companies;
         } catch (IOException | SQLException e) {
             throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
         }
+
+        return ObjectMapper.mapCompanyDBOToCompany(companiesDBO);
     }
 
-    public Set<Company> findAllByUserId(Long userId) throws RepositoryAccessException {
-        Set<Company> companies = new HashSet<>();
+    public synchronized Set<Company> findAllByUserId(Long userId) throws RepositoryAccessException, DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
         String query = """
         SELECT c.id, c.name, c.address_id
         FROM "company" c
@@ -49,29 +76,46 @@ public class CompanyRepository extends AbstractRepository<Company> {
         WHERE uc.user_id = ?;
         """;
 
+        Set<CompanyDBO> companiesDBO = new HashSet<>();
+
         try (Connection connection = DatabaseUtil.connectToDatabase();
              PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setLong(1, userId);
             ResultSet resultSet = stmt.executeQuery();
 
             while (resultSet.next()) {
-                Company company = ObjectMapper.mapResultSetToCompany(resultSet);
-                companies.add(company);
+                companiesDBO.add(ObjectMapper.mapResultSetToCompanyDBO(resultSet));
             }
 
-            return companies;
         } catch (IOException | SQLException e) {
             throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
         }
+
+        return ObjectMapper.mapCompanyDBOToCompany(companiesDBO);
     }
 
     @Override
-    public Set<Company> save(Set<Company> entities) throws RepositoryAccessException {
-        Set<Company> savedCompanies = new HashSet<>();
+    public synchronized Set<Company> save(Set<Company> entities) throws RepositoryAccessException, DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
         String query = """
         INSERT INTO "company" (name, address_id)
         VALUES (?, ?)
         """;
+
+        Set<Company> savedCompanies = new HashSet<>();
 
         try (Connection connection = DatabaseUtil.connectToDatabase();
              PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -92,14 +136,28 @@ public class CompanyRepository extends AbstractRepository<Company> {
                 }
             }
 
-            return savedCompanies;
         } catch (IOException | SQLException e) {
             throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
         }
+
+        return savedCompanies;
     }
 
-    public Set<Company> findAllByProductId(Long productId) throws RepositoryAccessException {
-        Set<Company> companies = new HashSet<>();
+    public synchronized Set<Company> findAllByProductId(Long productId) throws RepositoryAccessException, DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
         String query = """
         SELECT c.id, c.name, c.address_id
         FROM "company" c
@@ -107,23 +165,38 @@ public class CompanyRepository extends AbstractRepository<Company> {
         WHERE cp.product_id = ?;
         """;
 
+        Set<CompanyDBO> companiesDBO = new HashSet<>();
+
         try (Connection connection = DatabaseUtil.connectToDatabase();
              PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setLong(1, productId);
             ResultSet resultSet = stmt.executeQuery();
 
             while (resultSet.next()) {
-                Company company = ObjectMapper.mapResultSetToCompany(resultSet);
-                companies.add(company);
+                companiesDBO.add(ObjectMapper.mapResultSetToCompanyDBO(resultSet));
             }
-
-            return companies;
         } catch (IOException | SQLException e) {
             throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
         }
+
+        return ObjectMapper.mapCompanyDBOToCompany(companiesDBO);
     }
 
-    public void addUser(Long userId, Long companyId) throws RepositoryAccessException {
+    public synchronized void addUser(Long userId, Long companyId) throws RepositoryAccessException, DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
         String query = """
         INSERT INTO "user_company" (user_id, company_id)
         VALUES (?, ?)
@@ -137,6 +210,9 @@ public class CompanyRepository extends AbstractRepository<Company> {
             stmt.executeUpdate();
         } catch (IOException | SQLException e) {
             throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
         }
     }
 }

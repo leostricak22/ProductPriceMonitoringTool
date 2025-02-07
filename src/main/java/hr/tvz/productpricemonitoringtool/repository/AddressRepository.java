@@ -1,5 +1,6 @@
 package hr.tvz.productpricemonitoringtool.repository;
 
+import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.exception.RepositoryAccessException;
 import hr.tvz.productpricemonitoringtool.exception.RepositoryQueryException;
 import hr.tvz.productpricemonitoringtool.model.Address;
@@ -15,7 +16,18 @@ import java.util.Set;
 public class AddressRepository extends AbstractRepository<Address> {
 
     @Override
-    public Optional<Address> findById(Long id) throws RepositoryAccessException {
+    public synchronized Optional<Address> findById(Long id) throws RepositoryAccessException, DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
         String query = """
         SELECT id, street, city, postal_code, country, house_number
         FROM "address" WHERE ID = ?;
@@ -34,6 +46,9 @@ public class AddressRepository extends AbstractRepository<Address> {
             return Optional.empty();
         } catch (IOException | SQLException e) {
             throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
         }
     }
 
@@ -43,7 +58,17 @@ public class AddressRepository extends AbstractRepository<Address> {
     }
 
     @Override
-    public Set<Address> save(Set<Address> entities) throws RepositoryAccessException {
+    public synchronized Set<Address> save(Set<Address> entities) throws RepositoryAccessException, DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
         Set<Address> savedAddresses = new HashSet<>();
         String query = """
         INSERT INTO "address" (street, city, postal_code, country, house_number)
@@ -77,6 +102,9 @@ public class AddressRepository extends AbstractRepository<Address> {
             return savedAddresses;
         } catch (IOException | SQLException e) {
             throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
         }
     }
 }

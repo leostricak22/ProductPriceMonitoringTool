@@ -18,4 +18,8 @@ public class Constants {
     public static final Integer SCENE_MIN_HEIGHT = 600;
     public static final List<String> IMAGE_EXTENSIONS = List.of("*.jpg", "*.jpeg", "*.png");
     public static final String USER_PROFILE_PICTURES_PATH = "files/user/";
+
+    public static final String DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE =
+            "Database connection is active. Please try again later.";
+    public static final String ALERT_ERROR_TITLE = "Error occurred";
 }

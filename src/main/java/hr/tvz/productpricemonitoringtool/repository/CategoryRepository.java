@@ -1,7 +1,9 @@
 package hr.tvz.productpricemonitoringtool.repository;
 
+import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.exception.RepositoryAccessException;
 import hr.tvz.productpricemonitoringtool.model.Category;
+import hr.tvz.productpricemonitoringtool.model.dbo.CategoryDBO;
 import hr.tvz.productpricemonitoringtool.util.DatabaseUtil;
 import hr.tvz.productpricemonitoringtool.util.ObjectMapper;
 
@@ -15,29 +17,59 @@ import java.util.*;
 public class CategoryRepository extends AbstractRepository<Category> {
 
     @Override
-    public Optional<Category> findById(Long id) throws RepositoryAccessException {
+    public synchronized Optional<Category> findById(Long id) throws RepositoryAccessException, DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
         String query = """
         SELECT id, name, parent_category_id FROM "category" WHERE id = ?;
         """;
 
+        Optional<CategoryDBO> categoryDBO = Optional.empty();
         try (Connection connection = DatabaseUtil.connectToDatabase();
              var stmt = connection.prepareStatement(query)) {
             stmt.setLong(1, id);
             ResultSet resultSet = stmt.executeQuery();
 
             if (resultSet.next()) {
-                return Optional.of(ObjectMapper.mapResultSetToCategory(resultSet));
+                categoryDBO = Optional.of(ObjectMapper.mapResultSetToCategoryDBO(resultSet));
             }
-
-            return Optional.empty();
         } catch (IOException | SQLException e) {
             throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
         }
+
+        if (categoryDBO.isEmpty()) {
+            return Optional.empty();
+        }
+
+        return Optional.of(ObjectMapper.mapCategoryDBOToCategory(categoryDBO.get()));
     }
 
     @Override
-    public Set<Category> findAll() throws RepositoryAccessException {
-        Set<Category> categories = new HashSet<>();
+    public synchronized Set<Category> findAll() throws RepositoryAccessException, DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
+        Set<CategoryDBO> categoriesDBO = new HashSet<>();
 
         String query = """
         SELECT id, name, parent_category_id FROM "category";
@@ -48,14 +80,16 @@ public class CategoryRepository extends AbstractRepository<Category> {
             ResultSet resultSet = stmt.executeQuery(query);
 
             while (resultSet.next()) {
-                Category category = ObjectMapper.mapResultSetToCategory(resultSet);
-                categories.add(category);
+                categoriesDBO.add(ObjectMapper.mapResultSetToCategoryDBO(resultSet));
             }
-
-            return categories;
         } catch (IOException | SQLException e) {
             throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
         }
+
+        return ObjectMapper.mapCategoryDBOToCategory(categoriesDBO);
     }
 
     @Override
@@ -63,7 +97,7 @@ public class CategoryRepository extends AbstractRepository<Category> {
         return Set.of();
     }
 
-    public List<Category> findAllByParentCategory(Optional<Category> category) throws RepositoryAccessException {
+    public List<Category> findAllByParentCategory(Optional<Category> category) throws RepositoryAccessException, DatabaseConnectionActiveException {
         List<Category> categories = new ArrayList<>(findAll());
 
         return category.map(value -> categories.stream()
@@ -74,24 +108,32 @@ public class CategoryRepository extends AbstractRepository<Category> {
                 .toList());
     }
 
-    public List<Category> findAllByParentCategoryRecursively(Optional<Category> category) throws RepositoryAccessException {
-        List<Category> subCategories = new ArrayList<>(findAllByParentCategory(category));
-        List<Category> allCategories = new ArrayList<>(subCategories);
-        category.ifPresent(allCategories::add);
+    public List<Category> findAllByParentCategoryRecursively(Optional<Category> category) throws RepositoryAccessException, DatabaseConnectionActiveException {
+        List<Category> categories = new ArrayList<>(findAll());
 
-        while (!subCategories.isEmpty()) {
-            List<Category> temp = new ArrayList<>();
-            for (Category subCategory : subCategories) {
-                temp.addAll(findAllByParentCategory(Optional.of(subCategory)));
-            }
-            subCategories = temp;
-            allCategories.addAll(subCategories);
+        if (category.isEmpty()) {
+            return categories;
         }
 
-        return allCategories;
+        List<Category> allSubCategories = new ArrayList<>();
+        allSubCategories.add(category.get());
+        collectSubcategories(category.get(), categories, allSubCategories);
+        return allSubCategories;
     }
 
-    public String findCategoryHierarchy(Long categoryId) throws RepositoryAccessException {
+    private void collectSubcategories(Category parent, List<Category> categories, List<Category> allSubCategories) {
+        List<Category> subCategories = categories.stream()
+                .filter(c -> c.getParentCategory().isPresent() && c.getParentCategory().get().getId().equals(parent.getId()))
+                .toList();
+
+        allSubCategories.addAll(subCategories);
+
+        for (Category subCategory : subCategories) {
+            collectSubcategories(subCategory, categories, allSubCategories);
+        }
+    }
+
+    public String findCategoryHierarchy(Long categoryId) throws RepositoryAccessException, DatabaseConnectionActiveException {
         Set<Category> categories = findAll();
 
         Optional<Category> category = categories.stream()

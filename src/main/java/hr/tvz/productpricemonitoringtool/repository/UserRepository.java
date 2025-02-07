@@ -1,5 +1,6 @@
 package hr.tvz.productpricemonitoringtool.repository;
 
+import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.exception.RepositoryAccessException;
 import hr.tvz.productpricemonitoringtool.model.User;
 import hr.tvz.productpricemonitoringtool.util.DatabaseUtil;
@@ -20,7 +21,7 @@ public class UserRepository extends AbstractRepository<User> {
     }
 
     @Override
-    public Set<User> findAll() throws RepositoryAccessException {
+    public Set<User> findAll() throws RepositoryAccessException, DatabaseConnectionActiveException {
         Set<User> users = new HashSet<>();
         String query = """
         SELECT id, name, email, password, role FROM "user";
@@ -78,7 +79,7 @@ public class UserRepository extends AbstractRepository<User> {
         }
     }
 
-    public Optional<User> findByEmailAndPassword(String email, String password) {
+    public Optional<User> findByEmailAndPassword(String email, String password) throws DatabaseConnectionActiveException {
         String query = """
         SELECT id, name, email, password, role FROM "user" WHERE email = ? AND password = ?;
         """;

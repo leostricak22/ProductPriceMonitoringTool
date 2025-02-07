@@ -1,8 +1,10 @@
 package hr.tvz.productpricemonitoringtool.controller;
 
+import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.model.User;
 import hr.tvz.productpricemonitoringtool.repository.UserRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
+import hr.tvz.productpricemonitoringtool.util.Constants;
 import hr.tvz.productpricemonitoringtool.util.SceneLoader;
 import hr.tvz.productpricemonitoringtool.util.Session;
 import javafx.fxml.FXML;
@@ -24,8 +26,17 @@ public class LoginController  {
     public void handleLogin() {
         String email = emailTextField.getText();
         String password = passwordPasswordField.getText();
+        Optional<User> user;
 
-        Optional<User> user = userRepository.findByEmailAndPassword(email, password);
+        try {
+            user = userRepository.findByEmailAndPassword(email, password);
+        } catch (DatabaseConnectionActiveException e) {
+            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
+                    Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
+            logger.error("Database connection is active. Please try again later.");
+            return;
+        }
+
         if (user.isEmpty()) {
             AlertDialog.showErrorDialog("Error", "Invalid email or password");
             logger.error("Invalid email or password");

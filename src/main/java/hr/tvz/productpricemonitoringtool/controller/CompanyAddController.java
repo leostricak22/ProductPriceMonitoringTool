@@ -1,12 +1,14 @@
 package hr.tvz.productpricemonitoringtool.controller;
 
 import hr.tvz.productpricemonitoringtool.exception.AuthenticationException;
+import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.model.Address;
 import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.User;
 import hr.tvz.productpricemonitoringtool.repository.AddressRepository;
 import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
+import hr.tvz.productpricemonitoringtool.util.Constants;
 import hr.tvz.productpricemonitoringtool.util.SceneLoader;
 import hr.tvz.productpricemonitoringtool.util.Session;
 import javafx.fxml.FXML;
@@ -52,16 +54,46 @@ public class CompanyAddController {
                 .country(country)
                 .build();
 
-        address = addressRepository.save(address);
+        try {
+            address = addressRepository.save(address);
+        } catch (DatabaseConnectionActiveException e) {
+            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
+                    Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
+            logger.error(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE, e.getMessage());
+            return;
+        }
 
         Company company = new Company.Builder(0L, name)
                 .address(address)
                 .build();
 
-        companyRepository.save(company);
-        companyRepository.addUser(user.getId(), company.getId());
+        try {
+            companyRepository.save(company);
+        } catch (DatabaseConnectionActiveException e) {
+            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
+                    Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
+            logger.error(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE, e.getMessage());
+            return;
+        }
 
-        user.setCompanies(companyRepository.findAllByUserId(user.getId()));
+        try {
+            companyRepository.addUser(user.getId(), company.getId());
+        } catch (DatabaseConnectionActiveException e) {
+            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
+                    Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
+            logger.error(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE, e.getMessage());
+            return;
+        }
+
+        try {
+            user.setCompanies(companyRepository.findAllByUserId(user.getId()));
+        } catch (DatabaseConnectionActiveException e) {
+            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
+                    Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
+            logger.error(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE, e.getMessage());
+            return;
+        }
+
         Session.setLoggedInUser(user);
 
         AlertDialog.showInformationDialog("Success", "Company created successfully");

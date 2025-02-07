@@ -12,6 +12,17 @@
     -fx-text-fill: white;
 }
 
+.secondary-button {
+    -fx-font-size: 16;
+    -fx-background-color: #7284b3;
+    -fx-text-fill: #fff;
+    -fx-font-weight: bold;
+}
+
+.secondary-button:hover {
+    -fx-background-color: #526997;
+}
+
 .button:selected, .button:pressed, .button:focused {
     -fx-background-color: #44567A;
     -fx-text-fill: white;
