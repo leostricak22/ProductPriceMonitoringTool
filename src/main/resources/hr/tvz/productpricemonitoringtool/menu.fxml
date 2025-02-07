@@ -35,7 +35,7 @@
         <MenuButton fx:id="productsMenuButton" popupSide="RIGHT" prefWidth="100" text="Products">
             <items>
                 <MenuItem onAction="#handleProductSearchRedirect" text="Search" />
-                <MenuItem text="Add" />
+                <MenuItem onAction="#handleProductAddRedirect" text="Add" />
             </items>
         </MenuButton>
       <VBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" prefHeight="362.0" prefWidth="350.0" VBox.vgrow="ALWAYS">

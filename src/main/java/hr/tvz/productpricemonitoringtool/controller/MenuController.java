@@ -39,4 +39,10 @@ public class MenuController {
                 "Product Search",
                 Optional.empty());
     }
+
+    public void handleProductAddRedirect() {
+        SceneLoader.loadScene(
+                "product_add",
+                "Product Add");
+    }
 }

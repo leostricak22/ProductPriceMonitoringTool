@@ -4,6 +4,7 @@ module hr.tvz.productpricemonitoringtool {
     requires java.sql;
     requires org.slf4j;
     requires java.naming;
+    requires jdk.compiler;
 
 
     opens hr.tvz.productpricemonitoringtool to javafx.fxml;

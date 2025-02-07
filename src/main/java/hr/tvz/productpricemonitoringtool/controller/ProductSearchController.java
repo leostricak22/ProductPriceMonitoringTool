@@ -109,7 +109,7 @@ public class ProductSearchController {
 
                     createCategorySectionButtons(categories);
                     addProductPanes(products);
-                    hierarchyLabel.setText(hierarchy);
+                    hierarchyLabel.setText(fetchProductsThread.getHierarchy());
                 }));
                 timeline.setCycleCount(1);
                 timeline.play();

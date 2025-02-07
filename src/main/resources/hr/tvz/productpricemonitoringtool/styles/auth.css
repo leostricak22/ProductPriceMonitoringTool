@@ -9,16 +9,6 @@
     -fx-font-weight: bold;
 }
 
-.sectionHeading {
-    -fx-font-family: "Lilita One";
-    -fx-font-size: 36;
-}
-
-.formLabel {
-    -fx-font-family: "Gill Sans", sans-serif;
-    -fx-font-size: 16;
-}
-
 .noAccountLabel {
     -fx-font-family: "Gill Sans", sans-serif;
     -fx-font-size: 14;

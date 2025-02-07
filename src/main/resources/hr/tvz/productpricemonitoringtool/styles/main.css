@@ -42,3 +42,18 @@
     -fx-max-height: 50;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 10, 0.2, 0, 2);
 }
+
+.sectionHeading {
+    -fx-font-family: "Lilita One";
+    -fx-font-size: 36;
+}
+
+.formLabel {
+    -fx-font-family: "Gill Sans", sans-serif;
+    -fx-font-size: 16;
+}
+
+.imageContainer {
+    -fx-border-color: black;
+    -fx-border-width: 1px;
+}
