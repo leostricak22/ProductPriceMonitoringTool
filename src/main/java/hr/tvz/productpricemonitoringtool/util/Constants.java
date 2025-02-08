@@ -19,8 +19,11 @@ public class Constants {
     public static final List<String> IMAGE_EXTENSIONS = List.of("*.jpg", "*.jpeg", "*.png");
     public static final String USER_PROFILE_PICTURES_PATH = "files/user/";
     public static final Long MAX_DB_CONNECTION_WAIT_TIME_IN_SECONDS = 10L;
+    public static final String CATEGORY_HIERARCHY_PREFIX = "Category: ";
+    public static final String SCENE_EXTENSION = ".fxml";
 
     public static final String ALERT_ERROR_TITLE = "Error occurred";
     public static final String DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE =
             "Database connection is active. Please try again later.";
+    public static final String ERROR_LOADING_SCENE_MESSAGE = "Error loading scene: ";
 }
