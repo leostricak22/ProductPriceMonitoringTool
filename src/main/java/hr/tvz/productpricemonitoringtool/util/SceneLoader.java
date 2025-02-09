@@ -34,25 +34,25 @@ public class SceneLoader {
         }
     }
 
-    public static void loadPopupScene(String fxmlFileName, String title) {
+    public static FXMLLoader loadPopupScene(String fxmlFileName, String title) {
+        FXMLLoader fxmlLoader = null;
         try {
-            FXMLLoader fxmlLoader = FXMLLoaderHelper.fxmlFilePath(fxmlFileName + Constants.SCENE_EXTENSION);
-
+            fxmlLoader = FXMLLoaderHelper.fxmlFilePath(fxmlFileName + Constants.SCENE_EXTENSION);
             Scene scene = new Scene(fxmlLoader.load(), 700, 500);
-
             Stage popupStage = new Stage();
 
             popupStage.setTitle(title);
             popupStage.setScene(scene);
-
             popupStage.initModality(Modality.WINDOW_MODAL);
             popupStage.initOwner(ProductPriceMonitoringToolApplication.getMainStage());
 
             popupStage.showAndWait();
         } catch (IOException e) {
-            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE, Constants.ERROR_LOADING_SCENE_MESSAGE + fxmlFileName);
+            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
+                    Constants.ERROR_LOADING_SCENE_MESSAGE + fxmlFileName);
             logger.error(Constants.ERROR_LOADING_SCENE_MESSAGE + "{}", fxmlFileName, e);
         }
+        return fxmlLoader;
     }
 
     public static void loadProductSearchScene(String fxmlFileName, String title, Optional<Category> category) {

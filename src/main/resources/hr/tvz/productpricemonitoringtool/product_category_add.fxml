@@ -35,7 +35,7 @@
             <Insets bottom="15.0" left="15.0" right="15.0" top="15.0" />
          </GridPane.margin>
       </TreeView>
-      <Button mnemonicParsing="false" prefHeight="50.0" prefWidth="135.0" text="Save" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
+      <Button mnemonicParsing="false" onAction="#handleSave" prefHeight="50.0" prefWidth="135.0" text="Save" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.valignment="BOTTOM">
          <GridPane.margin>
             <Insets bottom="15.0" left="15.0" right="15.0" />
          </GridPane.margin>
