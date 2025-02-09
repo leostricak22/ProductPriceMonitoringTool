@@ -76,6 +76,6 @@ public class Product extends Entity {
         }
 
         return FileUtil.cropImageToSquare(
-                new Image("file:files/product/no-image.png"));
+                new Image(Constants.NO_IMAGE_URL));
     }
 }

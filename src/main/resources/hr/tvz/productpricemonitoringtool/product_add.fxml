@@ -7,10 +7,10 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
 <GridPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1400.0" style="-fx-background-color: white;" stylesheets="@styles/main.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.tvz.productpricemonitoringtool.controller.ProductAddController">
@@ -70,9 +70,9 @@
                         <Button mnemonicParsing="false" onAction="#handleSelectCategory" prefHeight="35.0" prefWidth="308.0" text="Select a category" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                     </children>
                 </GridPane>
-                <AnchorPane styleClass="imageContainer" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                <StackPane maxHeight="300.0" minHeight="300.0" prefHeight="300.0" styleClass="imageContainer" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
                     <children>
-                        <ImageView fitHeight="300.0" fitWidth="300.0" onMouseClicked="#handleImagePick" pickOnBounds="true" preserveRatio="true">
+                        <ImageView fx:id="productImageView" fitHeight="300.0" fitWidth="300.0" onMouseClicked="#handleImagePick" pickOnBounds="true" preserveRatio="true" styleClass="nesto">
                             <image>
                                 <Image url="@../../../../../../files/product/no-image.png" />
                             </image>
@@ -80,8 +80,15 @@
                                 <Cursor fx:constant="HAND" />
                             </cursor>
                         </ImageView>
+                  <Label fx:id="removePickedImageLabel" layoutX="284.0" layoutY="6.0" onMouseClicked="#handleRemovePickedImage" styleClass="removeLabel" text="X" visible="false" StackPane.alignment="TOP_RIGHT">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <StackPane.margin>
+                        <Insets right="5.0" top="5.0" />
+                     </StackPane.margin></Label>
                     </children>
-                </AnchorPane>
+                </StackPane>
                 <Label styleClass="sectionHeading" text="Add new product" GridPane.columnIndex="1" GridPane.halignment="CENTER" />
             <GridPane prefHeight="352.0" prefWidth="335.0" GridPane.columnIndex="2" GridPane.rowIndex="1" GridPane.rowSpan="2">
                <columnConstraints>

@@ -94,6 +94,7 @@ public class CategoryRepository extends AbstractRepository<Category> {
 
     @Override
     public Set<Category> save(Set<Category> entities) throws RepositoryAccessException {
+
         return Set.of();
     }
 

@@ -3,34 +3,59 @@ package hr.tvz.productpricemonitoringtool.controller;
 import hr.tvz.productpricemonitoringtool.model.Category;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
 import hr.tvz.productpricemonitoringtool.util.Constants;
+import hr.tvz.productpricemonitoringtool.util.FileUtil;
 import hr.tvz.productpricemonitoringtool.util.SceneLoader;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
 public class ProductAddController {
 
-    private static final Logger logger = LoggerFactory.getLogger(ProductAddController.class);
     @FXML public GridPane mainPane;
     @FXML public TextField nameTextField;
     @FXML public Label categoryHierarchyLabel;
+    @FXML public Label removePickedImageLabel;
+    @FXML public ImageView productImageView;
 
     private Optional<Category> category = Optional.empty();
+    private Image image;
+    private String imageUrl;
+    boolean isImageChanged = false;
+
+    private static final Logger logger = LoggerFactory.getLogger(ProductAddController.class);
 
     public void initialize() {
         // i will do this later
     }
 
     public void handleImagePick() {
-        // i will do this later
+        Optional<File> selectedFileOptional = FileUtil.pickFile(List.of("*.jpg", "*.jpeg", "*.png"));
+        if (selectedFileOptional.isEmpty())
+            return;
+
+        imageUrl = selectedFileOptional.get().toURI().toString();
+        image = FileUtil.cropImageToSquare(new Image(selectedFileOptional.get().toURI().toString()));
+        productImageView.setImage(image);
+        isImageChanged = true;
+        removePickedImageLabel.setVisible(true);
+    }
+
+    public void handleRemovePickedImage() {
+        productImageView.setImage(new Image(Constants.NO_IMAGE_URL));
+        isImageChanged = false;
+        removePickedImageLabel.setVisible(false);
     }
 
     public void handleAddProduct() {
