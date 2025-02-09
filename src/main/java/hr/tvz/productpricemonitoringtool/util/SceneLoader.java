@@ -34,10 +34,9 @@ public class SceneLoader {
         }
     }
 
-    public static FXMLLoader loadPopupScene(String fxmlFileName, String title) {
-        FXMLLoader fxmlLoader = null;
+    public static Optional<FXMLLoader> loadPopupScene(String fxmlFileName, String title) {
         try {
-            fxmlLoader = FXMLLoaderHelper.fxmlFilePath(fxmlFileName + Constants.SCENE_EXTENSION);
+            FXMLLoader fxmlLoader = FXMLLoaderHelper.fxmlFilePath(fxmlFileName + Constants.SCENE_EXTENSION);
             Scene scene = new Scene(fxmlLoader.load(), 700, 500);
             Stage popupStage = new Stage();
 
@@ -47,12 +46,14 @@ public class SceneLoader {
             popupStage.initOwner(ProductPriceMonitoringToolApplication.getMainStage());
 
             popupStage.showAndWait();
+
+            return Optional.of(fxmlLoader);
         } catch (IOException e) {
             AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
                     Constants.ERROR_LOADING_SCENE_MESSAGE + fxmlFileName);
             logger.error(Constants.ERROR_LOADING_SCENE_MESSAGE + "{}", fxmlFileName, e);
         }
-        return fxmlLoader;
+        return Optional.empty();
     }
 
     public static void loadProductSearchScene(String fxmlFileName, String title, Optional<Category> category) {

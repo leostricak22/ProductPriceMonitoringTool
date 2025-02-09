@@ -15,6 +15,8 @@ import javafx.stage.Stage;
 
 import java.util.Optional;
 
+import static java.util.Objects.isNull;
+
 public class ProductCategoryAddController {
 
     @FXML public TreeView<Category> categoryTreeView;
@@ -88,13 +90,21 @@ public class ProductCategoryAddController {
         resetCategoryHierarchyLabel.setVisible(false);
         categoryHierarchy = "";
         categoryHierarchyLabel.setText(Constants.CATEGORY_HIERARCHY_PREFIX);
+        categoryTreeView.getSelectionModel().clearSelection();
     }
 
     public void handleSave() {
         String newCategoryName = newCategoryNameTextField.getText();
+        TreeItem<Category> selectedCategoryTreeItem = categoryTreeView.getSelectionModel().getSelectedItem();
+        Optional<Category> parentCategory = Optional.empty();
+
+        if (!isNull(selectedCategoryTreeItem) && !isNull(selectedCategoryTreeItem.getValue())) {
+            parentCategory = Optional.of(selectedCategoryTreeItem.getValue());
+        }
+
         savedCategory = new Category.Builder(0L)
                 .name(newCategoryName)
-                .parentCategory(Optional.empty())
+                .parentCategory(parentCategory)
                 .build();
 
         Stage stage = (Stage) newCategoryNameTextField.getScene().getWindow();
@@ -103,5 +113,9 @@ public class ProductCategoryAddController {
 
     public Category getSavedCategory() {
         return savedCategory;
+    }
+
+    public String getHierarchyFromLabel() {
+        return categoryHierarchyLabel.getText();
     }
 }
