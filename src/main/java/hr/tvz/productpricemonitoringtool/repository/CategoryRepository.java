@@ -8,10 +8,7 @@ import hr.tvz.productpricemonitoringtool.util.DatabaseUtil;
 import hr.tvz.productpricemonitoringtool.util.ObjectMapper;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.*;
 
 public class CategoryRepository extends AbstractRepository<Category> {
@@ -93,9 +90,45 @@ public class CategoryRepository extends AbstractRepository<Category> {
     }
 
     @Override
-    public Set<Category> save(Set<Category> entities) throws RepositoryAccessException {
+    public synchronized Set<Category> save(Set<Category> entities) throws RepositoryAccessException, DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
 
-        return Set.of();
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
+        String query = """
+        INSERT INTO "category" (name, parent_category_id) VALUES (?, ?)
+        """;
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+             PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            for (Category category : entities) {
+                stmt.setString(1, category.getName());
+                stmt.setObject(2, category.getParentCategory().map(Category::getId).orElse(null));
+                stmt.addBatch();
+            }
+
+            stmt.executeBatch();
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            for (Category category : entities) {
+                if (generatedKeys.next()) {
+                    category.setId(generatedKeys.getLong(1));
+                }
+            }
+        } catch (IOException | SQLException e) {
+            throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
+        }
+
+        return entities;
     }
 
     public List<Category> findAllByParentCategory(Optional<Category> category) throws RepositoryAccessException, DatabaseConnectionActiveException {

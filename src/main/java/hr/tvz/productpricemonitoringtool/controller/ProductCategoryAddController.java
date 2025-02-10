@@ -96,16 +96,32 @@ public class ProductCategoryAddController {
     public void handleSave() {
         String newCategoryName = newCategoryNameTextField.getText();
         TreeItem<Category> selectedCategoryTreeItem = categoryTreeView.getSelectionModel().getSelectedItem();
-        Optional<Category> parentCategory = Optional.empty();
 
-        if (!isNull(selectedCategoryTreeItem) && !isNull(selectedCategoryTreeItem.getValue())) {
-            parentCategory = Optional.of(selectedCategoryTreeItem.getValue());
+        if (isNull(selectedCategoryTreeItem) && newCategoryName.isEmpty()) {
+            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE, "Category must be selected/created");
+            return;
         }
 
-        savedCategory = new Category.Builder(0L)
-                .name(newCategoryName)
-                .parentCategory(parentCategory)
-                .build();
+        Optional<Category> selectedCategory;
+        if (isNull(selectedCategoryTreeItem) || isNull(selectedCategoryTreeItem.getValue())) {
+            selectedCategory = Optional.empty();
+        } else {
+            selectedCategory = Optional.of(selectedCategoryTreeItem.getValue());
+        }
+
+        if(!newCategoryName.isEmpty()) {
+            savedCategory = new Category.Builder(null)
+                    .name(newCategoryName)
+                    .parentCategory(selectedCategory)
+                    .build();
+        } else {
+            if (selectedCategory.isEmpty()) {
+                AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE, "Category must be selected/created");
+                return;
+            }
+
+            savedCategory = selectedCategory.get();
+        }
 
         Stage stage = (Stage) newCategoryNameTextField.getScene().getWindow();
         stage.close();

@@ -1,6 +1,10 @@
 package hr.tvz.productpricemonitoringtool.controller;
 
+import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.model.Category;
+import hr.tvz.productpricemonitoringtool.model.Product;
+import hr.tvz.productpricemonitoringtool.repository.CategoryRepository;
+import hr.tvz.productpricemonitoringtool.repository.ProductRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
 import hr.tvz.productpricemonitoringtool.util.Constants;
 import hr.tvz.productpricemonitoringtool.util.FileUtil;
@@ -29,15 +33,18 @@ public class ProductAddController {
     @FXML public Label removePickedImageLabel;
     @FXML public ImageView productImageView;
 
-    private Optional<Category> category = Optional.empty();
+    private Category category;
     private Image image;
     private String imageUrl;
     boolean isImageChanged = false;
 
-    private static final Logger logger = LoggerFactory.getLogger(ProductAddController.class);
+    private final Logger logger = LoggerFactory.getLogger(ProductAddController.class);
+    private final CategoryRepository categoryRepository = new CategoryRepository();
+    private final ProductRepository productRepository = new ProductRepository();
 
     public void initialize() {
-        // i will do this later
+        productImageView.setImage(new Image(Constants.NO_IMAGE_URL));
+        removePickedImageLabel.setVisible(false);
     }
 
     public void handleImagePick() {
@@ -60,14 +67,39 @@ public class ProductAddController {
 
     public void handleAddProduct() {
         String error = validateFormData();
+        if (!error.isEmpty()) {
+            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE, error);
+            return;
+        }
 
-        logger.error(error);
+        try {
+            Category newCategory = this.category;
+            if (isNull(newCategory.getId())) {
+                newCategory = categoryRepository.save(newCategory);
+            }
+
+            Product product = new Product.Builder(null)
+                    .name(nameTextField.getText())
+                    .category(newCategory)
+                    .build();
+
+            if (isImageChanged) {
+                FileUtil.saveImage(imageUrl, "files/product/" + product.getId());
+            }
+
+            productRepository.save(product);
+
+        } catch (DatabaseConnectionActiveException e) {
+            logger.error("Error saving category", e);
+            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
+                    Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
+        }
     }
 
     private String validateFormData() {
         if (nameTextField.getText().trim().isEmpty())
             return "Name field must be filled!";
-        if (category.isEmpty())
+        if (isNull(category))
             return "Category must be selected/created";
 
         return "";
@@ -92,7 +124,7 @@ public class ProductAddController {
         }
 
         if (!isNull(newCategory)) {
-            this.category = Optional.of(newCategory);
+            this.category = newCategory;
         }
     }
 }
