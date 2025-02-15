@@ -9,10 +9,7 @@ import hr.tvz.productpricemonitoringtool.util.DatabaseUtil;
 import hr.tvz.productpricemonitoringtool.util.ObjectMapper;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +18,7 @@ import java.util.Set;
 public class ProductRepository extends AbstractRepository<Product> {
 
     private final CategoryRepository categoryRepository = new CategoryRepository();
+    private final CompanyProductRepository companyProductRepository = new CompanyProductRepository();
 
     @Override
     public Optional<Product> findById(Long id) throws RepositoryAccessException, DatabaseConnectionActiveException {
@@ -105,7 +103,48 @@ public class ProductRepository extends AbstractRepository<Product> {
     }
 
     @Override
-    public Set<Product> save(Set<Product> entities) throws RepositoryAccessException, DatabaseConnectionActiveException {
-        return Set.of();
+    public synchronized Set<Product> save(Set<Product> entities) throws RepositoryAccessException, DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
+        String query = """
+        INSERT INTO "product" (name, category_id) VALUES (?, ?);
+        """;
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+             PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+            for (Product p : entities) {
+                stmt.setString(1, p.getName());
+                stmt.setLong(2, p.getCategory().getId());
+
+                stmt.executeUpdate();
+                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        p.setId(generatedKeys.getLong(1));
+                    } else {
+                        throw new RepositoryAccessException("Creating product failed, no ID obtained.");
+                    }
+                }
+            }
+        } catch (SQLException | IOException e) {
+            throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
+        }
+
+        for (Product product : entities) {
+            companyProductRepository.saveProductToCompanies(product);
+        }
+
+        return entities;
     }
 }

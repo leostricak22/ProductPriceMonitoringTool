@@ -28,4 +28,6 @@ public class Constants {
     public static final String DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE =
             "Database connection is active. Please try again later.";
     public static final String ERROR_LOADING_SCENE_MESSAGE = "Error loading scene: ";
+
+    public static final String POSITIVE_BIG_DECIMAL_REGEX = "^[1-9]\\d*(\\.\\d+)?$";
 }

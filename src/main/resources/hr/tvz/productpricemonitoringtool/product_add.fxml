@@ -40,11 +40,12 @@
             <rowConstraints>
                 <RowConstraints maxHeight="80.0" minHeight="80.0" prefHeight="80.0" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="150.0" minHeight="150.0" prefHeight="150.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="100.0" minHeight="100.0" prefHeight="100.0" valignment="TOP" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="300.0" minHeight="300.0" prefHeight="300.0" valignment="TOP" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="1.7976931348623157E308" minHeight="40.0" prefHeight="40.0" valignment="BOTTOM" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Button mnemonicParsing="false" onAction="#handleAddProduct" prefHeight="35.0" prefWidth="734.0" text="Add product" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                <Button mnemonicParsing="false" onAction="#handleAddProduct" prefHeight="35.0" prefWidth="734.0" text="Add product" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                 <GridPane GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <columnConstraints>
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -64,13 +65,13 @@
                             </rowConstraints>
                             <children>
                                 <TextField fx:id="nameTextField" promptText="Name" GridPane.rowIndex="1" />
-                                <Label styleClass="formLabel" text="Name:" />
+                                <Label styleClass="formLabel" text="Name" />
                             </children>
                         </GridPane>
                         <Button mnemonicParsing="false" onAction="#handleSelectCategory" prefHeight="35.0" prefWidth="308.0" text="Select a category" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
                     </children>
                 </GridPane>
-                <StackPane maxHeight="300.0" minHeight="300.0" prefHeight="300.0" styleClass="imageContainer" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                <StackPane maxHeight="300.0" minHeight="300.0" prefHeight="300.0" styleClass="imageContainer" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP">
                     <children>
                         <ImageView fx:id="productImageView" fitHeight="300.0" fitWidth="300.0" onMouseClicked="#handleImagePick" pickOnBounds="true" preserveRatio="true" styleClass="nesto">
                             <image>
@@ -116,6 +117,19 @@
                         <Font size="10.0" />
                      </font>
                   </Label>
+               </children>
+            </GridPane>
+            <GridPane GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints maxHeight="30.0" minHeight="30.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <TextField fx:id="priceTextField" promptText="Price" GridPane.rowIndex="1" />
+                  <Label styleClass="formLabel" text="Price" />
                </children>
             </GridPane>
             </children>

@@ -10,12 +10,12 @@ import java.util.Set;
 public class Product extends Entity {
 
     private Category category;
-    private Set<Company> companies;
+    private Set<CompanyProduct> companyProducts;
 
     public Product(Builder builder) {
         super(builder.id, builder.name);
         this.category = builder.category;
-        this.companies = builder.companies;
+        this.companyProducts = builder.companyProducts;
     }
 
     public Category getCategory() {
@@ -26,19 +26,19 @@ public class Product extends Entity {
         this.category = category;
     }
 
-    public Set<Company> getCompanies() {
-        return companies;
+    public Set<CompanyProduct> getCompanyProducts() {
+        return companyProducts;
     }
 
-    public void setCompanies(Set<Company> companies) {
-        this.companies = companies;
+    public void setCompanyProducts(Set<CompanyProduct> companyProducts) {
+        this.companyProducts = companyProducts;
     }
 
     public static class Builder {
         private final Long id;
         private String name;
         private Category category;
-        private Set<Company> companies;
+        private Set<CompanyProduct> companyProducts;
 
         public Builder(Long id) {
             this.id = id;
@@ -54,8 +54,8 @@ public class Product extends Entity {
             return this;
         }
 
-        public Builder companies(Set<Company> companies) {
-            this.companies = companies;
+        public Builder companyProducts(Set<CompanyProduct> companyProducts) {
+            this.companyProducts = companyProducts;
             return this;
         }
 

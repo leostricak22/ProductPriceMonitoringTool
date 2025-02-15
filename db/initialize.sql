@@ -62,6 +62,8 @@ CREATE TABLE "company_product" (
     id LONG GENERATED ALWAYS AS IDENTITY,
     company_id LONG NOT NULL,
     product_id LONG NOT NULL,
+    price DECIMAL(10, 2) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
     FOREIGN KEY (company_id) REFERENCES "company"(id),
     FOREIGN KEY (product_id) REFERENCES "product"(id)
@@ -103,11 +105,11 @@ INSERT INTO "product" (name, category_id) VALUES ('Mac Mini', 5);
 INSERT INTO "product" (name, category_id) VALUES ('LG 27UL850-W', 6);
 INSERT INTO "product" (name, category_id) VALUES ('Dell U2718Q', 6);
 
-INSERT INTO "company_product" (company_id, product_id) VALUES (1, 1);
-INSERT INTO "company_product" (company_id, product_id) VALUES (2, 1);
-INSERT INTO "company_product" (company_id, product_id) VALUES (1, 2);
-INSERT INTO "company_product" (company_id, product_id) VALUES (2, 2);
-INSERT INTO "company_product" (company_id, product_id) VALUES (1, 3);
-INSERT INTO "company_product" (company_id, product_id) VALUES (1, 4);
-INSERT INTO "company_product" (company_id, product_id) VALUES (1, 5);
-INSERT INTO "company_product" (company_id, product_id) VALUES (1, 6);
+INSERT INTO "company_product" (company_id, product_id, price) VALUES (1, 1, 2000.00);
+INSERT INTO "company_product" (company_id, product_id, price) VALUES (2, 1, 2100.00);
+INSERT INTO "company_product" (company_id, product_id, price) VALUES (1, 2, 1000.00);
+INSERT INTO "company_product" (company_id, product_id, price) VALUES (2, 2, 1100.00);
+INSERT INTO "company_product" (company_id, product_id, price) VALUES (1, 3, 1500.00);
+INSERT INTO "company_product" (company_id, product_id, price) VALUES (1, 4, 800.00);
+INSERT INTO "company_product" (company_id, product_id, price) VALUES (1, 5, 500.00);
+INSERT INTO "company_product" (company_id, product_id, price) VALUES (1, 6, 600.00);

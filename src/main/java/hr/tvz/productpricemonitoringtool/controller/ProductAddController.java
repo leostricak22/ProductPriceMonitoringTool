@@ -1,14 +1,10 @@
 package hr.tvz.productpricemonitoringtool.controller;
 
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
-import hr.tvz.productpricemonitoringtool.model.Category;
-import hr.tvz.productpricemonitoringtool.model.Product;
+import hr.tvz.productpricemonitoringtool.model.*;
 import hr.tvz.productpricemonitoringtool.repository.CategoryRepository;
 import hr.tvz.productpricemonitoringtool.repository.ProductRepository;
-import hr.tvz.productpricemonitoringtool.util.AlertDialog;
-import hr.tvz.productpricemonitoringtool.util.Constants;
-import hr.tvz.productpricemonitoringtool.util.FileUtil;
-import hr.tvz.productpricemonitoringtool.util.SceneLoader;
+import hr.tvz.productpricemonitoringtool.util.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
@@ -20,8 +16,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.util.List;
-import java.util.Optional;
+import java.math.BigDecimal;
+import java.util.*;
 
 import static java.util.Objects.isNull;
 
@@ -29,12 +25,12 @@ public class ProductAddController {
 
     @FXML public GridPane mainPane;
     @FXML public TextField nameTextField;
+    @FXML public TextField priceTextField;
     @FXML public Label categoryHierarchyLabel;
     @FXML public Label removePickedImageLabel;
     @FXML public ImageView productImageView;
 
     private Category category;
-    private Image image;
     private String imageUrl;
     boolean isImageChanged = false;
 
@@ -48,6 +44,7 @@ public class ProductAddController {
     }
 
     public void handleImagePick() {
+        Image image;
         Optional<File> selectedFileOptional = FileUtil.pickFile(List.of("*.jpg", "*.jpeg", "*.png"));
         if (selectedFileOptional.isEmpty())
             return;
@@ -66,6 +63,13 @@ public class ProductAddController {
     }
 
     public void handleAddProduct() {
+        if (Session.getSelectedCompany().isEmpty()) {
+            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
+                    "No company selected. Please select company first.");
+            SceneLoader.loadScene("company_select", "Select company");
+        }
+        Company selectedCompany = Session.getSelectedCompany().get();
+
         String error = validateFormData();
         if (!error.isEmpty()) {
             AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE, error);
@@ -78,17 +82,25 @@ public class ProductAddController {
                 newCategory = categoryRepository.save(newCategory);
             }
 
+            CompanyProduct companyProduct = new CompanyProduct.Builder()
+                    .company(selectedCompany)
+                    .price(new Price(new BigDecimal(priceTextField.getText())))
+                    .build();
+
             Product product = new Product.Builder(null)
                     .name(nameTextField.getText())
                     .category(newCategory)
+                    .companyProducts(Set.of(companyProduct))
                     .build();
-
-            if (isImageChanged) {
-                FileUtil.saveImage(imageUrl, "files/product/" + product.getId());
-            }
 
             productRepository.save(product);
 
+            if (isImageChanged) {
+                FileUtil.saveImage(imageUrl, "files/product/" + product.getId()
+                        + imageUrl.substring(imageUrl.lastIndexOf(".")));
+            }
+
+            SceneLoader.loadScene("dashboard", "Dashboard");
         } catch (DatabaseConnectionActiveException e) {
             logger.error("Error saving category", e);
             AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
@@ -101,6 +113,10 @@ public class ProductAddController {
             return "Name field must be filled!";
         if (isNull(category))
             return "Category must be selected/created";
+        if (priceTextField.getText().trim().isEmpty())
+            return "Price field must be filled!";
+        if (!ValidationUtil.isPositiveBigDecimal(priceTextField.getText()))
+            return "Price must be a positive number!";
 
         return "";
     }
