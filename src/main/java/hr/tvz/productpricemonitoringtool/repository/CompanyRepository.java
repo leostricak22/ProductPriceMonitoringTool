@@ -16,8 +16,10 @@ import java.util.Set;
 public class CompanyRepository extends AbstractRepository<Company> {
 
     @Override
-    public Optional<Company> findById(Long id) throws RepositoryAccessException {
-        return Optional.empty();
+    public Optional<Company> findById(Long id) throws RepositoryAccessException, DatabaseConnectionActiveException {
+        return findAll().stream()
+                .filter(company -> company.getId().equals(id))
+                .findFirst();
     }
 
     @Override

@@ -6,9 +6,11 @@ import hr.tvz.productpricemonitoringtool.exception.RepositoryQueryException;
 import hr.tvz.productpricemonitoringtool.model.*;
 import hr.tvz.productpricemonitoringtool.model.dbo.CategoryDBO;
 import hr.tvz.productpricemonitoringtool.model.dbo.CompanyDBO;
+import hr.tvz.productpricemonitoringtool.model.dbo.CompanyProductDBO;
 import hr.tvz.productpricemonitoringtool.model.dbo.ProductDBO;
 import hr.tvz.productpricemonitoringtool.repository.AddressRepository;
 import hr.tvz.productpricemonitoringtool.repository.CategoryRepository;
+import hr.tvz.productpricemonitoringtool.repository.CompanyProductRepository;
 import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
 
 import java.sql.ResultSet;
@@ -21,6 +23,7 @@ public class ObjectMapper {
     private static final AddressRepository addressRepository = new AddressRepository();
     private static final CompanyRepository companyRepository = new CompanyRepository();
     private static final CategoryRepository categoryRepository = new CategoryRepository();
+    private static final CompanyProductRepository companyProductRepository = new CompanyProductRepository();
 
     private ObjectMapper() {}
 
@@ -92,7 +95,7 @@ public class ObjectMapper {
                 .name(productDBO.getName())
                 .category(categoryRepository.findById(productDBO.getCategoryId())
                         .orElseThrow(() -> new RepositoryQueryException("Category not found")))
-                .companies(companyRepository.findAllByProductId(productDBO.getId()))
+                .companyProducts(companyProductRepository.findByProductId(productDBO.getId()))
                 .build();
     }
 
@@ -108,6 +111,23 @@ public class ObjectMapper {
         return new ProductDBO.Builder(resultSet.getLong("id"))
                 .name(resultSet.getString("name"))
                 .categoryId(resultSet.getLong("category_id"))
+                .build();
+    }
+
+    public static CompanyProductDBO mapResultSetToCompanyProductDBO(ResultSet resultSet) throws SQLException {
+        return new CompanyProductDBO.Builder(resultSet.getLong("id"))
+                .companyId(resultSet.getLong("company_id"))
+                .productId(resultSet.getLong("product_id"))
+                .price(new Price(resultSet.getBigDecimal("price")))
+                .build();
+    }
+
+    public static CompanyProduct mapCompanyProductDBOToCompanyProduct(CompanyProductDBO companyProductDBO) throws DatabaseConnectionActiveException {
+        return new CompanyProduct.Builder()
+                .company(companyRepository.findById(companyProductDBO.getCompanyId())
+                        .orElseThrow(() -> new RepositoryQueryException("Company not found")))
+                .product(new Product.Builder(companyProductDBO.getProductId()).build())
+                .price(companyProductDBO.getPrice())
                 .build();
     }
 }
