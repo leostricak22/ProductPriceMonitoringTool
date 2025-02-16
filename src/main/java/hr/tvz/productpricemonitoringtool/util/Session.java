@@ -41,8 +41,8 @@ public class Session {
         selectedProduct = Optional.of(product);
     }
 
-    public static void setSelectedProduct(Optional<Product> product) {
-        selectedProduct = product;
+    public static Optional<Product> getSelectedProduct() {
+        return selectedProduct;
     }
 
     public static Image getUserProfilePicture() {
