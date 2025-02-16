@@ -9,8 +9,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.FlowPane;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 public class DashboardController {
 
@@ -26,7 +27,8 @@ public class DashboardController {
             return;
         }
 
-        Set<Company> companies = user.get().getCompanies();
+        List<Company> companies = new ArrayList<>(user.get().getCompanies());
+        companies.sort((c1, c2) -> c1.getName().compareToIgnoreCase(c2.getName()));
 
         for (Company company : companies) {
             Button companyButton = new Button(company.getName());

@@ -17,8 +17,8 @@ import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CompanyProductsListController {
 
@@ -34,9 +34,11 @@ public class CompanyProductsListController {
         }
 
         Company selectedCompany = Session.getSelectedCompany().get();
-        Set<CompanyProduct> companyProducts = new HashSet<>();
+        List<CompanyProduct> companyProducts = new ArrayList<>();
         try {
-            companyProducts = companyProductRepository.findByCompanyId(selectedCompany.getId());
+            companyProducts = new ArrayList<>(companyProductRepository.findByCompanyId(selectedCompany.getId()));
+            companyProducts.sort(
+                    (cp1, cp2) -> cp1.getProduct().getName().compareToIgnoreCase(cp2.getProduct().getName()));
         } catch (DatabaseConnectionActiveException e) {
             AlertDialog.showErrorDialog("Database connection active", "Please try again later.");
             SceneLoader.loadScene("dashboard", "Dashboard");
