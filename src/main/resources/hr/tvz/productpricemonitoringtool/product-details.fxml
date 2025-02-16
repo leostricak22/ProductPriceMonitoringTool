@@ -36,7 +36,7 @@
         </columnConstraints>
         <rowConstraints>
           <RowConstraints maxHeight="300.0" minHeight="300.0" prefHeight="300.0" vgrow="SOMETIMES" />
-          <RowConstraints maxHeight="35.0" minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <GridPane.margin>
@@ -44,52 +44,58 @@
          </GridPane.margin>
          <children>
             <ImageView fx:id="productImageView" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" />
-            <Label fx:id="productNameLabel" style="-fx-font-size: 40; -fx-font-weight: bold;" styleClass="formLabel" text="Product name" GridPane.columnIndex="1" GridPane.valignment="TOP">
+            <Label fx:id="productNameLabel" style="-fx-font-size: 32; -fx-font-weight: bold;" styleClass="formLabel" text="Product name" GridPane.columnIndex="1" GridPane.valignment="TOP">
                <font>
                   <Font size="34.0" />
                </font>
                <padding>
-                  <Insets left="15.0" top="5.0" />
+                  <Insets left="30.0" />
                </padding>
+               <GridPane.margin>
+                  <Insets top="15.0" />
+               </GridPane.margin>
             </Label>
             <Label fx:id="productCategoryLabel" styleClass="formLabel" text="Category name" GridPane.columnIndex="1" GridPane.valignment="TOP">
                <padding>
-                  <Insets left="15.0" />
+                  <Insets left="30.0" />
                </padding>
                <font>
                   <Font size="22.0" />
                </font>
                <GridPane.margin>
-                  <Insets top="60.0" />
+                  <Insets top="65.0" />
                </GridPane.margin>
             </Label>
-            <Label fx:id="companyProductPriceTitleLabel" styleClass="formLabel" text="Your price" GridPane.columnIndex="1" GridPane.valignment="BOTTOM">
+            <Label fx:id="companyProductPriceTitleLabel" styleClass="formLabel" text="Your price" GridPane.rowIndex="2" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets bottom="40.0" left="15.0" />
                </GridPane.margin>
             </Label>
-            <Label fx:id="companyProductPriceLabel" style="-fx-font-weight: bold;" styleClass="formLabel" text="price" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
+            <Label fx:id="companyProductPriceLabel" style="-fx-font-weight: bold;" styleClass="formLabel" text="price" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                <GridPane.margin>
-                  <Insets bottom="10.0" left="15.0" />
+                  <Insets bottom="10.0" left="15.0" top="25.0" />
                </GridPane.margin>
                <font>
                   <Font name="System Bold" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="productPriceLabel" style="-fx-font-weight: bold; -fx-font-size: 25;" styleClass="formLabel" text="price" GridPane.columnIndex="1" GridPane.valignment="TOP">
+            <Label fx:id="productPriceLabel" style="-fx-font-weight: bold; -fx-font-size: 22;" styleClass="formLabel" text="price" GridPane.columnIndex="1" GridPane.valignment="TOP">
                <font>
                   <Font name="System Bold" size="20.0" />
                </font>
                <GridPane.margin>
-                  <Insets left="15.0" top="100.0" />
+                  <Insets top="95.0" />
                </GridPane.margin>
+               <padding>
+                  <Insets left="30.0" />
+               </padding>
             </Label>
-            <Button fx:id="companyProductPriceButton" mnemonicParsing="false" onAction="#handleChangePrice" prefHeight="35.0" prefWidth="128.0" text="Change price" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+            <Button fx:id="companyProductPriceButton" mnemonicParsing="false" onAction="#handleChangePrice" prefHeight="35.0" prefWidth="128.0" text="Change price" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                <GridPane.margin>
-                  <Insets left="15.0" />
+                  <Insets left="15.0" top="60.0" />
                </GridPane.margin>
             </Button>
-            <GridPane GridPane.columnIndex="1" GridPane.rowIndex="2">
+            <GridPane style="-fx-border-width: 0 0 0 1; -fx-border-color: lightgray;" GridPane.columnIndex="1" GridPane.rowIndex="2">
               <columnConstraints>
                 <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
@@ -97,9 +103,6 @@
                 <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="202.0" vgrow="SOMETIMES" />
               </rowConstraints>
-               <padding>
-                  <Insets left="15.0" top="30.0" />
-               </padding>
                <children>
                   <VBox fx:id="companyProductsVBox" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
                      <GridPane.margin>
@@ -120,7 +123,21 @@
                      </children>
                   </HBox>
                </children>
+               <padding>
+                  <Insets left="15.0" />
+               </padding>
             </GridPane>
+            <Label fx:id="descriptionLabel" styleClass="formLabel" GridPane.columnIndex="1" GridPane.valignment="TOP">
+               <padding>
+                  <Insets left="30.0" />
+               </padding>
+               <font>
+                  <Font size="22.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets top="135.0" />
+               </GridPane.margin>
+            </Label>
          </children>
       </GridPane>
     </GridPane>

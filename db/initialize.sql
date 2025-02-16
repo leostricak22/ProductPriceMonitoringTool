@@ -54,6 +54,7 @@ CREATE TABLE "product" (
     id LONG GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(255) NOT NULL,
     category_id LONG NOT NULL,
+    description VARCHAR(255),
     PRIMARY KEY (id),
     FOREIGN KEY (category_id) REFERENCES "category"(id)
 );
@@ -98,12 +99,12 @@ INSERT INTO "category" (name, parent_category_id) VALUES ('Office', 3);
 INSERT INTO "category" (name, parent_category_id) VALUES ('Visual Studio', 3);
 INSERT INTO "category" (name, parent_category_id) VALUES ('Gaming PCs', 5);
 
-INSERT INTO "product" (name, category_id) VALUES ('MacBook Pro', 4);
-INSERT INTO "product" (name, category_id) VALUES ('MacBook Air', 4);
-INSERT INTO "product" (name, category_id) VALUES ('iMac', 5);
-INSERT INTO "product" (name, category_id) VALUES ('Mac Mini', 5);
+INSERT INTO "product" (name, category_id, description) VALUES ('MacBook Pro', 4, 'The ultimate pro notebook.');
+INSERT INTO "product" (name, category_id, description) VALUES ('MacBook Air', 4, 'The thinnest and lightest notebook.');
+INSERT INTO "product" (name, category_id, description) VALUES ('iMac', 5, 'The all-in-one for all.');
+INSERT INTO "product" (name, category_id, description) VALUES ('Mac Mini', 5, 'Mac mini is an affordable powerhouse that packs the entire Mac experience into a 7.7-inch-square frame.');
 INSERT INTO "product" (name, category_id) VALUES ('LG 27UL850-W', 6);
-INSERT INTO "product" (name, category_id) VALUES ('Dell U2718Q', 6);
+INSERT INTO "product" (name, category_id, description) VALUES ('Dell U2718Q', 6, '27" 4K monitor with InfinityEdge and Dell HDR.');
 
 INSERT INTO "company_product" (company_id, product_id, price) VALUES (1, 1, 2000.00);
 INSERT INTO "company_product" (company_id, product_id, price) VALUES (2, 1, 2100.00);

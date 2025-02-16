@@ -94,6 +94,7 @@ public class ObjectMapper {
                 .category(categoryRepository.findById(productDBO.getCategoryId())
                         .orElseThrow(() -> new RepositoryQueryException("Category not found")))
                 .companyProducts(companyProductRepository.findByProductId(productDBO.getId()))
+                .description(productDBO.getDescription())
                 .build();
     }
 
@@ -109,6 +110,7 @@ public class ObjectMapper {
         return new ProductDBO.Builder(resultSet.getLong("id"))
                 .name(resultSet.getString("name"))
                 .categoryId(resultSet.getLong("category_id"))
+                .description(resultSet.getString("description"))
                 .build();
     }
 

@@ -8,6 +8,7 @@ import hr.tvz.productpricemonitoringtool.util.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -29,6 +30,7 @@ public class ProductAddController {
     @FXML public Label categoryHierarchyLabel;
     @FXML public Label removePickedImageLabel;
     @FXML public ImageView productImageView;
+    @FXML public TextArea descriptionTextArea;
 
     private Category category;
     private String imageUrl;
@@ -91,6 +93,7 @@ public class ProductAddController {
                     .name(nameTextField.getText())
                     .category(newCategory)
                     .companyProducts(Set.of(companyProduct))
+                    .description(descriptionTextArea.getText())
                     .build();
 
             productRepository.save(product);
@@ -100,7 +103,7 @@ public class ProductAddController {
                         + imageUrl.substring(imageUrl.lastIndexOf(".")));
             }
 
-            SceneLoader.loadScene("dashboard", "Dashboard");
+            SceneLoader.loadScene("company_products_list", "Company products");
         } catch (DatabaseConnectionActiveException e) {
             logger.error("Error saving category", e);
             AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,

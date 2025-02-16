@@ -48,7 +48,7 @@ public class ProductRepository extends AbstractRepository<Product> {
         DatabaseUtil.setActiveConnectionWithDatabase(true);
 
         String query = """
-        SELECT id, name, category_id FROM "product";
+        SELECT id, name, category_id, description FROM "product";
         """;
 
         Set<ProductDBO> productsDBO = new HashSet<>();
@@ -84,7 +84,7 @@ public class ProductRepository extends AbstractRepository<Product> {
         DatabaseUtil.setActiveConnectionWithDatabase(true);
 
         String query = """
-        SELECT p.id, p.name, p.category_id
+        SELECT p.id, p.name, p.category_id, p.description
         FROM "product" p
         WHERE p.category_id = ?;
         """;
@@ -125,7 +125,7 @@ public class ProductRepository extends AbstractRepository<Product> {
         DatabaseUtil.setActiveConnectionWithDatabase(true);
 
         String query = """
-        INSERT INTO "product" (name, category_id) VALUES (?, ?);
+        INSERT INTO "product" (name, category_id, description) VALUES (?, ?, ?);
         """;
 
         try (Connection connection = DatabaseUtil.connectToDatabase();
@@ -133,6 +133,7 @@ public class ProductRepository extends AbstractRepository<Product> {
             for (Product p : entities) {
                 stmt.setString(1, p.getName());
                 stmt.setLong(2, p.getCategory().getId());
+                stmt.setString(3, p.getDescription());
 
                 stmt.executeUpdate();
                 try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {

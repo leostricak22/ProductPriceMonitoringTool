@@ -5,10 +5,12 @@ import hr.tvz.productpricemonitoringtool.model.Entity;
 public class ProductDBO extends Entity {
 
     private Long categoryId;
+    private String description;
 
     public ProductDBO(Builder builder) {
         super(builder.id, builder.name);
         this.categoryId = builder.categoryId;
+        this.description = builder.description;
     }
 
     public Long getCategoryId() {
@@ -19,10 +21,19 @@ public class ProductDBO extends Entity {
         this.categoryId = categoryId;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public static class Builder {
         private final Long id;
         private String name;
         private Long categoryId;
+        private String description;
 
         public Builder(Long id) {
             this.id = id;
@@ -35,6 +46,11 @@ public class ProductDBO extends Entity {
 
         public Builder categoryId(Long categoryId) {
             this.categoryId = categoryId;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
             return this;
         }
 

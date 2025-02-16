@@ -11,11 +11,13 @@ public class Product extends Entity {
 
     private Category category;
     private Set<CompanyProduct> companyProducts;
+    private String description;
 
     public Product(Builder builder) {
         super(builder.id, builder.name);
         this.category = builder.category;
         this.companyProducts = builder.companyProducts;
+        this.description = builder.description;
     }
 
     public Category getCategory() {
@@ -34,11 +36,20 @@ public class Product extends Entity {
         this.companyProducts = companyProducts;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public static class Builder {
         private final Long id;
         private String name;
         private Category category;
         private Set<CompanyProduct> companyProducts;
+        private String description;
 
         public Builder(Long id) {
             this.id = id;
@@ -56,6 +67,11 @@ public class Product extends Entity {
 
         public Builder companyProducts(Set<CompanyProduct> companyProducts) {
             this.companyProducts = companyProducts;
+            return this;
+        }
+
+        public Builder description(String description) {
+            this.description = description;
             return this;
         }
 

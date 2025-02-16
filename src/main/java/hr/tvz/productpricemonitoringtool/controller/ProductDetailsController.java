@@ -5,6 +5,7 @@ import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.CompanyProduct;
 import hr.tvz.productpricemonitoringtool.model.Price;
 import hr.tvz.productpricemonitoringtool.model.Product;
+import hr.tvz.productpricemonitoringtool.repository.CategoryRepository;
 import hr.tvz.productpricemonitoringtool.repository.CompanyProductRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
 import hr.tvz.productpricemonitoringtool.util.Constants;
@@ -31,11 +32,14 @@ public class ProductDetailsController {
     @FXML public Label productCategoryLabel;
     @FXML public Label companyProductPriceLabel;
     @FXML public Label companyProductPriceTitleLabel;
+    @FXML public Label descriptionLabel;
     @FXML public Button companyProductPriceButton;
     @FXML public Button companyProductsSortButton;
     @FXML public VBox companyProductsVBox;
 
     private final CompanyProductRepository companyProductRepository = new CompanyProductRepository();
+    private final CategoryRepository categoryRepository = new CategoryRepository();
+
     private String sortType = "desc";
     private List<CompanyProduct> companyProducts = new ArrayList<>();
 
@@ -48,9 +52,13 @@ public class ProductDetailsController {
 
         productImageView.setImage(selectedProduct.getImage());
         productNameLabel.setText(selectedProduct.getName());
-        productCategoryLabel.setText(selectedProduct.getCategory().getName());
+
+        if (!isNull(selectedProduct.getDescription())) {
+            descriptionLabel.setText(selectedProduct.getDescription());
+        }
 
         try {
+            productCategoryLabel.setText(categoryRepository.findCategoryHierarchy(selectedProduct.getCategory().getId()));
             companyProducts = new ArrayList<>(companyProductRepository.findByProductId(selectedProduct.getId()));
         } catch (DatabaseConnectionActiveException e) {
             AlertDialog.showErrorDialog("Database connection active", "Please try again later.");
