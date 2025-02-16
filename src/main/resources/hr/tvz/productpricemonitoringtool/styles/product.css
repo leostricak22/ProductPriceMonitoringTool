@@ -10,3 +10,28 @@
     -fx-font-size: 14;
     -fx-font-weight: bold;
 }
+
+.product-box-container {
+    -fx-background-color: white;
+    -fx-border-color: #d9d9d9;
+    -fx-border-width: 0 0 1 0;
+    -fx-min-height: 100;
+    -fx-pref-height: 100;
+    -fx-max-height: 100;
+    -fx-padding: 0 15;
+}
+
+.product-box-container:hover {
+    -fx-background-color: #f4f4f4;
+    -fx-cursor: hand;
+}
+
+.scroll-pane {
+    -fx-background-color: white;
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+.scroll-pane .viewport {
+    -fx-background-color: white;
+}

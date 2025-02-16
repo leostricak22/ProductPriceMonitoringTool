@@ -45,4 +45,10 @@ public class MenuController {
                 "product_add",
                 "Product Add");
     }
+
+    public void handleCompanyProductsListRedirect() {
+        SceneLoader.loadScene(
+                "company_products_list",
+                "Company Products List");
+    }
 }

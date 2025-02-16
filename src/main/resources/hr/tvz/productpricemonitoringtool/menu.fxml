@@ -29,6 +29,7 @@
             <items>
                 <MenuItem text="Edit" />
                 <MenuItem text="Staff" />
+                <MenuItem onAction="#handleCompanyProductsListRedirect" text="Company products"  />
             </items>
         </MenuButton>
 

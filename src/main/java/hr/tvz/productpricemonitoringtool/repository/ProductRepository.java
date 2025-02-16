@@ -22,7 +22,16 @@ public class ProductRepository extends AbstractRepository<Product> {
 
     @Override
     public Optional<Product> findById(Long id) throws RepositoryAccessException, DatabaseConnectionActiveException {
-        return Optional.empty();
+        return findAll().stream()
+                .filter(product -> product.getId().equals(id))
+                .findFirst();
+    }
+
+    public Optional<Product> findByIdWithoutCompanies(Long id) throws DatabaseConnectionActiveException {
+        Optional<Product> product = findById(id);
+        product.ifPresent(value -> value.setCompanyProducts(new HashSet<>()));
+
+        return product;
     }
 
     @Override

@@ -8,10 +8,7 @@ import hr.tvz.productpricemonitoringtool.model.dbo.CategoryDBO;
 import hr.tvz.productpricemonitoringtool.model.dbo.CompanyDBO;
 import hr.tvz.productpricemonitoringtool.model.dbo.CompanyProductDBO;
 import hr.tvz.productpricemonitoringtool.model.dbo.ProductDBO;
-import hr.tvz.productpricemonitoringtool.repository.AddressRepository;
-import hr.tvz.productpricemonitoringtool.repository.CategoryRepository;
-import hr.tvz.productpricemonitoringtool.repository.CompanyProductRepository;
-import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
+import hr.tvz.productpricemonitoringtool.repository.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -23,6 +20,7 @@ public class ObjectMapper {
     private static final AddressRepository addressRepository = new AddressRepository();
     private static final CompanyRepository companyRepository = new CompanyRepository();
     private static final CategoryRepository categoryRepository = new CategoryRepository();
+    private static final ProductRepository productRepository = new ProductRepository();
     private static final CompanyProductRepository companyProductRepository = new CompanyProductRepository();
 
     private ObjectMapper() {}
@@ -122,11 +120,20 @@ public class ObjectMapper {
                 .build();
     }
 
-    public static CompanyProduct mapCompanyProductDBOToCompanyProduct(CompanyProductDBO companyProductDBO) throws DatabaseConnectionActiveException {
+    public static CompanyProduct mapCompanyProductDBOToCompanyProduct(CompanyProductDBO companyProductDBO, String finding) throws DatabaseConnectionActiveException {
+        if (finding.equals("company")) {
+            return new CompanyProduct.Builder()
+                    .company(companyRepository.findById(companyProductDBO.getCompanyId())
+                            .orElseThrow(() -> new RepositoryQueryException("Company not found")))
+                    .product(new Product.Builder(companyProductDBO.getProductId()).build())
+                    .price(companyProductDBO.getPrice())
+                    .build();
+        }
+
         return new CompanyProduct.Builder()
-                .company(companyRepository.findById(companyProductDBO.getCompanyId())
-                        .orElseThrow(() -> new RepositoryQueryException("Company not found")))
-                .product(new Product.Builder(companyProductDBO.getProductId()).build())
+                .company(new Company.Builder(companyProductDBO.getCompanyId(), companyProductDBO.getName()).build())
+                .product(productRepository.findByIdWithoutCompanies(companyProductDBO.getProductId())
+                        .orElseThrow(() -> new RepositoryQueryException("Product not found")))
                 .price(companyProductDBO.getPrice())
                 .build();
     }
