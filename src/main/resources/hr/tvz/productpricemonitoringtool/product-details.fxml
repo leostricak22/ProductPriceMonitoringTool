@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1365.0" style="-fx-background-color: white;" stylesheets="@styles/main.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.tvz.productpricemonitoringtool.controller.ProductDetailsController">
@@ -28,21 +31,20 @@
         <fx:include maxWidth="1.7976931348623157E308" minWidth="300.0" source="topBar.fxml" GridPane.rowIndex="0" />
       <GridPane GridPane.rowIndex="1">
         <columnConstraints>
-          <ColumnConstraints hgrow="SOMETIMES" maxWidth="250.0" minWidth="250.0" prefWidth="250.0" />
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="300.0" prefWidth="300.0" />
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
-          <RowConstraints maxHeight="250.0" minHeight="250.0" prefHeight="250.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="300.0" minHeight="300.0" prefHeight="300.0" vgrow="SOMETIMES" />
+          <RowConstraints maxHeight="35.0" minHeight="35.0" prefHeight="35.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <GridPane.margin>
             <Insets top="15.0" />
          </GridPane.margin>
          <children>
-            <ImageView fx:id="productImageView" fitHeight="250.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true" />
-            <Label fx:id="productNameLabel" style="-fx-font-size: 30;" styleClass="formLabel" text="Product name" GridPane.columnIndex="1" GridPane.valignment="TOP">
+            <ImageView fx:id="productImageView" fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" />
+            <Label fx:id="productNameLabel" style="-fx-font-size: 40; -fx-font-weight: bold;" styleClass="formLabel" text="Product name" GridPane.columnIndex="1" GridPane.valignment="TOP">
                <font>
                   <Font size="34.0" />
                </font>
@@ -52,18 +54,21 @@
             </Label>
             <Label fx:id="productCategoryLabel" styleClass="formLabel" text="Category name" GridPane.columnIndex="1" GridPane.valignment="TOP">
                <padding>
-                  <Insets left="15.0" top="60.0" />
+                  <Insets left="15.0" />
                </padding>
                <font>
                   <Font size="22.0" />
                </font>
+               <GridPane.margin>
+                  <Insets top="60.0" />
+               </GridPane.margin>
             </Label>
-            <Label styleClass="formLabel" text="Price from to:" GridPane.columnIndex="1" GridPane.valignment="BOTTOM">
+            <Label fx:id="companyProductPriceTitleLabel" styleClass="formLabel" text="Your price" GridPane.columnIndex="1" GridPane.valignment="BOTTOM">
                <GridPane.margin>
                   <Insets bottom="40.0" left="15.0" />
                </GridPane.margin>
             </Label>
-            <Label fx:id="productPriceLabel" style="-fx-font-weight: bold;" styleClass="formLabel" text="price" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
+            <Label fx:id="companyProductPriceLabel" style="-fx-font-weight: bold;" styleClass="formLabel" text="price" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="BOTTOM">
                <GridPane.margin>
                   <Insets bottom="10.0" left="15.0" />
                </GridPane.margin>
@@ -71,6 +76,51 @@
                   <Font name="System Bold" size="12.0" />
                </font>
             </Label>
+            <Label fx:id="productPriceLabel" style="-fx-font-weight: bold; -fx-font-size: 25;" styleClass="formLabel" text="price" GridPane.columnIndex="1" GridPane.valignment="TOP">
+               <font>
+                  <Font name="System Bold" size="20.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets left="15.0" top="100.0" />
+               </GridPane.margin>
+            </Label>
+            <Button fx:id="companyProductPriceButton" mnemonicParsing="false" prefHeight="35.0" prefWidth="128.0" text="Change price" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="1" GridPane.valignment="TOP">
+               <GridPane.margin>
+                  <Insets left="15.0" />
+               </GridPane.margin>
+            </Button>
+            <GridPane GridPane.columnIndex="1" GridPane.rowIndex="2">
+              <columnConstraints>
+                <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+              </columnConstraints>
+              <rowConstraints>
+                <RowConstraints maxHeight="20.0" minHeight="20.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="202.0" vgrow="SOMETIMES" />
+              </rowConstraints>
+               <padding>
+                  <Insets left="15.0" top="30.0" />
+               </padding>
+               <children>
+                  <VBox fx:id="companyProductsVBox" prefHeight="200.0" prefWidth="100.0" GridPane.rowIndex="1">
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                  </VBox>
+                  <HBox prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label style="-fx-font-weight: bold;" styleClass="formLabel" text="Product prices in other companies" />
+                        <Button fx:id="companyProductsSortButton" mnemonicParsing="false" onAction="#handleCompanySort" prefHeight="25.0" prefWidth="161.0" text="Sort by price (desc)">
+                           <HBox.margin>
+                              <Insets left="15.0" />
+                           </HBox.margin>
+                           <padding>
+                              <Insets left="5.0" right="5.0" />
+                           </padding>
+                        </Button>
+                     </children>
+                  </HBox>
+               </children>
+            </GridPane>
          </children>
       </GridPane>
     </GridPane>
