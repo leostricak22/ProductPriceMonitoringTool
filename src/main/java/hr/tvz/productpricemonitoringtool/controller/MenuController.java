@@ -5,14 +5,19 @@ import hr.tvz.productpricemonitoringtool.util.SceneLoader;
 import hr.tvz.productpricemonitoringtool.util.Session;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 
 import java.util.Optional;
 
 public class MenuController {
 
-    private Optional<Company> selectedCompany;
-
     @FXML public Label companyNameLabel;
+    @FXML public MenuButton companyMenuButton;
+    @FXML public MenuItem productsAddMenuItem;
+    @FXML public MenuItem productsCompanyProductsMenuItem;
+
+    private Optional<Company> selectedCompany;
 
     public void initialize() {
         selectedCompany = Session.getSelectedCompany();
@@ -21,6 +26,10 @@ public class MenuController {
             companyNameLabel.setText("Currently in: " + selectedCompany.get().getName());
         } else {
             companyNameLabel.setVisible(false);
+
+            companyMenuButton.setDisable(true);
+            productsAddMenuItem.setDisable(true);
+            productsCompanyProductsMenuItem.setDisable(true);
         }
     }
 

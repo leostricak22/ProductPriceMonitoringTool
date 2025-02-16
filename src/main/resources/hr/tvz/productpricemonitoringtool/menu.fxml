@@ -21,7 +21,7 @@
 
         <MenuButton>
             <graphic>
-                <Label onMouseClicked="#handleDashboardRedirect" styleClass="dashboardMenuButtonLabel" style="-fx-font-size: 1.1em;" text="Dashboard" />
+                <Label onMouseClicked="#handleDashboardRedirect" style="-fx-font-size: 1.1em;" styleClass="dashboardMenuButtonLabel" text="Dashboard" />
             </graphic>
         </MenuButton>
 
@@ -29,14 +29,15 @@
             <items>
                 <MenuItem text="Edit" />
                 <MenuItem text="Staff" />
-                <MenuItem onAction="#handleCompanyProductsListRedirect" text="Company products"  />
+                <MenuItem onAction="#handleCompanyProductsListRedirect" text="Products" />
             </items>
         </MenuButton>
 
         <MenuButton fx:id="productsMenuButton" popupSide="RIGHT" prefWidth="100" text="Products">
             <items>
                 <MenuItem onAction="#handleProductSearchRedirect" text="Search" />
-                <MenuItem onAction="#handleProductAddRedirect" text="Add" />
+                <MenuItem fx:id="productsAddMenuItem" onAction="#handleProductAddRedirect" text="Add" />
+            <MenuItem fx:id="productsCompanyProductsMenuItem" onAction="#handleCompanyProductsListRedirect" text="Company products" />
             </items>
         </MenuButton>
       <VBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" prefHeight="362.0" prefWidth="350.0" VBox.vgrow="ALWAYS">
