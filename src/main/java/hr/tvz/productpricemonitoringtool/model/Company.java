@@ -1,5 +1,7 @@
 package hr.tvz.productpricemonitoringtool.model;
 
+import java.util.Objects;
+
 public class Company extends Entity {
 
     private Address address;
@@ -35,5 +37,18 @@ public class Company extends Entity {
         public Company build() {
             return new Company(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Company company = (Company) o;
+        return Objects.equals(address, company.address);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(address);
     }
 }

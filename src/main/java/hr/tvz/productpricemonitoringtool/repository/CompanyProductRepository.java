@@ -3,6 +3,7 @@ package hr.tvz.productpricemonitoringtool.repository;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.exception.RepositoryAccessException;
 import hr.tvz.productpricemonitoringtool.model.CompanyProduct;
+import hr.tvz.productpricemonitoringtool.model.Price;
 import hr.tvz.productpricemonitoringtool.model.Product;
 import hr.tvz.productpricemonitoringtool.model.dbo.CompanyProductDBO;
 import hr.tvz.productpricemonitoringtool.util.DatabaseUtil;
@@ -141,5 +142,36 @@ public class CompanyProductRepository {
                     }
                 })
                 .collect(Collectors.toSet());
+    }
+
+    public synchronized void updatePrice(Long companyId, Long productId, Price price) throws DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
+        String query = """
+        UPDATE "company_product" SET price=? WHERE company_id=? AND product_id=?;
+        """;
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setBigDecimal(1, price.value());
+            stmt.setLong(2, companyId);
+            stmt.setLong(3, productId);
+
+            stmt.executeUpdate();
+        } catch (SQLException | IOException e) {
+            throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
+        }
     }
 }

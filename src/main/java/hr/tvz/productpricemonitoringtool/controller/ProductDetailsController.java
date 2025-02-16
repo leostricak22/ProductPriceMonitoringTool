@@ -3,12 +3,15 @@ package hr.tvz.productpricemonitoringtool.controller;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.CompanyProduct;
+import hr.tvz.productpricemonitoringtool.model.Price;
 import hr.tvz.productpricemonitoringtool.model.Product;
 import hr.tvz.productpricemonitoringtool.repository.CompanyProductRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
+import hr.tvz.productpricemonitoringtool.util.Constants;
 import hr.tvz.productpricemonitoringtool.util.SceneLoader;
 import hr.tvz.productpricemonitoringtool.util.Session;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -18,6 +21,7 @@ import javafx.scene.layout.VBox;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static java.util.Objects.isNull;
 
 public class ProductDetailsController {
 
@@ -37,8 +41,7 @@ public class ProductDetailsController {
 
     public void initialize() {
         if (Session.getSelectedProduct().isEmpty()) {
-            AlertDialog.showErrorDialog("No product selected", "Please select a product first.");
-            SceneLoader.loadScene("dashboard", "Dashboard");
+            handleUnselectedProductOrCompany();
         }
 
         Product selectedProduct = Session.getSelectedProduct().get();
@@ -118,5 +121,44 @@ public class ProductDetailsController {
             HBox productBox = new HBox(companyNameLabel, priceLabel);
             companyProductsVBox.getChildren().add(productBox);
         }
+    }
+
+    public void handleChangePrice() {
+        Optional<FXMLLoader> loader = SceneLoader.loadPopupScene("change_product_price", "Change price");
+
+        if (loader.isEmpty()) {
+            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
+                    "Error fetching data from popup window");
+            return;
+        }
+
+        ChangeProductPriceController controller = loader.get().getController();
+
+        if (Session.getSelectedProduct().isEmpty() || Session.getSelectedCompany().isEmpty()) {
+            handleUnselectedProductOrCompany();
+            return;
+        }
+
+        Price price = controller.getNewPrice();
+
+        if (!isNull(price)) {
+            try {
+                companyProductRepository.updatePrice(
+                        Session.getSelectedCompany().get().getId(),
+                        Session.getSelectedProduct().get().getId(),
+                        controller.getNewPrice());
+            } catch (DatabaseConnectionActiveException e) {
+                AlertDialog.showErrorDialog("Database connection active", "Please try again later.");
+                return;
+            }
+
+            initialize();
+        }
+    }
+
+    public void handleUnselectedProductOrCompany() {
+        AlertDialog.showErrorDialog(
+                "No product selected", "Please select a product first.");
+        SceneLoader.loadScene("dashboard", "Dashboard");
     }
 }
