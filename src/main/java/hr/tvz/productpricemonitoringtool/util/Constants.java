@@ -8,6 +8,8 @@ public class Constants {
 
     public static final String RELATIVE_FXML_PATH =
             "file:./src/main/resources/hr/tvz/productpricemonitoringtool/";
+    public static final String RELATIVE_HTML_PATH =
+            "./src/main/resources/hr/tvz/productpricemonitoringtool/html/";
     public static final String DATABASE_PROPERTIES_FILE =
             "./src/main/resources/database.properties";
     public static final String APPLICATION_ICON =
@@ -30,4 +32,5 @@ public class Constants {
     public static final String ERROR_LOADING_SCENE_MESSAGE = "Error loading scene: ";
 
     public static final String POSITIVE_BIG_DECIMAL_REGEX = "^[1-9]\\d*(\\.\\d+)?$";
+
 }

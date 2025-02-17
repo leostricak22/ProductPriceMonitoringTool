@@ -23,4 +23,8 @@ public class TopBarController {
     public void handleUserEditRedirect() {
         SceneLoader.loadScene("user_edit", "Edit User");
     }
+
+    public void handleFilter() {
+        SceneLoader.loadPopupScene("map_radius", "Filter");
+    }
 }

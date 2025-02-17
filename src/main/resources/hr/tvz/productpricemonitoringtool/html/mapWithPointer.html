@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OpenLayers Map</title>
+    <link rel="stylesheet" href="https://openlayers.org/en/v6.5.0/css/ol.css" type="text/css">
+    <style>
+        .map {
+            height: 100%;
+            width: 100%;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+    <script src="https://openlayers.org/en/v6.5.0/build/ol.js"></script>
+</head>
+<body>
+<div id="map" class="map"></div>
+<script type="text/javascript">
+    var iconStyle = new ol.style.Style({
+        image: new ol.style.Icon({
+            anchor: [0.5, 1],
+            src: 'https://maps.google.com/mapfiles/ms/icons/red-dot.png'
+        })
+    });
+
+    var pointerFeature = new ol.Feature({
+        geometry: new ol.geom.Circle(ol.proj.fromLonLat([16.3738, 45.1]), radius)
+    });
+    pointerFeature.setStyle(iconStyle);
+
+    var vectorSource = new ol.source.Vector({
+        features: [pointerFeature]
+    });
+
+    var vectorLayer = new ol.layer.Vector({
+        source: vectorSource
+    });
+
+    var map = new ol.Map({
+        target: 'map',
+        layers: [
+            new ol.layer.Tile({
+                source: new ol.source.OSM()
+            }),
+            vectorLayer
+        ],
+        view: new ol.View({
+            center: ol.proj.fromLonLat([0, 0]),
+            zoom: 2
+        })
+    });
+
+    map.on('click', function(event) {
+        var coordinates = event.coordinate;
+        pointerFeature.setGeometry(new ol.geom.Point(coordinates));
+        console.log('Pointer moved to: ', ol.proj.toLonLat(coordinates));
+    });
+
+    function sendData() {
+        var coordinates = pointerFeature.getGeometry().getCoordinates();
+        var lonLat = ol.proj.toLonLat(coordinates);
+        var data = `Pointer is at longitude: ${lonLat[0]}, latitude: ${lonLat[1]}`;
+        if (window.javaBridge) {
+            window.javaBridge.sendDataToJava(data);
+        } else {
+            console.error("JavaBridge is not available.");
+        }
+        return data;
+    }
+</script>
+</body>
+</html>

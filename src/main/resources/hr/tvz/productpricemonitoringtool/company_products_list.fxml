@@ -24,7 +24,7 @@
             <RowConstraints maxHeight="75.0" minHeight="75.0" prefHeight="75.0" vgrow="SOMETIMES" />
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
-        <fx:include maxWidth="1.7976931348623157E308" minWidth="300.0" source="topBar.fxml" GridPane.rowIndex="0" />
+        <fx:include maxWidth="1.7976931348623157E308" minWidth="300.0" source="top_bar.fxml" GridPane.rowIndex="0" />
         <ScrollPane fitToWidth="true" GridPane.rowIndex="1">
             <content>
                 <VBox fx:id="itemListVbox" fillWidth="true">
