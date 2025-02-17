@@ -1,4 +1,4 @@
-package hr.tvz.productpricemonitoringtool.model;
+package hr.tvz.productpricemonitoringtool.model.json;
 
 import java.math.BigDecimal;
 

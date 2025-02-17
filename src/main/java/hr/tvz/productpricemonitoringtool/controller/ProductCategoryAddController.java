@@ -54,7 +54,7 @@ public class ProductCategoryAddController {
     }
 
     private void handleTreeItemSelection(TreeItem<Category> newItem) throws DatabaseConnectionActiveException {
-        if (newItem == null) {
+        if (isNull(newItem)) {
             return;
         }
 

@@ -2,7 +2,6 @@ package hr.tvz.productpricemonitoringtool.controller;
 
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
 import hr.tvz.productpricemonitoringtool.util.Constants;
-import hr.tvz.productpricemonitoringtool.util.JavaBridge;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Slider;
@@ -23,11 +22,10 @@ public class MapRadiusController {
     public void initialize() {
         WebEngine webEngine = webView.getEngine();
 
-        JavaBridge javaBridge = new JavaBridge();
         webEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
             if (newState == javafx.concurrent.Worker.State.SUCCEEDED) {
                 JSObject window = (JSObject) webEngine.executeScript("window");
-                window.setMember("javaBridge", javaBridge);
+                window.setMember("javaBridge", this);
             }
         });
 

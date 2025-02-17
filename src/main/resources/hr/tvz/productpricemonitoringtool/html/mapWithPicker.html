@@ -64,9 +64,9 @@
     function sendData() {
         var coordinates = pointerFeature.getGeometry().getCoordinates();
         var lonLat = ol.proj.toLonLat(coordinates);
-        var data = `Pointer is at longitude: ${lonLat[0]}, latitude: ${lonLat[1]}`;
+        var data = `${lonLat[0]} ${lonLat[1]}`;
         if (window.javaBridge) {
-            window.javaBridge.sendDataToJava(data);
+            window.javaBridge.findLonAndLatOnMap(data);
         } else {
             console.error("JavaBridge is not available.");
         }

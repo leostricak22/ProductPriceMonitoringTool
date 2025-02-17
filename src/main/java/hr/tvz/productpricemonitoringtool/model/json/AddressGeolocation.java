@@ -1,4 +1,4 @@
-package hr.tvz.productpricemonitoringtool.model;
+package hr.tvz.productpricemonitoringtool.model.json;
 
 import com.google.gson.annotations.SerializedName;
 
@@ -58,9 +58,5 @@ public class AddressGeolocation {
 
     public void setCountry(String country) {
         this.country = country;
-    }
-
-    public String getAddress() {
-        return road + " " + houseNumber + ", " + city + ", " + country;
     }
 }

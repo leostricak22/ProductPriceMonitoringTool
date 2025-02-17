@@ -17,5 +17,6 @@ module hr.tvz.productpricemonitoringtool {
     exports hr.tvz.productpricemonitoringtool.main;
     exports hr.tvz.productpricemonitoringtool.controller;
     opens hr.tvz.productpricemonitoringtool.model to com.google.gson;
+    opens hr.tvz.productpricemonitoringtool.model.json to com.google.gson;
 
 }
