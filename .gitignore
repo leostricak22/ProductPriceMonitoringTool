@@ -40,3 +40,7 @@ build/
 database.properties
 src/main/resources/database.properties
 .src/main/resources/database.properties
+
+secret.properties
+src/main/resources/secret.properties
+.src/main/resources/secret.properties

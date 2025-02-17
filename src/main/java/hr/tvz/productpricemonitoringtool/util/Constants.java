@@ -12,6 +12,8 @@ public class Constants {
             "./src/main/resources/hr/tvz/productpricemonitoringtool/html/";
     public static final String DATABASE_PROPERTIES_FILE =
             "./src/main/resources/database.properties";
+    public static final String SECRET_PROPERTIES_FILE =
+            "./src/main/resources/secret.properties";
     public static final String APPLICATION_ICON =
             "file:./src/main/resources/hr/tvz/productpricemonitoringtool/images/logo.png";
     public static final String NO_IMAGE_URL =
@@ -33,4 +35,5 @@ public class Constants {
 
     public static final String POSITIVE_BIG_DECIMAL_REGEX = "^[1-9]\\d*(\\.\\d+)?$";
 
+    public static final String GEOLOCATION_API_URL = "https://nominatim.openstreetmap.org";
 }
