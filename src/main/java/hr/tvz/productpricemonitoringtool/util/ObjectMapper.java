@@ -58,11 +58,14 @@ public class ObjectMapper {
 
     public static Address mapResultSetToAddress(ResultSet resultSet) throws SQLException {
         return new Address.Builder(resultSet.getLong("id"))
-                .street(resultSet.getString("street"))
-                .city(resultSet.getString("city"))
-                .postalCode(resultSet.getString("postal_code"))
-                .country(resultSet.getString("country"))
+                .longitude(resultSet.getBigDecimal("longitude"))
+                .latitude(resultSet.getBigDecimal("latitude"))
+                .road(resultSet.getString("road"))
                 .houseNumber(resultSet.getString("house_number"))
+                .city(resultSet.getString("city"))
+                .town(resultSet.getString("town"))
+                .village(resultSet.getString("village"))
+                .country(resultSet.getString("country"))
                 .build();
     }
 

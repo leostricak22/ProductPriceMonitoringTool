@@ -29,7 +29,7 @@ public class AddressRepository extends AbstractRepository<Address> {
         DatabaseUtil.setActiveConnectionWithDatabase(true);
 
         String query = """
-        SELECT id, street, city, postal_code, country, house_number
+        SELECT id, longitude, latitude, road, house_number, city, town, village, country
         FROM "address" WHERE ID = ?;
         """;
 
@@ -71,19 +71,22 @@ public class AddressRepository extends AbstractRepository<Address> {
         DatabaseUtil.setActiveConnectionWithDatabase(true);
         Set<Address> savedAddresses = new HashSet<>();
         String query = """
-        INSERT INTO "address" (street, city, postal_code, country, house_number)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO "address" (longitude, latitude, road, house_number, city, town, village, country)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
         """;
 
         try (Connection connection = DatabaseUtil.connectToDatabase();
             PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
             for (Address address : entities) {
-                stmt.setString(1, address.getStreet());
-                stmt.setString(2, address.getCity());
-                stmt.setString(3, address.getPostalCode());
-                stmt.setString(4, address.getCountry());
-                stmt.setString(5, address.getHouseNumber());
+                stmt.setBigDecimal(1, address.getLongitude());
+                stmt.setBigDecimal(2, address.getLatitude());
+                stmt.setString(3, address.getRoad());
+                stmt.setString(4, address.getHouseNumber());
+                stmt.setString(5, address.getCity());
+                stmt.setString(6, address.getTown());
+                stmt.setString(7, address.getVillage());
+                stmt.setString(8, address.getCountry());
 
                 stmt.addBatch();
             }

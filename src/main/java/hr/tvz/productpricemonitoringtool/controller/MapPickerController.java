@@ -1,7 +1,7 @@
 package hr.tvz.productpricemonitoringtool.controller;
 
 import hr.tvz.productpricemonitoringtool.exception.UnsuccessfulHTTPResponseCode;
-import hr.tvz.productpricemonitoringtool.model.Address2;
+import hr.tvz.productpricemonitoringtool.model.Address;
 import hr.tvz.productpricemonitoringtool.util.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -21,7 +21,7 @@ public class MapPickerController {
     @FXML public WebView webView;
     @FXML public TextField pickedLocationTextField;
 
-    private Address2 address;
+    private Address address;
 
     public void initialize() {
         WebEngine webEngine = webView.getEngine();
@@ -75,7 +75,7 @@ public class MapPickerController {
         }
     }
 
-    public Address2 getAddress() {
+    public Address getAddress() {
         return address;
     }
 }

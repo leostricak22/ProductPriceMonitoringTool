@@ -24,109 +24,44 @@
         </columnConstraints>
         <rowConstraints>
             <RowConstraints maxHeight="75.0" minHeight="75.0" prefHeight="75.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="349.0" minHeight="10.0" prefHeight="52.0" vgrow="SOMETIMES" />
-         <RowConstraints maxHeight="607.0" minHeight="306.0" prefHeight="348.0" />
+            <RowConstraints maxHeight="50.0" minHeight="30.0" prefHeight="50.0" vgrow="SOMETIMES" />
+         <RowConstraints maxHeight="175.0" minHeight="200.0" prefHeight="175.0" valignment="CENTER" />
          <RowConstraints maxHeight="329.0" minHeight="58.0" prefHeight="305.0" />
         </rowConstraints>
         <fx:include maxWidth="1.7976931348623157E308" minWidth="300.0" source="top_bar.fxml" GridPane.rowIndex="0" />
-        <GridPane maxHeight="300.0" maxWidth="700.0" minHeight="250.0" prefHeight="300.0" prefWidth="373.0" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+        <GridPane maxHeight="170.0" maxWidth="1.7976931348623157E308" minHeight="170.0" prefHeight="170.0" prefWidth="373.0" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="2">
             <columnConstraints>
-                <ColumnConstraints hgrow="SOMETIMES" maxWidth="700.0" minWidth="120.0" prefWidth="374.0" />
-                <ColumnConstraints maxWidth="148.0" minWidth="0.0" prefWidth="0.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="300.0" prefWidth="300.0" />
+                <ColumnConstraints hgrow="SOMETIMES" maxWidth="300.0" minWidth="300.0" prefWidth="300.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="300.0" prefWidth="300.0" />
+            <ColumnConstraints />
             </columnConstraints>
             <rowConstraints>
                 <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="10.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="80.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                <RowConstraints maxHeight="80.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="70.0" minHeight="70.0" prefHeight="70.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
-                <Label text="Name" GridPane.columnSpan="2" GridPane.valignment="BOTTOM">
+                <Label styleClass="formLabel" text="Name" GridPane.columnIndex="1" GridPane.columnSpan="2" GridPane.valignment="BOTTOM">
                     <GridPane.margin>
                         <Insets bottom="5.0" left="15.0" right="15.0" />
                     </GridPane.margin>
                 </Label>
-                <TextField fx:id="nameTextField" minWidth="120.0" prefHeight="40.0" prefWidth="355.0" GridPane.columnSpan="2" GridPane.rowIndex="1">
+                <TextField fx:id="nameTextField" minWidth="120.0" prefHeight="40.0" prefWidth="355.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                     <GridPane.margin>
                         <Insets bottom="5.0" left="15.0" right="15.0" />
                     </GridPane.margin>
                 </TextField>
-                <Label text="Street" GridPane.rowIndex="2" GridPane.valignment="BOTTOM">
-                    <GridPane.margin>
-                        <Insets bottom="5.0" left="15.0" right="15.0" />
-                    </GridPane.margin>
-                </Label>
-                <TextField fx:id="streetTextField" maxWidth="700.0" minWidth="120.0" prefHeight="40.0" prefWidth="355.0" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3">
-                    <GridPane.margin>
-                        <Insets bottom="5.0" left="15.0" right="15.0" />
-                    </GridPane.margin>
-                </TextField>
-                <GridPane maxWidth="1.7976931348623157E308" prefHeight="70.0" prefWidth="338.0" GridPane.rowIndex="4">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="256.0" />
-                        <ColumnConstraints maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="253.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints maxHeight="30.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="57.0" minHeight="10.0" prefHeight="57.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                    <children>
-                        <Label text="House number" GridPane.valignment="BOTTOM">
-                            <GridPane.margin>
-                                <Insets bottom="5.0" left="15.0" right="15.0" />
-                            </GridPane.margin>
-                        </Label>
-                        <TextField fx:id="houseNumberTextField" prefHeight="40.0" prefWidth="355.0" GridPane.rowIndex="1">
-                            <GridPane.margin>
-                                <Insets bottom="5.0" left="15.0" right="5.0" />
-                            </GridPane.margin>
-                        </TextField>
-                        <Label text="City" GridPane.columnIndex="1" GridPane.valignment="BOTTOM">
-                            <GridPane.margin>
-                                <Insets bottom="5.0" left="5.0" right="15.0" />
-                            </GridPane.margin>
-                        </Label>
-                        <TextField fx:id="cityTextField" prefHeight="40.0" prefWidth="355.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                            <GridPane.margin>
-                                <Insets bottom="5.0" left="5.0" right="15.0" />
-                            </GridPane.margin>
-                        </TextField>
-                    </children>
-                </GridPane>
-                <GridPane GridPane.rowIndex="5">
-                    <columnConstraints>
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="100.0" prefWidth="100.0" />
-                        <ColumnConstraints hgrow="SOMETIMES" minWidth="100.0" prefWidth="100.0" />
-                    </columnConstraints>
-                    <rowConstraints>
-                        <RowConstraints maxHeight="45.0" minHeight="0.0" prefHeight="20.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="70.0" minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
-                    </rowConstraints>
-                    <children>
-                        <Label text="Postal code" GridPane.valignment="BOTTOM">
-                            <GridPane.margin>
-                                <Insets bottom="5.0" left="15.0" right="15.0" />
-                            </GridPane.margin>
-                        </Label>
-                        <Label text="Country" GridPane.columnIndex="1" GridPane.valignment="BOTTOM">
-                            <GridPane.margin>
-                                <Insets bottom="5.0" left="5.0" right="15.0" />
-                            </GridPane.margin>
-                        </Label>
-                        <TextField fx:id="postalCodeTextField" prefHeight="40.0" prefWidth="355.0" GridPane.rowIndex="1">
-                            <GridPane.margin>
-                                <Insets bottom="5.0" left="15.0" right="5.0" />
-                            </GridPane.margin>
-                        </TextField>
-                        <TextField fx:id="countryTextField" prefHeight="40.0" prefWidth="355.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                            <GridPane.margin>
-                                <Insets bottom="5.0" left="5.0" right="15.0" />
-                            </GridPane.margin>
-                        </TextField>
-                    </children>
-                </GridPane>
+            <Button mnemonicParsing="false" onAction="#handleMapButton" prefHeight="35.0" prefWidth="815.0" styleClass="secondary-button" text="Pick address" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets left="15.0" right="15.0" />
+               </GridPane.margin>
+            </Button>
+            <Label fx:id="addressLabel" styleClass="formLabel" GridPane.columnIndex="2" GridPane.rowIndex="2">
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
+            </Label>
             </children>
         </GridPane>
         <Button mnemonicParsing="false" onAction="#handleCreate" prefHeight="25.0" prefWidth="135.0" text="Create" GridPane.columnIndex="0" GridPane.halignment="CENTER" GridPane.rowIndex="3" GridPane.valignment="TOP">
@@ -142,6 +77,5 @@
                 <Font size="25.0" />
             </font>
         </Label>
-      <Button mnemonicParsing="false" onAction="#handleMapButton" text="Map" GridPane.rowIndex="2" />
     </GridPane>
 </GridPane>

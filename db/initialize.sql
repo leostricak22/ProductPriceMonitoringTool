@@ -17,10 +17,13 @@ CREATE TABLE "user" (
 
 CREATE TABLE "address" (
     id LONG GENERATED ALWAYS AS IDENTITY,
-    street VARCHAR(255) NOT NULL,
+    latitude DECIMAL(12, 8) NOT NULL,
+    longitude DECIMAL(13, 8) NOT NULL,
+    road VARCHAR(255) NOT NULL,
     house_number VARCHAR(10) NOT NULL,
-    postal_code VARCHAR(5) NOT NULL,
-    city VARCHAR(50) NOT NULL,
+    city VARCHAR(255),
+    town VARCHAR(255),
+    village VARCHAR(255),
     country VARCHAR(50) NOT NULL,
     PRIMARY KEY (id)
 );
@@ -74,9 +77,9 @@ INSERT INTO "user" (name, email, password, role) VALUES ('admin', 'admin', 'admi
 INSERT INTO "user" (name, email, password, role) VALUES ('merchant', 'merchant@merchant.com', 'merchant', 'MERCHANT');
 INSERT INTO "user" (name, email, password, role) VALUES ('customer', 'customer@customer.com', 'customer', 'CUSTOMER');
 
-INSERT INTO "address" (street, house_number, postal_code, city, country) VALUES ('Ilica', '1', '10000', 'Zagreb', 'Croatia');
-INSERT INTO "address" (street, house_number, postal_code, city, country) VALUES ('Vukovarska', '1', '10000', 'Zagreb', 'Croatia');
-INSERT INTO "address" (street, house_number, postal_code, city, country) VALUES ('Trg bana Jelačića', '1', '10000', 'Zagreb', 'Croatia');
+INSERT INTO "address" (longitude, latitude, road, house_number, city, country) VALUES (15.976036, 45.8129663, 'Ilica', '1', 'Zagreb', 'Croatia');
+INSERT INTO "address" (longitude, latitude, road, house_number, city, country) VALUES (16.0521091, 45.8197321, 'Vukovarska', '1', 'Zagreb', 'Croatia');
+INSERT INTO "address" (longitude, latitude, road, house_number, city, country) VALUES (15.976034, 45.8132734, 'Trg bana Jelačića', '1', 'Zagreb', 'Croatia');
 
 INSERT INTO "company" (name, address_id) VALUES ('Google', 1);
 INSERT INTO "company" (name, address_id) VALUES ('Microsoft', 2);

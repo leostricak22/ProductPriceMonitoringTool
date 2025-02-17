@@ -1,28 +1,54 @@
 package hr.tvz.productpricemonitoringtool.model;
 
+import java.math.BigDecimal;
+
+import static java.util.Objects.isNull;
+
 public class Address extends Entity {
 
-    private String street;
+    private BigDecimal latitude;
+    private BigDecimal longitude;
+    private String road;
     private String houseNumber;
     private String city;
-    private String postalCode;
+    private String town;
+    private String village;
     private String country;
 
-    private Address(Builder builder) {
-        super(builder.id, builder.name);
-        this.street = builder.street;
+    public Address(Builder builder) {
+        super(builder.id, builder.road);
+        this.latitude = builder.latitude;
+        this.longitude = builder.longitude;
+        this.road = builder.road;
         this.houseNumber = builder.houseNumber;
         this.city = builder.city;
-        this.postalCode = builder.postalCode;
+        this.town = builder.town;
+        this.village = builder.village;
         this.country = builder.country;
     }
 
-    public String getStreet() {
-        return street;
+    public BigDecimal getLatitude() {
+        return latitude;
     }
 
-    public void setStreet(String street) {
-        this.street = street;
+    public void setLatitude(BigDecimal latitude) {
+        this.latitude = latitude;
+    }
+
+    public BigDecimal getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(BigDecimal longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getRoad() {
+        return road;
+    }
+
+    public void setRoad(String road) {
+        this.road = road;
     }
 
     public String getHouseNumber() {
@@ -41,12 +67,20 @@ public class Address extends Entity {
         this.city = city;
     }
 
-    public String getPostalCode() {
-        return postalCode;
+    public String getTown() {
+        return town;
     }
 
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
+    public void setTown(String town) {
+        this.town = town;
+    }
+
+    public String getVillage() {
+        return village;
+    }
+
+    public void setVillage(String village) {
+        this.village = village;
     }
 
     public String getCountry() {
@@ -58,22 +92,32 @@ public class Address extends Entity {
     }
 
     public static class Builder {
-
         private final Long id;
-        private final String name;
-        private String street;
+        private BigDecimal latitude;
+        private BigDecimal longitude;
+        private String road;
         private String houseNumber;
         private String city;
-        private String postalCode;
+        private String town;
+        private String village;
         private String country;
 
         public Builder(Long id) {
             this.id = id;
-            this.name = "Address-" + id;
         }
 
-        public Builder street(String street) {
-            this.street = street;
+        public Builder latitude(BigDecimal latitude) {
+            this.latitude = latitude;
+            return this;
+        }
+
+        public Builder longitude(BigDecimal longitude) {
+            this.longitude = longitude;
+            return this;
+        }
+
+        public Builder road(String road) {
+            this.road = road;
             return this;
         }
 
@@ -87,8 +131,13 @@ public class Address extends Entity {
             return this;
         }
 
-        public Builder postalCode(String postalCode) {
-            this.postalCode = postalCode;
+        public Builder town(String town) {
+            this.town = town;
+            return this;
+        }
+
+        public Builder village(String village) {
+            this.village = village;
             return this;
         }
 
@@ -100,5 +149,36 @@ public class Address extends Entity {
         public Address build() {
             return new Address(this);
         }
+    }
+
+    public String getAddress() {
+        StringBuilder address = new StringBuilder();
+        if (isNull(road)) {
+            address.append("?");
+        } else {
+            address.append(road);
+        }
+
+        if (!isNull(houseNumber)) {
+            address.append(" ").append(houseNumber);
+        }
+
+        if (!isNull(city)) {
+            address.append(", ").append(city);
+        }
+
+        if (!isNull(town)) {
+            address.append(", ").append(town);
+        }
+
+        if (!isNull(village)) {
+            address.append(", ").append(village);
+        }
+
+        if (!isNull(country)) {
+            address.append(", ").append(country);
+        }
+
+        return address.toString();
     }
 }
