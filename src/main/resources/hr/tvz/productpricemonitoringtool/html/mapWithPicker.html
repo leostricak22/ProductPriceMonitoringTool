@@ -28,7 +28,7 @@
     });
 
     var pointerFeature = new ol.Feature({
-        geometry: new ol.geom.Circle(ol.proj.fromLonLat([16.3738, 45.1]), radius)
+        geometry: new ol.geom.Circle(ol.proj.fromLonLat([16.3738, 45.1]))
     });
     pointerFeature.setStyle(iconStyle);
 
@@ -49,8 +49,8 @@
             vectorLayer
         ],
         view: new ol.View({
-            center: ol.proj.fromLonLat([0, 0]),
-            zoom: 2
+            center: ol.proj.fromLonLat([16.3738, 45.1]),
+            zoom: 6
         })
     });
 
@@ -58,6 +58,7 @@
         var coordinates = event.coordinate;
         pointerFeature.setGeometry(new ol.geom.Point(coordinates));
         console.log('Pointer moved to: ', ol.proj.toLonLat(coordinates));
+        sendData();
     });
 
     function sendData() {

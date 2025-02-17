@@ -100,6 +100,10 @@ public class CompanyAddController {
         SceneLoader.loadScene("dashboard", "Dashboard");
     }
 
+    public void handleMapButton() {
+        SceneLoader.loadPopupScene("map_picker", "Map Picker");
+    }
+
     private String validateInput(String name, String street, String houseNumber, String city, String postalCode, String country) {
         if(name.trim().isEmpty()) {
             return "Name is required";

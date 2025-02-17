@@ -142,5 +142,6 @@
                 <Font size="25.0" />
             </font>
         </Label>
+      <Button mnemonicParsing="false" onAction="#handleMapButton" text="Map" GridPane.rowIndex="2" />
     </GridPane>
 </GridPane>

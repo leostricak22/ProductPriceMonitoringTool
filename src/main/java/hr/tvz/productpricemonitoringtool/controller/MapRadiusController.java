@@ -40,7 +40,6 @@ public class MapRadiusController {
         }
 
         radiusSlider.valueProperty().addListener((observable, oldValue, newValue) -> handleSliderDragDone(newValue));
-
     }
 
     public void onFetchData() {
