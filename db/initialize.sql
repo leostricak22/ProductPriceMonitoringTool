@@ -17,8 +17,8 @@ CREATE TABLE "user" (
 
 CREATE TABLE "address" (
     id LONG GENERATED ALWAYS AS IDENTITY,
-    latitude DECIMAL(12, 8) NOT NULL,
-    longitude DECIMAL(13, 8) NOT NULL,
+    latitude DECIMAL(19, 16) NOT NULL,
+    longitude DECIMAL(19, 16) NOT NULL,
     road VARCHAR(255) NOT NULL,
     house_number VARCHAR(10) NOT NULL,
     city VARCHAR(255),

@@ -20,10 +20,19 @@
 <body>
 <div id="map" class="map"></div>
 <script type="text/javascript">
-    var radius = 10000;
+    var radiusInMeters = 10000;
+    var centerLonLat = [16.3738, 45.1];
+
+    function metersToProjection(lonLat, radius) {
+        var point1 = ol.proj.fromLonLat(lonLat);
+        var point2 = ol.proj.fromLonLat([lonLat[0], lonLat[1] + (radius / 111320)]);
+        return Math.abs(point1[1] - point2[1]);
+    }
+
+    var projectedRadius = metersToProjection(centerLonLat, radiusInMeters);
 
     var circleFeature = new ol.Feature({
-        geometry: new ol.geom.Circle(ol.proj.fromLonLat([16.3738, 45.1]), radius)
+        geometry: new ol.geom.Circle(ol.proj.fromLonLat(centerLonLat), projectedRadius)
     });
 
     var vectorSource = new ol.source.Vector({
@@ -52,33 +61,34 @@
             vectorLayer
         ],
         view: new ol.View({
-            center: ol.proj.fromLonLat([16.3738, 45.1]), // Centered on Croatia
-            zoom: 7
+            center: ol.proj.fromLonLat(centerLonLat),
+            zoom: 6
         })
     });
 
     map.on('click', function(event) {
         var coordinates = event.coordinate;
-        circleFeature.setGeometry(new ol.geom.Circle(coordinates, radius));
+        circleFeature.setGeometry(new ol.geom.Circle(coordinates, projectedRadius));
         console.log('Circle moved to: ', ol.proj.toLonLat(coordinates));
     });
 
     function sendData() {
         var coordinates = circleFeature.getGeometry().getCenter();
         var lonLat = ol.proj.toLonLat(coordinates);
-        var data = `Circle is centered at longitude: ${lonLat[0]}, latitude: ${lonLat[1]}`;
+        var data = `${lonLat[0]} ${lonLat[1]}`;
         if (window.javaBridge) {
-            window.javaBridge.sendDataToJava(data);
+            window.javaBridge.findLonAndLatOnMap(data);
         } else {
             console.error("JavaBridge is not available.");
         }
         return data;
     }
 
-    function updateRadius(newRadius) {
-        radius = newRadius * 1000;
-        circleFeature.setGeometry(new ol.geom.Circle(circleFeature.getGeometry().getCenter(), radius));
-        console.log('Radius updated to: ', radius);
+    function updateRadius(newRadiusKm) {
+        radiusInMeters = newRadiusKm * 1000;
+        projectedRadius = metersToProjection(centerLonLat, radiusInMeters);
+        circleFeature.setGeometry(new ol.geom.Circle(circleFeature.getGeometry().getCenter(), projectedRadius));
+        console.log('Radius updated to:', radiusInMeters);
     }
 </script>
 </body>

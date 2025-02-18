@@ -16,7 +16,7 @@
             <WebView fx:id="webView" VBox.vgrow="ALWAYS" />
          <BorderPane maxHeight="50.0" minHeight="70.0" prefHeight="70.0" prefWidth="200.0" style="-fx-background-color: white;">
             <center>
-               <TextField fx:id="radiusTextField" maxHeight="10.0" minHeight="10.0" onKeyReleased="#handleTextViewRadiusUpdate" prefHeight="10.0" prefWidth="153.0" style="-fx-max-height: 10;" BorderPane.alignment="CENTER">
+               <TextField fx:id="radiusTextField" maxHeight="10.0" minHeight="10.0" onKeyReleased="#handleTextViewRadiusUpdate" prefHeight="10.0" prefWidth="153.0" style="-fx-max-height: 10;" text="10" BorderPane.alignment="CENTER">
                   <BorderPane.margin>
                      <Insets />
                   </BorderPane.margin></TextField>
@@ -25,7 +25,7 @@
                <HBox alignment="CENTER" BorderPane.alignment="CENTER">
                   <children>
                      <Label text="1 KM" />
-                     <Slider fx:id="radiusSlider" max="200.0" min="1.0" prefHeight="14.0" prefWidth="345.0">
+                     <Slider fx:id="radiusSlider" max="200.0" min="1.0" prefHeight="14.0" prefWidth="345.0" value="10.0">
                         <padding>
                            <Insets left="5.0" right="5.0" />
                         </padding>
@@ -41,7 +41,7 @@
                </HBox>
             </left>
             <right>
-                  <Button onAction="#onFetchData" text="Fetch Data" BorderPane.alignment="CENTER">
+                  <Button onAction="#onFetchData" text="Apply radius" BorderPane.alignment="CENTER">
                   <opaqueInsets>
                      <Insets />
                   </opaqueInsets>

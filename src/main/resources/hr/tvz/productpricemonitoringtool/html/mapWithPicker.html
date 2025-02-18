@@ -64,7 +64,7 @@
     function sendData() {
         var coordinates = pointerFeature.getGeometry().getCoordinates();
         var lonLat = ol.proj.toLonLat(coordinates);
-        var data = `${lonLat[0]} ${lonLat[1]}`;
+        var data = `${lonLat[1]} ${lonLat[0]}`;
         if (window.javaBridge) {
             window.javaBridge.findLonAndLatOnMap(data);
         } else {

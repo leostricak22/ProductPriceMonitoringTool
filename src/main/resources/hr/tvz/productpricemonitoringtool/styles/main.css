@@ -84,3 +84,21 @@
 .text-area .content {
     -fx-background-color: #f5f5f5;
 }
+
+.slider .track {
+    -fx-background-color: #ccc;
+    -fx-background-radius: 5px;
+    -fx-pref-height: 8px;
+}
+
+.slider .thumb {
+    -fx-background-color: #0078D7;
+    -fx-background-radius: 50%;
+    -fx-pref-width: 15px;
+    -fx-pref-height: 15px;
+}
+
+.slider .fill {
+    -fx-background-color: #0078D7;
+    -fx-background-radius: 5px;
+}

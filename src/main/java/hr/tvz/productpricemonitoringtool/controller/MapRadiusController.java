@@ -1,7 +1,10 @@
 package hr.tvz.productpricemonitoringtool.controller;
 
-import hr.tvz.productpricemonitoringtool.util.AlertDialog;
-import hr.tvz.productpricemonitoringtool.util.Constants;
+import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
+import hr.tvz.productpricemonitoringtool.model.Company;
+import hr.tvz.productpricemonitoringtool.model.Coordinates;
+import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
+import hr.tvz.productpricemonitoringtool.util.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Slider;
@@ -9,15 +12,23 @@ import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.Set;
+
 
 public class MapRadiusController {
 
+    private static final Logger log = LoggerFactory.getLogger(MapRadiusController.class);
     @FXML public WebView webView;
     @FXML public Slider radiusSlider;
     @FXML public TextField radiusTextField;
+
+    private final CompanyRepository companyRepository = new CompanyRepository();
 
     public void initialize() {
         WebEngine webEngine = webView.getEngine();
@@ -33,7 +44,7 @@ public class MapRadiusController {
             File file = new File(Constants.RELATIVE_HTML_PATH + "mapWithRadius.html");
             webEngine.load(file.toURI().toURL().toString());
         } catch (IOException e) {
-            AlertDialog.showErrorDialog("Error occurred", "Error loading a map");
+            AlertDialog.showErrorDialog("Error loading a map");
             return;
         }
 
@@ -56,7 +67,9 @@ public class MapRadiusController {
 
     public void handleSliderDragDone(Number newValue) {
         WebEngine webEngine = webView.getEngine();
-        radiusTextField.setText(String.valueOf(newValue));
+        if (!radiusTextField.isFocused()) {
+            radiusTextField.setText(String.valueOf(newValue));
+        }
         webEngine.executeScript("updateRadius(" + newValue + ")");
     }
 
@@ -64,12 +77,46 @@ public class MapRadiusController {
         WebEngine webEngine = webView.getEngine();
 
         String radius = radiusTextField.getText();
-        if (radius.isEmpty() || !radius.matches("\\d+")) {
+        if (radius.isEmpty() || !ValidationUtil.isPositiveBigDecimal(radius)) {
             radius = "0";
         }
 
-        radiusSlider.setValue(Long.parseLong(radius));
+        radiusSlider.setValue(new BigDecimal(radius).doubleValue());
 
         webEngine.executeScript("updateRadius(" + radius + ")");
+    }
+
+    public void findLonAndLatOnMap(String data) {
+        Coordinates coordinates = MapUtil.getCoordinatesFromMap(data);
+
+        Set<Company> companies;
+        try {
+            companies = companyRepository.findAll();
+        } catch (DatabaseConnectionActiveException e) {
+            AlertDialog.showErrorDialog("Error fetching companies from database.");
+            return;
+        }
+
+        if (!ValidationUtil.isPositiveBigDecimal(radiusTextField.getText())) {
+            AlertDialog.showErrorDialog("Radius must be a positive number.");
+            return;
+        }
+
+        BigDecimal radius = new BigDecimal(radiusTextField.getText());
+        for (Company company : companies) {
+            Coordinates companyCoordinates = new Coordinates.Builder()
+                    .latitude(company.getAddress().getLatitude())
+                    .longitude(company.getAddress().getLongitude())
+                    .build();
+
+            BigDecimal distance = MapUtil.calculateDistance(coordinates, companyCoordinates);
+            log.info("Distance between coordinates and {} is {}", companyCoordinates, distance);
+            if (distance.compareTo(radius) <= 0) {
+                log.info("Company {} is in radius.", company.getName());
+            } else {
+                log.info("Company {} is NOT in radius.", company.getName());
+            }
+
+        }
     }
 }

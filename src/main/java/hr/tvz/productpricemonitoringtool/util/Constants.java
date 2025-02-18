@@ -35,6 +35,7 @@ public class Constants {
 
     public static final String POSITIVE_BIG_DECIMAL_REGEX = "^[1-9]\\d*(\\.\\d+)?$";
     public static final String BIG_DECIMAL_REGEX = "^\\d*(\\.\\d+)?$";
+    public static final String POSITIVE_INTEGER_REGEX = "^[1-9]\\d*$";
 
     public static final String GEOLOCATION_API_URL = "https://nominatim.openstreetmap.org";
 }

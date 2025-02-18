@@ -11,4 +11,8 @@ public class ValidationUtil {
     public static boolean isBigDecimal(String value) {
         return value.matches(Constants.BIG_DECIMAL_REGEX);
     }
+
+    public static boolean isPositiveInteger(String value) {
+        return value.matches(Constants.POSITIVE_INTEGER_REGEX);
+    }
 }
