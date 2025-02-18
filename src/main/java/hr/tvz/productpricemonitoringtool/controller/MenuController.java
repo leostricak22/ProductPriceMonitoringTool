@@ -60,4 +60,10 @@ public class MenuController {
                 "company_products_list",
                 "Company Products List");
     }
+
+    public void handleCompanyEditRedirect() {
+        SceneLoader.loadScene(
+                "company_edit",
+                "Company Edit");
+    }
 }

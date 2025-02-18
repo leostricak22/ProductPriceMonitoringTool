@@ -16,8 +16,10 @@ import java.util.Set;
 public class UserRepository extends AbstractRepository<User> {
 
     @Override
-    public Optional<User> findById(Long id) throws RepositoryAccessException {
-        return Optional.empty();
+    public Optional<User> findById(Long id) throws RepositoryAccessException, DatabaseConnectionActiveException {
+        return findAll().stream()
+                .filter(user -> user.getId().equals(id))
+                .findFirst();
     }
 
     @Override

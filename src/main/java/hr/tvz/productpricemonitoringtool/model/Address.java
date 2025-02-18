@@ -153,29 +153,29 @@ public class Address extends Entity {
 
     public String getAddress() {
         StringBuilder address = new StringBuilder();
-        if (isNull(road)) {
+        if (isNull(road) || road.equals("?")) {
             address.append("?");
         } else {
             address.append(road);
         }
 
-        if (!isNull(houseNumber)) {
+        if (!isNull(houseNumber) && !houseNumber.equals("?")) {
             address.append(" ").append(houseNumber);
         }
 
-        if (!isNull(city)) {
+        if (!isNull(city) && !city.equals("?")) {
             address.append(", ").append(city);
         }
 
-        if (!isNull(town)) {
+        if (!isNull(town) && !town.equals("?")) {
             address.append(", ").append(town);
         }
 
-        if (!isNull(village)) {
+        if (!isNull(village) && !village.equals("?")) {
             address.append(", ").append(village);
         }
 
-        if (!isNull(country)) {
+        if (!isNull(country) && !country.equals("?")) {
             address.append(", ").append(country);
         }
 

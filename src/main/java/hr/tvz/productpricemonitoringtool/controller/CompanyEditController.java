@@ -7,6 +7,7 @@ import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.User;
 import hr.tvz.productpricemonitoringtool.repository.AddressRepository;
 import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
+import hr.tvz.productpricemonitoringtool.repository.UserRepository;
 import hr.tvz.productpricemonitoringtool.util.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -19,18 +20,31 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
-public class CompanyAddController {
+public class CompanyEditController {
 
+    @FXML public Label sectionTitleLabel;
     @FXML public TextField nameTextField;
     @FXML public Label addressLabel;
 
     private Address address;
 
-    private final Logger logger = LoggerFactory.getLogger(CompanyAddController.class);
+    private final Logger logger = LoggerFactory.getLogger(CompanyEditController.class);
     private final AddressRepository addressRepository = new AddressRepository();
     private final CompanyRepository companyRepository = new CompanyRepository();
+    private final UserRepository userRepository = new UserRepository();
 
-    public void handleCreate() {
+    public void initialize() {
+        Company company = Session.getSelectedCompany().orElseThrow(() ->
+                new AuthenticationException("Company is not selected"));
+
+        sectionTitleLabel.setText("Edit Company: " + company.getName());
+
+        nameTextField.setText(company.getName());
+        address = company.getAddress();
+        addressLabel.setText(address.getAddress());
+    }
+
+    public void handleEdit() {
         String name = nameTextField.getText();
 
         String validationMessage = validateInput(name);
@@ -40,8 +54,6 @@ public class CompanyAddController {
             return;
         }
 
-        User user = Session.getLoggedInUser().orElseThrow(() -> new AuthenticationException("User is not logged in"));
-
         try {
             address = addressRepository.save(address);
         } catch (DatabaseConnectionActiveException e) {
@@ -50,38 +62,33 @@ public class CompanyAddController {
             return;
         }
 
-        Company company = new Company.Builder(0L, name)
+        Company company = new Company.Builder(getCompany().getId(), name)
                 .address(address)
                 .build();
 
-        try {
-            companyRepository.save(company);
-        } catch (DatabaseConnectionActiveException e) {
-            AlertDialog.showErrorDialog(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
-            logger.error(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE, e.getMessage());
-            return;
-        }
+        companyRepository.update(company);
 
-        try {
-            companyRepository.addUser(user.getId(), company.getId());
-        } catch (DatabaseConnectionActiveException e) {
-            AlertDialog.showErrorDialog(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
-            logger.error(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE, e.getMessage());
-            return;
-        }
+        Session.getLoggedInUser().ifPresentOrElse(user -> {
+            Optional<User> optionalUser;
+            try {
+                optionalUser = userRepository.findById(user.getId());
+            } catch (DatabaseConnectionActiveException e) {
+                throw new AuthenticationException(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
+            }
 
-        try {
-            user.setCompanies(companyRepository.findAllByUserId(user.getId()));
-        } catch (DatabaseConnectionActiveException e) {
-            AlertDialog.showErrorDialog(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
-            logger.error(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE, e.getMessage());
-            return;
-        }
+            if (optionalUser.isEmpty()) {
+                throw new AuthenticationException("User not found");
+            }
 
-        Session.setLoggedInUser(user);
+            Session.setLoggedInUser(optionalUser.get());
+        }, () -> {
+            throw new AuthenticationException("User is not logged in");
+        });
+
+        Session.setSelectedCompany(company);
 
         AlertDialog.showInformationDialog("Success", "Company created successfully");
-        SceneLoader.loadScene("dashboard", "Dashboard");
+        SceneLoader.loadScene("company_dashboard", "Dashboard");
     }
 
     public void handleMapButton() {
@@ -98,5 +105,10 @@ public class CompanyAddController {
         }
 
         return "";
+    }
+
+    private Company getCompany() {
+        return Session.getSelectedCompany().orElseThrow(() ->
+                new AuthenticationException("Company is not selected"));
     }
 }

@@ -4,6 +4,7 @@ import hr.tvz.productpricemonitoringtool.exception.UnsuccessfulHTTPResponseCode;
 import hr.tvz.productpricemonitoringtool.model.Address;
 import hr.tvz.productpricemonitoringtool.model.Coordinates;
 import hr.tvz.productpricemonitoringtool.util.*;
+import javafx.concurrent.Worker;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
@@ -13,6 +14,7 @@ import netscape.javascript.JSObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
@@ -23,13 +25,20 @@ public class MapPickerController {
 
     private Address address;
 
-    public void initialize() {
+    public void initialize(Optional<Address> previousAddress) {
         WebEngine webEngine = webView.getEngine();
 
         webEngine.getLoadWorker().stateProperty().addListener((obs, oldState, newState) -> {
-            if (newState == javafx.concurrent.Worker.State.SUCCEEDED) {
+            if (newState == Worker.State.SUCCEEDED) {
                 JSObject window = (JSObject) webEngine.executeScript("window");
                 window.setMember("javaBridge", this);
+
+                if (previousAddress.isPresent()) {
+                    address = previousAddress.get();
+                    pickedLocationTextField.setText(address.getAddress());
+
+                    webEngine.executeScript("setMarker(" + address.getLongitude() + ", " + address.getLatitude() + ")");
+                }
             }
         });
 

@@ -72,6 +72,13 @@
         }
         return data;
     }
+
+    function setMarker(lon, lat) {
+        var coordinates = ol.proj.fromLonLat([lon, lat]);
+        pointerFeature.setGeometry(new ol.geom.Point(coordinates));
+        map.getView().setCenter(coordinates);
+        map.getView().setZoom(12);
+    }
 </script>
 </body>
 </html>

@@ -30,6 +30,7 @@ public class DashboardController {
         List<Company> companies = new ArrayList<>(user.get().getCompanies());
         companies.sort((c1, c2) -> c1.getName().compareToIgnoreCase(c2.getName()));
 
+        companyFlowPane.getChildren().clear();
         for (Company company : companies) {
             Button companyButton = new Button(company.getName());
             companyButton.getStyleClass().add("company-button");

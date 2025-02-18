@@ -53,17 +53,17 @@
 }
 
 .default-color0.chart-series-line {
-    -fx-stroke: darkred;
+    -fx-stroke: rgba(149, 14, 14, 0.86);
 }
 
 .default-color1.chart-series-line {
-    -fx-stroke: darkgreen;
+    -fx-stroke: #1a751c;
 }
 
 .default-color0.chart-line-symbol {
-    -fx-background-color: darkred, darkred;
+    -fx-background-color: rgba(149, 14, 14, 0.86), rgba(149, 14, 14, 0.86);
 }
 
 .default-color1.chart-line-symbol {
-    -fx-background-color: darkgreen, darkgreen;
+    -fx-background-color: #1a751c, #1a751c;
 }

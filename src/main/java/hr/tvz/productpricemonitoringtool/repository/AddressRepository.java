@@ -13,6 +13,8 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import static java.util.Objects.isNull;
+
 public class AddressRepository extends AbstractRepository<Address> {
 
     @Override
@@ -81,12 +83,12 @@ public class AddressRepository extends AbstractRepository<Address> {
             for (Address address : entities) {
                 stmt.setBigDecimal(1, address.getLongitude());
                 stmt.setBigDecimal(2, address.getLatitude());
-                stmt.setString(3, address.getRoad());
-                stmt.setString(4, address.getHouseNumber());
-                stmt.setString(5, address.getCity());
-                stmt.setString(6, address.getTown());
-                stmt.setString(7, address.getVillage());
-                stmt.setString(8, address.getCountry());
+                stmt.setString(3, isNull(address.getRoad()) ? "?" : address.getRoad());
+                stmt.setString(4, isNull(address.getHouseNumber()) ? "?" : address.getHouseNumber());
+                stmt.setString(5, isNull(address.getCity()) ? "?" : address.getCity());
+                stmt.setString(6, isNull(address.getTown()) ? "?" : address.getTown());
+                stmt.setString(7, isNull(address.getVillage()) ? "?" : address.getVillage());
+                stmt.setString(8, isNull(address.getCountry()) ? "?" : address.getCountry());
 
                 stmt.addBatch();
             }

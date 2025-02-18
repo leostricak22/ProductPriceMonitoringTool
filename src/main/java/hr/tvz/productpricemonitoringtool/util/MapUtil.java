@@ -1,9 +1,14 @@
 package hr.tvz.productpricemonitoringtool.util;
 
+import hr.tvz.productpricemonitoringtool.controller.MapPickerController;
+import hr.tvz.productpricemonitoringtool.model.Address;
 import hr.tvz.productpricemonitoringtool.model.Coordinates;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Label;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
@@ -51,5 +56,23 @@ public class MapUtil {
         double distance = EARTH_RADIUS_KM * c;
 
         return BigDecimal.valueOf(distance).setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public static Optional<Address> handleMapPick(Address address, Label addressLabel) {
+        Optional<FXMLLoader> loader = SceneLoader.loadMapPickerPopupScene(
+                "map_picker", "Map Picker", Optional.ofNullable(address));
+
+        if (loader.isEmpty()) {
+            AlertDialog.showErrorDialog("Error fetching data from popup window");
+            return Optional.empty();
+        }
+
+        MapPickerController controller = loader.get().getController();
+        if(!isNull(controller.getAddress())) {
+            address = controller.getAddress();
+            addressLabel.setText(address.getAddress());
+        }
+
+        return Optional.of(address);
     }
 }

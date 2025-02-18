@@ -148,6 +148,37 @@ public class CompanyRepository extends AbstractRepository<Company> {
         return savedCompanies;
     }
 
+    public synchronized void update(Company company) {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
+        String query = """
+        UPDATE "company" SET name = ?, address_id = ?
+        WHERE id = ?
+        """;
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, company.getName());
+            stmt.setLong(2, company.getAddress().getId());
+            stmt.setLong(3, company.getId());
+
+            stmt.executeUpdate();
+        } catch (IOException | SQLException e) {
+            throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
+        }
+    }
+
     public synchronized Set<Company> findAllByProductId(Long productId) throws RepositoryAccessException, DatabaseConnectionActiveException {
         while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
             try {

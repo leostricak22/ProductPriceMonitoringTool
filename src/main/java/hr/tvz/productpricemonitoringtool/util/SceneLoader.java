@@ -1,8 +1,10 @@
 package hr.tvz.productpricemonitoringtool.util;
 
 import hr.tvz.productpricemonitoringtool.controller.CompanyProductChartController;
+import hr.tvz.productpricemonitoringtool.controller.MapPickerController;
 import hr.tvz.productpricemonitoringtool.controller.ProductSearchController;
 import hr.tvz.productpricemonitoringtool.main.ProductPriceMonitoringToolApplication;
+import hr.tvz.productpricemonitoringtool.model.Address;
 import hr.tvz.productpricemonitoringtool.model.Category;
 import hr.tvz.productpricemonitoringtool.model.Company;
 import javafx.fxml.FXMLLoader;
@@ -95,5 +97,30 @@ public class SceneLoader {
             AlertDialog.showErrorDialog(Constants.ERROR_LOADING_SCENE_MESSAGE + fxmlFileName);
             logger.error(Constants.ERROR_LOADING_SCENE_MESSAGE + "{}", fxmlFileName, e);
         }
+    }
+
+    public static Optional<FXMLLoader> loadMapPickerPopupScene(String fxmlFileName, String title, Optional<Address> previousAddress) {
+        try {
+            FXMLLoader fxmlLoader = FXMLLoaderHelper.fxmlFilePath(fxmlFileName + Constants.SCENE_EXTENSION);
+            Scene scene = new Scene(fxmlLoader.load(), 700, 500);
+            Stage popupStage = new Stage();
+
+            MapPickerController mapPickerController = fxmlLoader.getController();
+            mapPickerController.initialize(previousAddress);
+
+            popupStage.setTitle(title);
+            popupStage.setScene(scene);
+            popupStage.initModality(Modality.WINDOW_MODAL);
+            popupStage.initOwner(ProductPriceMonitoringToolApplication.getMainStage());
+
+            popupStage.showAndWait();
+
+            return Optional.of(fxmlLoader);
+        } catch (IOException e) {
+            AlertDialog.showErrorDialog(Constants.ERROR_LOADING_SCENE_MESSAGE + fxmlFileName);
+            logger.error(Constants.ERROR_LOADING_SCENE_MESSAGE + "{}", fxmlFileName, e);
+        }
+
+        return Optional.empty();
     }
 }
