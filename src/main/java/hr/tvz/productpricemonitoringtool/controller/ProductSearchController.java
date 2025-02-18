@@ -1,13 +1,15 @@
 package hr.tvz.productpricemonitoringtool.controller;
 
+import hr.tvz.productpricemonitoringtool.enumeration.CompanyProductRecordType;
+import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.model.Category;
+import hr.tvz.productpricemonitoringtool.model.CompanyProduct;
 import hr.tvz.productpricemonitoringtool.model.Product;
 import hr.tvz.productpricemonitoringtool.repository.CategoryRepository;
+import hr.tvz.productpricemonitoringtool.repository.CompanyProductRepository;
 import hr.tvz.productpricemonitoringtool.repository.ProductRepository;
 import hr.tvz.productpricemonitoringtool.thread.FetchProductsByCategoriesThread;
-import hr.tvz.productpricemonitoringtool.util.AlertDialog;
-import hr.tvz.productpricemonitoringtool.util.Constants;
-import hr.tvz.productpricemonitoringtool.util.ProgressBarUtil;
+import hr.tvz.productpricemonitoringtool.util.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
@@ -16,9 +18,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
+import javafx.scene.layout.*;
 import javafx.util.Duration;
 
 import java.math.BigDecimal;
@@ -37,6 +37,7 @@ public class ProductSearchController {
 
     private final CategoryRepository categoryRepository = new CategoryRepository();
     private final ProductRepository productRepository = new ProductRepository();
+    private final CompanyProductRepository companyProductRepository = new CompanyProductRepository();
 
     public void initialize(Optional<Category> parentCategory) {
         this.parentCategory = parentCategory;
@@ -154,12 +155,46 @@ public class ProductSearchController {
         imageView.setFitHeight(250);
         pane.getChildren().add(imageView);
 
-        Label label = new Label(product.getName());
-        pane.getChildren().add(label);
+        List<CompanyProduct> companyProducts = new ArrayList<>();
+        try {
+            companyProducts = new ArrayList<>(companyProductRepository.findByProductId(product.getId(),
+                    CompanyProductRecordType.LATEST_RECORD));
+        } catch (
+        DatabaseConnectionActiveException e) {
+            AlertDialog.showErrorDialog("Please try again later.");
+            SceneLoader.loadScene("dashboard", "Dashboard");
+        }
+
+        BigDecimal lowestPrice = companyProducts.stream()
+                .map(companyProduct -> companyProduct.getPrice().value())
+                .min(BigDecimal::compareTo)
+                .orElse(BigDecimal.ZERO);
+
+        BigDecimal highestPrice = companyProducts.stream()
+                .map(companyProduct -> companyProduct.getPrice().value())
+                .max(BigDecimal::compareTo)
+                .orElse(BigDecimal.ZERO);
+
+        VBox namePriceBox = new VBox();
+        Label nameLabel = new Label(product.getName());
+        Label priceLabel = new Label(lowestPrice + "€ - " + highestPrice + "€");
+
+        nameLabel.getStyleClass().add("product-name-label");
+        priceLabel.getStyleClass().add("product-price-label");
+
+        namePriceBox.getChildren().add(nameLabel);
+        namePriceBox.getChildren().add(priceLabel);
+
+        pane.getChildren().add(namePriceBox);
 
         pane.getStyleClass().add("product-pane");
         GridPane.setRowIndex(imageView, 0);
-        GridPane.setRowIndex(label, 1);
+        GridPane.setRowIndex(namePriceBox, 1);
+
+        pane.setOnMouseClicked(event -> {
+            Session.setSelectedProduct(product);
+            SceneLoader.loadScene("product_details", "Product Details");
+        });
 
         return pane;
     }
