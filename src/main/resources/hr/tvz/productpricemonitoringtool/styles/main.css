@@ -117,3 +117,11 @@
 .textFieldWithButtonButton:selected {
     -fx-border-width: 1 1 1 1;
 }
+
+.logoutButton {
+    -fx-background-color: #782c2c;
+}
+
+.logoutButton:hover, .logoutButton:pressed, .logoutButton:focused, .logoutButton:selected {
+    -fx-background-color: #4a2020;
+}

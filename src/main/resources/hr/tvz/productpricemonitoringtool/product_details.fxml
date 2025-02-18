@@ -136,7 +136,7 @@
                   <Insets left="15.0" />
                </padding>
             </GridPane>
-            <Label fx:id="descriptionLabel" styleClass="formLabel" GridPane.columnIndex="1" GridPane.valignment="TOP">
+            <Label fx:id="descriptionLabel" styleClass="formLabel" wrapText="true" GridPane.columnIndex="1" GridPane.valignment="TOP">
                <padding>
                   <Insets left="30.0" />
                </padding>

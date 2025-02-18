@@ -67,4 +67,9 @@ public class UserEditController {
     public void handleUserEditPasswordRedirect() {
         SceneLoader.loadScene("user_edit_password", "Edit Password");
     }
+
+    public void handleLogout() {
+        Session.logout();
+        SceneLoader.loadScene("login", "Login");
+    }
 }

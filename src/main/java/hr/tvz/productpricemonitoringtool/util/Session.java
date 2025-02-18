@@ -63,4 +63,10 @@ public class Session {
         return FileUtil.cropImageToSquare(
                 new Image("file:files/user/default_profile_picture.png"));
     }
+
+    public static void logout() {
+        loggedInUser = Optional.empty();
+        selectedCompany = Optional.empty();
+        selectedProduct = Optional.empty();
+    }
 }

@@ -108,10 +108,10 @@ public class ProductDetailsController {
             });
 
             if (price.isEmpty()) {
-                companyProductPriceLabel.setVisible(false);
-                companyProductPriceTitleLabel.setVisible(false);
-                companyProductPriceButton.setVisible(false);
+                hideCompanyProductPrice();
             }
+        } else {
+            hideCompanyProductPrice();
         }
 
         companyProducts.sort((cp1, cp2) -> cp2.getPrice().value().compareTo(cp1.getPrice().value()));
@@ -200,7 +200,7 @@ public class ProductDetailsController {
     }
 
     public void createProductLineChart(Long productId) throws DatabaseConnectionActiveException {
-        List<CompanyProduct> companyProducts = new ArrayList<>(companyProductRepository.findByProductId(
+        companyProducts = new ArrayList<>(companyProductRepository.findByProductId(
                 productId,
                 CompanyProductRecordType.ALL_RECORDS));
         companyProducts.sort(Comparator.comparing(CompanyProduct::getCreatedAt));
@@ -246,5 +246,11 @@ public class ProductDetailsController {
         }
 
         productLineChart.getData().addAll(highestPriceSeries, lowestPriceSeries);
+    }
+
+    private void hideCompanyProductPrice() {
+        companyProductPriceLabel.setVisible(false);
+        companyProductPriceTitleLabel.setVisible(false);
+        companyProductPriceButton.setVisible(false);
     }
 }

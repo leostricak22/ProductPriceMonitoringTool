@@ -29,7 +29,7 @@ import java.util.*;
 public class ProductSearchController {
 
     @FXML public GridPane mainPane;
-    @FXML public FlowPane categoryFlowPane;
+    @FXML public HBox categoryHBox;
     @FXML public FlowPane productsFlowPane;
     @FXML public Label hierarchyLabel;
 
@@ -104,7 +104,7 @@ public class ProductSearchController {
 
                 Timeline timeline = new Timeline(new KeyFrame(Duration.millis(200), e -> {
                     progressBar.remove();
-                    categoryFlowPane.getChildren().clear();
+                    categoryHBox.getChildren().clear();
                     productsFlowPane.getChildren().clear();
 
                     createCategorySectionButtons(categories);
@@ -130,13 +130,13 @@ public class ProductSearchController {
         if (parentCategory.isPresent()) {
             Button backButton = new Button("<");
             backButton.setOnAction(event -> initialize(parentCategory.flatMap(Category::getParentCategory)));
-            categoryFlowPane.getChildren().add(backButton);
+            categoryHBox.getChildren().add(backButton);
         }
 
         for (Category category : categories) {
             Button categoryButton = new Button(category.getName());
             categoryButton.setOnAction(event -> initialize(Optional.of(category)));
-            categoryFlowPane.getChildren().add(categoryButton);
+            categoryHBox.getChildren().add(categoryButton);
         }
     }
 

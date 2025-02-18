@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 
 <GridPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="1065.0" style="-fx-background-color: white;" stylesheets="@styles/main.css, @styles/product.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.tvz.productpricemonitoringtool.controller.ProductSearchController">
@@ -41,20 +42,27 @@
                         <ColumnConstraints hgrow="SOMETIMES" maxWidth="1018.0" minWidth="10.0" prefWidth="972.0" />
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
                         <Label prefHeight="17.0" prefWidth="133.0" text="Search by categories:">
                             <GridPane.margin>
-                                <Insets left="5.0" />
+                                <Insets bottom="10.0" left="5.0" />
                             </GridPane.margin>
                         </Label>
-                        <FlowPane fx:id="categoryFlowPane" hgap="5.0" prefHeight="200.0" prefWidth="200.0" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
-                            <padding>
-                                <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                            </padding>
-                        </FlowPane>
+                        <ScrollPane hbarPolicy="AS_NEEDED" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: white;" vbarPolicy="NEVER" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.valignment="CENTER">
+                            <content>
+                                <HBox fx:id="categoryHBox" maxHeight="40.0" maxWidth="1.7976931348623157E308" prefHeight="40.0" spacing="5.0" style="-fx-background-color: white;">
+                                    <padding>
+                                        <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+                                    </padding>
+                                </HBox>
+                            </content>
+                        </ScrollPane>
                     </children>
+               <GridPane.margin>
+                  <Insets top="10.0" />
+               </GridPane.margin>
                 </GridPane>
                 <Label fx:id="hierarchyLabel" GridPane.rowIndex="1" GridPane.valignment="TOP">
                     <GridPane.margin>
