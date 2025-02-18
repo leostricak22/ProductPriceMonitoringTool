@@ -1,5 +1,6 @@
 package hr.tvz.productpricemonitoringtool.controller;
 
+import hr.tvz.productpricemonitoringtool.enumeration.CompanyProductRecordType;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.CompanyProduct;
@@ -58,7 +59,8 @@ public class ProductDetailsController {
 
         try {
             productCategoryLabel.setText(categoryRepository.findCategoryHierarchy(selectedProduct.getCategory().getId()));
-            companyProducts = new ArrayList<>(companyProductRepository.findByProductId(selectedProduct.getId()));
+            companyProducts = new ArrayList<>(companyProductRepository.findByProductId(selectedProduct.getId(),
+                    CompanyProductRecordType.LATEST_RECORD));
         } catch (DatabaseConnectionActiveException e) {
             AlertDialog.showErrorDialog("Please try again later.");
             SceneLoader.loadScene("dashboard", "Dashboard");
@@ -126,6 +128,13 @@ public class ProductDetailsController {
             priceLabel.getStyleClass().add("formLabel");
 
             HBox productBox = new HBox(companyNameLabel, priceLabel);
+
+            productBox.setCursor(javafx.scene.Cursor.HAND);
+            productBox.setOnMouseClicked(event ->
+                    SceneLoader.loadProductCompanyGraphPopupScene("company_product_graph",
+                            "Product graph",
+                            companyProduct.getCompany()));
+
             companyProductsVBox.getChildren().add(productBox);
         }
     }

@@ -1,8 +1,10 @@
 package hr.tvz.productpricemonitoringtool.util;
 
+import hr.tvz.productpricemonitoringtool.controller.CompanyProductChartController;
 import hr.tvz.productpricemonitoringtool.controller.ProductSearchController;
 import hr.tvz.productpricemonitoringtool.main.ProductPriceMonitoringToolApplication;
 import hr.tvz.productpricemonitoringtool.model.Category;
+import hr.tvz.productpricemonitoringtool.model.Company;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
@@ -68,6 +70,27 @@ public class SceneLoader {
             productSearchController.initialize(category);
 
             ProductPriceMonitoringToolApplication.getMainStage().show();
+        } catch (IOException e) {
+            AlertDialog.showErrorDialog(Constants.ERROR_LOADING_SCENE_MESSAGE + fxmlFileName);
+            logger.error(Constants.ERROR_LOADING_SCENE_MESSAGE + "{}", fxmlFileName, e);
+        }
+    }
+
+    public static void loadProductCompanyGraphPopupScene(String fxmlFileName, String title, Company company) {
+        try {
+            FXMLLoader fxmlLoader = FXMLLoaderHelper.fxmlFilePath(fxmlFileName + Constants.SCENE_EXTENSION);
+            Scene scene = new Scene(fxmlLoader.load(), 700, 500);
+            Stage popupStage = new Stage();
+
+            CompanyProductChartController companyProductChartController = fxmlLoader.getController();
+            companyProductChartController.initialize(company);
+
+            popupStage.setTitle(title);
+            popupStage.setScene(scene);
+            popupStage.initModality(Modality.WINDOW_MODAL);
+            popupStage.initOwner(ProductPriceMonitoringToolApplication.getMainStage());
+
+            popupStage.showAndWait();
         } catch (IOException e) {
             AlertDialog.showErrorDialog(Constants.ERROR_LOADING_SCENE_MESSAGE + fxmlFileName);
             logger.error(Constants.ERROR_LOADING_SCENE_MESSAGE + "{}", fxmlFileName, e);

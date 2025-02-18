@@ -1,5 +1,6 @@
 package hr.tvz.productpricemonitoringtool.controller;
 
+import hr.tvz.productpricemonitoringtool.enumeration.CompanyProductRecordType;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.CompanyProduct;
@@ -33,7 +34,8 @@ public class CompanyProductsListController {
         Company selectedCompany = Session.getSelectedCompany().get();
         List<CompanyProduct> companyProducts = new ArrayList<>();
         try {
-            companyProducts = new ArrayList<>(companyProductRepository.findByCompanyId(selectedCompany.getId()));
+            companyProducts = new ArrayList<>(companyProductRepository.findByCompanyId(selectedCompany.getId(),
+                    CompanyProductRecordType.LATEST_RECORD));
             companyProducts.sort(
                     (cp1, cp2) -> cp1.getProduct().getName().compareToIgnoreCase(cp2.getProduct().getName()));
         } catch (DatabaseConnectionActiveException e) {
@@ -74,7 +76,7 @@ public class CompanyProductsListController {
 
             productBox.setOnMouseClicked(event -> {
                 Session.setSelectedProduct(companyProduct.getProduct());
-                SceneLoader.loadScene("product-details", "Product details");
+                SceneLoader.loadScene("product_details", "Product details");
             });
 
             itemListVbox.getChildren().add(productBox);

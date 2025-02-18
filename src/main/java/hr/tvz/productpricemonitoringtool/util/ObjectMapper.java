@@ -1,5 +1,6 @@
 package hr.tvz.productpricemonitoringtool.util;
 
+import hr.tvz.productpricemonitoringtool.enumeration.CompanyProductRecordType;
 import hr.tvz.productpricemonitoringtool.enumeration.Role;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.exception.RepositoryQueryException;
@@ -96,7 +97,8 @@ public class ObjectMapper {
                 .name(productDBO.getName())
                 .category(categoryRepository.findById(productDBO.getCategoryId())
                         .orElseThrow(() -> new RepositoryQueryException("Category not found")))
-                .companyProducts(companyProductRepository.findByProductId(productDBO.getId()))
+                .companyProducts(companyProductRepository.findByProductId(productDBO.getId(),
+                        CompanyProductRecordType.LATEST_RECORD))
                 .description(productDBO.getDescription())
                 .build();
     }
@@ -122,6 +124,7 @@ public class ObjectMapper {
                 .companyId(resultSet.getLong("company_id"))
                 .productId(resultSet.getLong("product_id"))
                 .price(new Price(resultSet.getBigDecimal("price")))
+                .createdAt(resultSet.getTimestamp("created_at").toLocalDateTime())
                 .build();
     }
 
@@ -132,6 +135,7 @@ public class ObjectMapper {
                             .orElseThrow(() -> new RepositoryQueryException("Company not found")))
                     .product(new Product.Builder(companyProductDBO.getProductId()).build())
                     .price(companyProductDBO.getPrice())
+                    .createdAt(companyProductDBO.getCreatedAt())
                     .build();
         }
 
@@ -140,6 +144,7 @@ public class ObjectMapper {
                 .product(productRepository.findByIdWithoutCompanies(companyProductDBO.getProductId())
                         .orElseThrow(() -> new RepositoryQueryException("Product not found")))
                 .price(companyProductDBO.getPrice())
+                .createdAt(companyProductDBO.getCreatedAt())
                 .build();
     }
 }

@@ -1,5 +1,6 @@
 package hr.tvz.productpricemonitoringtool.controller;
 
+import hr.tvz.productpricemonitoringtool.enumeration.CompanyProductRecordType;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.CompanyProduct;
@@ -38,7 +39,8 @@ public class ChangeProductPriceController {
 
         Set<CompanyProduct> companyProducts;
         try {
-            companyProducts = companyProductRepository.findByProductId(selectedProduct.get().getId());
+            companyProducts = companyProductRepository.findByProductId(selectedProduct.get().getId(),
+                    CompanyProductRecordType.LATEST_RECORD);
         } catch (DatabaseConnectionActiveException e) {
             AlertDialog.showErrorDialog(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
             return;

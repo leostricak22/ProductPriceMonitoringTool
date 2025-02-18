@@ -3,17 +3,21 @@ package hr.tvz.productpricemonitoringtool.model.dbo;
 import hr.tvz.productpricemonitoringtool.model.Entity;
 import hr.tvz.productpricemonitoringtool.model.Price;
 
+import java.time.LocalDateTime;
+
 public class CompanyProductDBO extends Entity {
 
     private Long companyId;
     private Long productId;
     private Price price;
+    private LocalDateTime createdAt;
 
     public CompanyProductDBO(Builder builder) {
         super(builder.id, builder.name);
         this.companyId = builder.companyId;
         this.productId = builder.productId;
         this.price = builder.price;
+        this.createdAt = builder.createdAt;
     }
 
     public Long getCompanyId() {
@@ -40,12 +44,21 @@ public class CompanyProductDBO extends Entity {
         this.price = price;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     public static class Builder {
         private Long id;
         private String name;
         private Long companyId;
         private Long productId;
         private Price price;
+        private LocalDateTime createdAt;
 
         public Builder(Long id) {
             this.id = id;
@@ -64,6 +77,11 @@ public class CompanyProductDBO extends Entity {
 
         public Builder price(Price price) {
             this.price = price;
+            return this;
+        }
+
+        public Builder createdAt(LocalDateTime createdAt) {
+            this.createdAt = createdAt;
             return this;
         }
 

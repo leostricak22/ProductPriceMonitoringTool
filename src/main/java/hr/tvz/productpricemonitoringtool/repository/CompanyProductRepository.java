@@ -1,5 +1,6 @@
 package hr.tvz.productpricemonitoringtool.repository;
 
+import hr.tvz.productpricemonitoringtool.enumeration.CompanyProductRecordType;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.exception.RepositoryAccessException;
 import hr.tvz.productpricemonitoringtool.model.CompanyProduct;
@@ -54,7 +55,10 @@ public class CompanyProductRepository {
         }
     }
 
-    public synchronized Set<CompanyProduct> findByProductId(Long productId) throws DatabaseConnectionActiveException {
+    public synchronized Set<CompanyProduct> findByProductIdAndCompanyId(
+            Long productId,
+            Long companyId,
+            CompanyProductRecordType companyProductRecordType) throws DatabaseConnectionActiveException {
         while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
             try {
                 wait();
@@ -67,11 +71,78 @@ public class CompanyProductRepository {
         DatabaseUtil.setActiveConnectionWithDatabase(true);
 
         String query = """
-        SELECT DISTINCT ON (company_id, product_id) id, company_id, product_id, price, created_at
-        FROM "company_product"
-        WHERE product_id = ?
-        ORDER BY company_id, product_id, created_at DESC;
+            SELECT DISTINCT ON (company_id, product_id) id, company_id, product_id, price, created_at
+            FROM "company_product"
+            WHERE product_id = ? AND company_id = ?
+            ORDER BY company_id, product_id, created_at DESC;
         """;
+
+        if (companyProductRecordType.equals(CompanyProductRecordType.ALL_RECORDS)) {
+            query = """
+                SELECT id, company_id, product_id, price, created_at
+                FROM "company_product"
+                WHERE product_id = ? AND company_id = ?
+            """;
+        }
+
+        Set<CompanyProductDBO> companyProductsDBO = new HashSet<>();
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setLong(1, productId);
+            stmt.setLong(2, companyId);
+
+            ResultSet resultSet = stmt.executeQuery();
+
+            while (resultSet.next()) {
+                companyProductsDBO.add(ObjectMapper.mapResultSetToCompanyProductDBO(resultSet));
+            }
+        } catch (SQLException | IOException e) {
+            throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
+        }
+
+        return companyProductsDBO.stream()
+                .map(companyProductDBO -> {
+                    try {
+                        return ObjectMapper.mapCompanyProductDBOToCompanyProduct(companyProductDBO, "product");
+                    } catch (DatabaseConnectionActiveException e) {
+                        throw new RepositoryAccessException(e);
+                    }
+                })
+                .collect(Collectors.toSet());
+    }
+
+    public synchronized Set<CompanyProduct> findByProductId(
+            Long productId,
+            CompanyProductRecordType companyProductRecordType) throws DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
+        String query = """
+            SELECT DISTINCT ON (company_id, product_id) id, company_id, product_id, price, created_at
+            FROM "company_product"
+            WHERE product_id = ?
+            ORDER BY company_id, product_id, created_at DESC;
+        """;
+
+        if (companyProductRecordType.equals(CompanyProductRecordType.ALL_RECORDS)) {
+            query = """
+                SELECT id, company_id, product_id, price, created_at
+                FROM "company_product"
+                WHERE product_id = ?
+            """;
+        }
 
         Set<CompanyProductDBO> companyProductsDBO = new HashSet<>();
 
@@ -102,7 +173,7 @@ public class CompanyProductRepository {
                 .collect(Collectors.toSet());
     }
 
-    public synchronized Set<CompanyProduct> findByCompanyId(Long companyId) throws DatabaseConnectionActiveException {
+    public synchronized Set<CompanyProduct> findByCompanyId(Long companyId, CompanyProductRecordType companyProductRecordType) throws DatabaseConnectionActiveException {
         while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
             try {
                 wait();
@@ -115,11 +186,19 @@ public class CompanyProductRepository {
         DatabaseUtil.setActiveConnectionWithDatabase(true);
 
         String query = """
-        SELECT DISTINCT ON (company_id, product_id) id, company_id, product_id, price, created_at
-        FROM "company_product"
-        WHERE company_id = ?
-        ORDER BY company_id, product_id, created_at DESC;
+            SELECT DISTINCT ON (company_id, product_id) id, company_id, product_id, price, created_at
+            FROM "company_product"
+            WHERE company_id = ?
+            ORDER BY company_id, product_id, created_at DESC;
         """;
+
+        if (companyProductRecordType.equals(CompanyProductRecordType.ALL_RECORDS)) {
+            query = """
+                SELECT id, company_id, product_id, price, created_at
+                FROM "company_product"
+                WHERE company_id = ?
+            """;
+        }
 
         Set<CompanyProductDBO> companyProductsDBO = new HashSet<>();
 
