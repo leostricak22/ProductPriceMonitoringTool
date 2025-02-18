@@ -37,7 +37,7 @@ public class CompanyRepository extends AbstractRepository<Company> {
         DatabaseUtil.setActiveConnectionWithDatabase(true);
 
         String query = """
-        SELECT id, name, address_id FROM "company";
+        SELECT id, name, address_id, join_code FROM "company";
         """;
 
         Set<CompanyDBO> companiesDBO = new HashSet<>();
@@ -73,7 +73,7 @@ public class CompanyRepository extends AbstractRepository<Company> {
         DatabaseUtil.setActiveConnectionWithDatabase(true);
 
         String query = """
-        SELECT c.id, c.name, c.address_id
+        SELECT c.id, c.name, c.address_id, c.join_code
         FROM "company" c
         JOIN "user_company" uc ON c.id = uc.company_id
         WHERE uc.user_id = ?;
@@ -114,8 +114,8 @@ public class CompanyRepository extends AbstractRepository<Company> {
         DatabaseUtil.setActiveConnectionWithDatabase(true);
 
         String query = """
-        INSERT INTO "company" (name, address_id)
-        VALUES (?, ?)
+        INSERT INTO "company" (name, address_id, join_code)
+        VALUES (?, ?, ?)
         """;
 
         Set<Company> savedCompanies = new HashSet<>();
@@ -126,6 +126,7 @@ public class CompanyRepository extends AbstractRepository<Company> {
             for (Company company : entities) {
                 stmt.setString(1, company.getName());
                 stmt.setLong(2, company.getAddress().getId());
+                stmt.setString(3, company.getJoinCode());
 
                 stmt.addBatch();
             }

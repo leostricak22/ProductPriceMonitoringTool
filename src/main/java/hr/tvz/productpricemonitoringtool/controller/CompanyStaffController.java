@@ -1,11 +1,10 @@
 package hr.tvz.productpricemonitoringtool.controller;
 
-import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.User;
 import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
-import hr.tvz.productpricemonitoringtool.util.SceneLoader;
+import hr.tvz.productpricemonitoringtool.util.ClipboardUtil;
 import hr.tvz.productpricemonitoringtool.util.Session;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -16,7 +15,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
-import java.util.HashSet;
 import java.util.Set;
 
 public class CompanyStaffController {
@@ -58,14 +56,7 @@ public class CompanyStaffController {
             selectedCompany = Session.getSelectedCompany().get();
         }
 
-        Set<User> users = new HashSet<>();
-        try {
-            users = companyRepository.findAllUsers(selectedCompany);
-        } catch (DatabaseConnectionActiveException e) {
-            AlertDialog.showErrorDialog("Database connection is active. Please try again later.");
-            SceneLoader.loadScene("dashboard", "Dashboard");
-        }
-
+        Set<User> users = companyRepository.findAllUsers(selectedCompany);
         staffTableView.setItems(FXCollections.observableArrayList(users));
     }
 
@@ -74,12 +65,28 @@ public class CompanyStaffController {
             codeLabel.setVisible(false);
             copyCodeLabel.setVisible(false);
 
+            copyCodeLabel.setText("(Click the code to copy)");
             showCodeButton.setText("Show code");
             return;
         }
 
+        if (Session.getSelectedCompany().isEmpty()) {
+            AlertDialog.showErrorDialog("Please select a company first.");
+            return;
+        }
+
+        codeLabel.setText(Session.getSelectedCompany().get().getJoinCode());
         codeLabel.setVisible(true);
         copyCodeLabel.setVisible(true);
         showCodeButton.setText("Hide code");
+    }
+
+    public void handleCopyCode() {
+        if (!codeLabel.isVisible()) {
+            return;
+        }
+
+        ClipboardUtil.copyToClipboard(codeLabel.getText());
+        copyCodeLabel.setText("(Copied to clipboard)");
     }
 }

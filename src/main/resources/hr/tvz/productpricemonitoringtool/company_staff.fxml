@@ -43,7 +43,7 @@
             <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
                <children>
                   <Button fx:id="showCodeButton" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleShowCode" text="Show code" />
-                  <Label fx:id="codeLabel" styleClass="formLabel" text="bd541799-6661-4fa5-88a5-8da20ae9023a">
+                  <Label fx:id="codeLabel" onMouseClicked="#handleCopyCode" styleClass="formLabel" text="bd541799-6661-4fa5-88a5-8da20ae9023a">
                      <opaqueInsets>
                         <Insets left="15.0" right="5.0" />
                      </opaqueInsets>
@@ -54,7 +54,9 @@
                         <Cursor fx:constant="HAND" />
                      </cursor>
                   </Label>
-                  <Label fx:id="copyCodeLabel" text="(Click the code to copy)" textFill="#9e9e9e" />
+                  <Label fx:id="copyCodeLabel" text="(Click the code to copy)" textFill="#9e9e9e" onMouseClicked="#handleCopyCode">
+                        <cursor><Cursor fx:constant="HAND" /></cursor>
+                  </Label>
                </children>
             </HBox>
              <TableView fx:id="staffTableView" pickOnBounds="false" prefHeight="200.0" prefWidth="600.0" GridPane.rowIndex="2">

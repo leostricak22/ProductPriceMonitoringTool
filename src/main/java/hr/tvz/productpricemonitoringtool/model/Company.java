@@ -5,10 +5,12 @@ import java.util.Objects;
 public class Company extends Entity {
 
     private Address address;
+    private String joinCode;
 
     public Company(Builder builder) {
         super(builder.id, builder.name);
         this.address = builder.address;
+        this.joinCode = builder.joinCode;
     }
 
     public void setAddress(Address address) {
@@ -19,10 +21,19 @@ public class Company extends Entity {
         return address;
     }
 
+    public String getJoinCode() {
+        return joinCode;
+    }
+
+    public void setJoinCode(String joinCode) {
+        this.joinCode = joinCode;
+    }
+
     public static class Builder {
         private final Long id;
         private final String name;
         private Address address;
+        private String joinCode;
 
         public Builder(Long id, String name) {
             this.id = id;
@@ -31,6 +42,11 @@ public class Company extends Entity {
 
         public Builder address(Address address) {
             this.address = address;
+            return this;
+        }
+
+        public Builder joinCode(String joinCode) {
+            this.joinCode = joinCode;
             return this;
         }
 

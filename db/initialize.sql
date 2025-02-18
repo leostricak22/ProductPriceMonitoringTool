@@ -32,6 +32,7 @@ CREATE TABLE "company" (
     id LONG GENERATED ALWAYS AS IDENTITY,
     name VARCHAR(255) NOT NULL,
     address_id LONG NOT NULL,
+    join_code VARCHAR(10) NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (address_id) REFERENCES "address"(id)
 );
@@ -81,9 +82,9 @@ INSERT INTO "address" (longitude, latitude, road, house_number, city, country) V
 INSERT INTO "address" (longitude, latitude, road, house_number, city, country) VALUES (16.0521091, 45.8197321, 'Vukovarska', '1', 'Zagreb', 'Croatia');
 INSERT INTO "address" (longitude, latitude, road, house_number, city, country) VALUES (15.976034, 45.8132734, 'Trg bana Jelačića', '1', 'Zagreb', 'Croatia');
 
-INSERT INTO "company" (name, address_id) VALUES ('Google', 1);
-INSERT INTO "company" (name, address_id) VALUES ('Microsoft', 2);
-INSERT INTO "company" (name, address_id) VALUES ('Apple', 3);
+INSERT INTO "company" (name, address_id, join_code) VALUES ('Google', 1, '1231254512');
+INSERT INTO "company" (name, address_id, join_code) VALUES ('Microsoft', 2, '4989469843');
+INSERT INTO "company" (name, address_id, join_code) VALUES ('Apple', 3, '8725872512');
 
 INSERT INTO "user_company" (user_id, company_id) VALUES (1, 1);
 INSERT INTO "user_company" (user_id, company_id) VALUES (1, 2);

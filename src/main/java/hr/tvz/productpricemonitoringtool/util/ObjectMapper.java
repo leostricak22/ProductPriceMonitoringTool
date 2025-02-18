@@ -55,12 +55,14 @@ public class ObjectMapper {
         return new Company.Builder(companyDBO.getId(), companyDBO.getName())
                 .address(addressRepository.findById(companyDBO.getAddressId())
                         .orElseThrow(() -> new RepositoryQueryException("Address not found")))
+                .joinCode(companyDBO.getJoinCode())
                 .build();
     }
 
     public static CompanyDBO mapResultSetToCompanyDBO(ResultSet resultSet) throws SQLException {
         return new CompanyDBO.Builder(resultSet.getLong("id"), resultSet.getString("name"))
                 .addressId(resultSet.getLong("address_id"))
+                .joinCode(resultSet.getString("join_code"))
                 .build();
     }
 

@@ -9,7 +9,6 @@ import hr.tvz.productpricemonitoringtool.repository.AddressRepository;
 import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
 import hr.tvz.productpricemonitoringtool.util.*;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.slf4j.Logger;
@@ -52,6 +51,7 @@ public class CompanyAddController {
 
         Company company = new Company.Builder(0L, name)
                 .address(address)
+                .joinCode(Hash.generateJoinCode())
                 .build();
 
         try {
