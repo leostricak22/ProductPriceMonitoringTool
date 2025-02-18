@@ -108,7 +108,10 @@ public class ProductDetailsController {
             });
 
             if (price.isEmpty()) {
-                hideCompanyProductPrice();
+                companyProductPriceTitleLabel.setText("Your company also sells this product?");
+                companyProductPriceLabel.setText("Add it to the list!");
+                companyProductPriceButton.setText("Add your price");
+                companyProductPriceButton.setOnAction(event -> handleAddPrice());
             }
         } else {
             hideCompanyProductPrice();
@@ -163,7 +166,15 @@ public class ProductDetailsController {
     }
 
     public void handleChangePrice() {
-        Optional<FXMLLoader> loader = SceneLoader.loadPopupScene("change_product_price", "Change price");
+        handleSavePrice("change_product_price");
+    }
+
+    public void handleAddPrice() {
+        handleSavePrice("add_product_price");
+    }
+
+    public void handleSavePrice(String sceneName) {
+        Optional<FXMLLoader> loader = SceneLoader.loadPopupScene(sceneName, "Price");
 
         if (loader.isEmpty()) {
             AlertDialog.showErrorDialog("Error fetching data from popup window");

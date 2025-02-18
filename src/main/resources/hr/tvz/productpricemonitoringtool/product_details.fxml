@@ -94,7 +94,7 @@
                   <Insets left="30.0" />
                </padding>
             </Label>
-            <Button fx:id="companyProductPriceButton" mnemonicParsing="false" onAction="#handleChangePrice" prefHeight="35.0" prefWidth="128.0" text="Change price" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
+            <Button fx:id="companyProductPriceButton" mnemonicParsing="false" onAction="#handleChangePrice" prefHeight="35.0" prefWidth="153.0" text="Change price" GridPane.halignment="LEFT" GridPane.rowIndex="2" GridPane.valignment="TOP">
                <GridPane.margin>
                   <Insets left="15.0" top="60.0" />
                </GridPane.margin>

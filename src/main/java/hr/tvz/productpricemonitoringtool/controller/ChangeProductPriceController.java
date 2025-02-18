@@ -19,6 +19,8 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.Set;
 
+import static java.util.Objects.isNull;
+
 public class ChangeProductPriceController {
 
     @FXML public TextField oldPriceTextField;
@@ -46,10 +48,12 @@ public class ChangeProductPriceController {
             return;
         }
 
-        companyProducts.stream()
+        if (!isNull(companyProducts)) {
+            companyProducts.stream()
                 .filter(companyProduct -> companyProduct.getCompany().getId().equals(selectedCompany.get().getId()))
                 .findFirst()
                 .ifPresent(companyProduct -> oldPriceTextField.setText(companyProduct.getPrice().value().toString()));
+        }
     }
 
     public void handleSave() {
