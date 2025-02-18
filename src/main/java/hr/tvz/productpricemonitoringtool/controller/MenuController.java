@@ -66,4 +66,10 @@ public class MenuController {
                 "company_edit",
                 "Company Edit");
     }
+
+    public void handleCompanyStaffRedirect() {
+        SceneLoader.loadScene(
+                "company_staff",
+                "Company Staff");
+    }
 }

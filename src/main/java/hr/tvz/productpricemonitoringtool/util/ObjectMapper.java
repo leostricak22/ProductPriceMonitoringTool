@@ -35,6 +35,14 @@ public class ObjectMapper {
                 .build();
     }
 
+    public static User mapResultSetToUserWithoutCompanies(ResultSet resultSet) throws SQLException {
+        return new User.Builder(resultSet.getLong("id"), resultSet.getString("name"))
+                .email(resultSet.getString("email"))
+                .password(resultSet.getString("password"))
+                .role(Role.valueOf(resultSet.getString("role")))
+                .build();
+    }
+
     public static Set<Company> mapCompanyDBOToCompany(Set<CompanyDBO> companyDBO) throws DatabaseConnectionActiveException {
         Set<Company> companies = new HashSet<>();
         for (CompanyDBO company : companyDBO) {

@@ -28,7 +28,7 @@
         <MenuButton fx:id="companyMenuButton" popupSide="RIGHT" prefWidth="100" text="Company">
             <items>
                 <MenuItem onAction="#handleCompanyEditRedirect" text="Edit" />
-                <MenuItem text="Staff" />
+                <MenuItem onAction="#handleCompanyStaffRedirect" text="Staff" />
                 <MenuItem onAction="#handleCompanyProductsListRedirect" text="Products" />
             </items>
         </MenuButton>

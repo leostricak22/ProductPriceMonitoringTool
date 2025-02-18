@@ -3,6 +3,7 @@ package hr.tvz.productpricemonitoringtool.repository;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.exception.RepositoryAccessException;
 import hr.tvz.productpricemonitoringtool.model.Company;
+import hr.tvz.productpricemonitoringtool.model.User;
 import hr.tvz.productpricemonitoringtool.model.dbo.CompanyDBO;
 import hr.tvz.productpricemonitoringtool.util.DatabaseUtil;
 import hr.tvz.productpricemonitoringtool.util.ObjectMapper;
@@ -179,45 +180,6 @@ public class CompanyRepository extends AbstractRepository<Company> {
         }
     }
 
-    public synchronized Set<Company> findAllByProductId(Long productId) throws RepositoryAccessException, DatabaseConnectionActiveException {
-        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new DatabaseConnectionActiveException(e);
-            }
-        }
-
-        DatabaseUtil.setActiveConnectionWithDatabase(true);
-
-        String query = """
-        SELECT c.id, c.name, c.address_id
-        FROM "company" c
-        JOIN "company_product" cp ON c.id = cp.company_id
-        WHERE cp.product_id = ?;
-        """;
-
-        Set<CompanyDBO> companiesDBO = new HashSet<>();
-
-        try (Connection connection = DatabaseUtil.connectToDatabase();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setLong(1, productId);
-            ResultSet resultSet = stmt.executeQuery();
-
-            while (resultSet.next()) {
-                companiesDBO.add(ObjectMapper.mapResultSetToCompanyDBO(resultSet));
-            }
-        } catch (IOException | SQLException e) {
-            throw new RepositoryAccessException(e);
-        } finally {
-            DatabaseUtil.setActiveConnectionWithDatabase(false);
-            notifyAll();
-        }
-
-        return ObjectMapper.mapCompanyDBOToCompany(companiesDBO);
-    }
-
     public synchronized void addUser(Long userId, Long companyId) throws RepositoryAccessException, DatabaseConnectionActiveException {
         while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
             try {
@@ -247,5 +209,44 @@ public class CompanyRepository extends AbstractRepository<Company> {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
             notifyAll();
         }
+    }
+
+    public synchronized Set<User> findAllUsers(Company company) throws RepositoryAccessException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
+        String query = """
+        SELECT u.id, u.name, u.email, u.role, u.password
+        FROM "user" u
+        JOIN "user_company" uc ON u.id = uc.user_id
+        WHERE uc.company_id = ?
+        """;
+
+        Set<User> users = new HashSet<>();
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setLong(1, company.getId());
+            ResultSet resultSet = stmt.executeQuery();
+
+            while (resultSet.next()) {
+                users.add(ObjectMapper.mapResultSetToUserWithoutCompanies(resultSet));
+            }
+
+        } catch (IOException | SQLException e) {
+            throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
+        }
+
+        return users;
     }
 }
