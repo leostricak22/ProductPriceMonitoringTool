@@ -67,7 +67,10 @@ public class CompanyProductRepository {
         DatabaseUtil.setActiveConnectionWithDatabase(true);
 
         String query = """
-        SELECT id, company_id, product_id, price, created_at FROM "company_product" WHERE product_id=?;
+        SELECT DISTINCT ON (company_id, product_id) id, company_id, product_id, price, created_at
+        FROM "company_product"
+        WHERE product_id = ?
+        ORDER BY company_id, product_id, created_at DESC;
         """;
 
         Set<CompanyProductDBO> companyProductsDBO = new HashSet<>();
@@ -112,7 +115,10 @@ public class CompanyProductRepository {
         DatabaseUtil.setActiveConnectionWithDatabase(true);
 
         String query = """
-        SELECT id, company_id, product_id, price, created_at FROM "company_product" WHERE company_id=?;
+        SELECT DISTINCT ON (company_id, product_id) id, company_id, product_id, price, created_at
+        FROM "company_product"
+        WHERE company_id = ?
+        ORDER BY company_id, product_id, created_at DESC;
         """;
 
         Set<CompanyProductDBO> companyProductsDBO = new HashSet<>();
@@ -157,14 +163,14 @@ public class CompanyProductRepository {
         DatabaseUtil.setActiveConnectionWithDatabase(true);
 
         String query = """
-        UPDATE "company_product" SET price=? WHERE company_id=? AND product_id=?;
+        INSERT INTO "company_product" (company_id, product_id, price) VALUES (?, ?, ?);
         """;
 
         try (Connection connection = DatabaseUtil.connectToDatabase();
              PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setBigDecimal(1, price.value());
-            stmt.setLong(2, companyId);
-            stmt.setLong(3, productId);
+            stmt.setLong(1, companyId);
+            stmt.setLong(2, productId);
+            stmt.setBigDecimal(3, price.value());
 
             stmt.executeUpdate();
         } catch (SQLException | IOException e) {
