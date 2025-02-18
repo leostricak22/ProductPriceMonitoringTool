@@ -35,3 +35,35 @@
 .scroll-pane .viewport {
     -fx-background-color: white;
 }
+
+.product-company-box-container {
+    -fx-background-color: white;
+    -fx-border-color: #d9d9d9;
+    -fx-border-width: 0 0 1 0;
+    -fx-min-height: 50;
+    -fx-pref-height: 50;
+    -fx-max-height: 50;
+    -fx-padding: 0 15;
+    -fx-alignment: center-left;
+}
+
+.product-company-box-container:hover {
+    -fx-background-color: #f4f4f4;
+    -fx-cursor: hand;
+}
+
+.default-color0.chart-series-line {
+    -fx-stroke: darkred;
+}
+
+.default-color1.chart-series-line {
+    -fx-stroke: darkgreen;
+}
+
+.default-color0.chart-line-symbol {
+    -fx-background-color: darkred, darkred;
+}
+
+.default-color1.chart-line-symbol {
+    -fx-background-color: darkgreen, darkgreen;
+}

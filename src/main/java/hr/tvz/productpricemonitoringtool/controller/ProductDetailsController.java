@@ -23,6 +23,7 @@ import javafx.scene.layout.VBox;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static java.util.Objects.isNull;
@@ -149,6 +150,7 @@ public class ProductDetailsController {
             priceLabel.getStyleClass().add("formLabel");
 
             HBox productBox = new HBox(companyNameLabel, priceLabel);
+            productBox.getStyleClass().add("product-company-box-container");
 
             productBox.setCursor(javafx.scene.Cursor.HAND);
             productBox.setOnMouseClicked(event ->
@@ -188,7 +190,7 @@ public class ProductDetailsController {
                 return;
             }
 
-            initialize();
+            SceneLoader.loadScene("product_details", "Product Details");
         }
     }
 
@@ -202,6 +204,8 @@ public class ProductDetailsController {
                 productId,
                 CompanyProductRecordType.ALL_RECORDS));
         companyProducts.sort(Comparator.comparing(CompanyProduct::getCreatedAt));
+
+        productLineChart.getData().clear();
 
         Map<LocalDateTime, BigDecimal> highestPrices = new LinkedHashMap<>();
         Map<LocalDateTime, BigDecimal> lowestPrices = new LinkedHashMap<>();
@@ -229,14 +233,16 @@ public class ProductDetailsController {
         highestPriceSeries.setName("Highest Price");
 
         for (Map.Entry<LocalDateTime, BigDecimal> entry : highestPrices.entrySet()) {
-            highestPriceSeries.getData().add(new XYChart.Data<>(entry.getKey().toString(), entry.getValue()));
+            highestPriceSeries.getData().add(new XYChart.Data<>(
+                    entry.getKey().format(DateTimeFormatter.ofPattern("dd.MM.yy. HH:mm")), entry.getValue()));
         }
 
         XYChart.Series<String, BigDecimal> lowestPriceSeries = new XYChart.Series<>();
         lowestPriceSeries.setName("Lowest Price");
 
         for (Map.Entry<LocalDateTime, BigDecimal> entry : lowestPrices.entrySet()) {
-            lowestPriceSeries.getData().add(new XYChart.Data<>(entry.getKey().toString(), entry.getValue()));
+            lowestPriceSeries.getData().add(new XYChart.Data<>(
+                    entry.getKey().format(DateTimeFormatter.ofPattern("dd.MM.yy. HH:mm")), entry.getValue()));
         }
 
         productLineChart.getData().addAll(highestPriceSeries, lowestPriceSeries);
