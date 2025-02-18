@@ -13,6 +13,8 @@ import hr.tvz.productpricemonitoringtool.util.SceneLoader;
 import hr.tvz.productpricemonitoringtool.util.Session;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
@@ -20,22 +22,35 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.*;
 
 import static java.util.Objects.isNull;
 
 public class ProductDetailsController {
 
-    @FXML public ImageView productImageView;
-    @FXML public Label productNameLabel;
-    @FXML public Label productPriceLabel;
-    @FXML public Label productCategoryLabel;
-    @FXML public Label companyProductPriceLabel;
-    @FXML public Label companyProductPriceTitleLabel;
-    @FXML public Label descriptionLabel;
-    @FXML public Button companyProductPriceButton;
-    @FXML public Button companyProductsSortButton;
-    @FXML public VBox companyProductsVBox;
+    @FXML
+    public ImageView productImageView;
+    @FXML
+    public Label productNameLabel;
+    @FXML
+    public Label productPriceLabel;
+    @FXML
+    public Label productCategoryLabel;
+    @FXML
+    public Label companyProductPriceLabel;
+    @FXML
+    public Label companyProductPriceTitleLabel;
+    @FXML
+    public Label descriptionLabel;
+    @FXML
+    public Button companyProductPriceButton;
+    @FXML
+    public Button companyProductsSortButton;
+    @FXML
+    public VBox companyProductsVBox;
+    @FXML
+    public LineChart<String, BigDecimal> productLineChart;
 
     private final CompanyProductRepository companyProductRepository = new CompanyProductRepository();
     private final CategoryRepository categoryRepository = new CategoryRepository();
@@ -100,6 +115,12 @@ public class ProductDetailsController {
 
         companyProducts.sort((cp1, cp2) -> cp2.getPrice().value().compareTo(cp1.getPrice().value()));
         fillCompanyProductsVBox();
+        try {
+            createProductLineChart(selectedProduct.getId());
+        } catch (DatabaseConnectionActiveException e) {
+            AlertDialog.showErrorDialog("Please try again later.");
+            SceneLoader.loadScene("dashboard", "Dashboard");
+        }
     }
 
     public void handleCompanySort() {
@@ -174,5 +195,50 @@ public class ProductDetailsController {
     public void handleUnselectedProductOrCompany() {
         AlertDialog.showErrorDialog("Please select a product first.");
         SceneLoader.loadScene("dashboard", "Dashboard");
+    }
+
+    public void createProductLineChart(Long productId) throws DatabaseConnectionActiveException {
+        List<CompanyProduct> companyProducts = new ArrayList<>(companyProductRepository.findByProductId(
+                productId,
+                CompanyProductRecordType.ALL_RECORDS));
+        companyProducts.sort(Comparator.comparing(CompanyProduct::getCreatedAt));
+
+        Map<LocalDateTime, BigDecimal> highestPrices = new LinkedHashMap<>();
+        Map<LocalDateTime, BigDecimal> lowestPrices = new LinkedHashMap<>();
+
+        Map<Long, BigDecimal> currentPrices = new HashMap<>();
+
+        for (CompanyProduct cp : companyProducts) {
+            Long companyId = cp.getCompany().getId();
+            BigDecimal price = cp.getPrice().value();
+
+            currentPrices.put(companyId, price);
+
+            BigDecimal currentHighest = currentPrices.values().stream()
+                    .max(Comparator.naturalOrder())
+                    .orElse(BigDecimal.ZERO);
+            BigDecimal currentLowest = currentPrices.values().stream()
+                    .min(Comparator.naturalOrder())
+                    .orElse(BigDecimal.ZERO);
+
+            highestPrices.put(cp.getCreatedAt(), currentHighest);
+            lowestPrices.put(cp.getCreatedAt(), currentLowest);
+        }
+
+        XYChart.Series<String, BigDecimal> highestPriceSeries = new XYChart.Series<>();
+        highestPriceSeries.setName("Highest Price");
+
+        for (Map.Entry<LocalDateTime, BigDecimal> entry : highestPrices.entrySet()) {
+            highestPriceSeries.getData().add(new XYChart.Data<>(entry.getKey().toString(), entry.getValue()));
+        }
+
+        XYChart.Series<String, BigDecimal> lowestPriceSeries = new XYChart.Series<>();
+        lowestPriceSeries.setName("Lowest Price");
+
+        for (Map.Entry<LocalDateTime, BigDecimal> entry : lowestPrices.entrySet()) {
+            lowestPriceSeries.getData().add(new XYChart.Data<>(entry.getKey().toString(), entry.getValue()));
+        }
+
+        productLineChart.getData().addAll(highestPriceSeries, lowestPriceSeries);
     }
 }
