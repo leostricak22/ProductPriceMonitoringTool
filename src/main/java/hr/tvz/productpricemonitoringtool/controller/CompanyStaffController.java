@@ -15,7 +15,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CompanyStaffController {
 
@@ -56,7 +57,8 @@ public class CompanyStaffController {
             selectedCompany = Session.getSelectedCompany().get();
         }
 
-        Set<User> users = companyRepository.findAllUsers(selectedCompany);
+        List<User> users = new ArrayList<>(companyRepository.findAllUsers(selectedCompany));
+        users.sort((u1, u2) -> u1.getId().compareTo(u2.getId()));
         staffTableView.setItems(FXCollections.observableArrayList(users));
     }
 
