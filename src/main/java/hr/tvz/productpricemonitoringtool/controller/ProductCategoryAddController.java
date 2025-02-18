@@ -38,7 +38,7 @@ public class ProductCategoryAddController {
         try {
             TreeViewUtil.populateCategoryTreeView(categoryTreeView, categoryRepository);
         } catch (DatabaseConnectionActiveException e) {
-            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE, Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
+            AlertDialog.showErrorDialog(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
         }
 
         categoryTreeView.getSelectionModel().selectedItemProperty().addListener(
@@ -46,8 +46,7 @@ public class ProductCategoryAddController {
                     try {
                         handleTreeItemSelection(newItem);
                     } catch (DatabaseConnectionActiveException e) {
-                        AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
-                                Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
+                        AlertDialog.showErrorDialog(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
                     }
                 }
         );
@@ -98,7 +97,7 @@ public class ProductCategoryAddController {
         TreeItem<Category> selectedCategoryTreeItem = categoryTreeView.getSelectionModel().getSelectedItem();
 
         if (isNull(selectedCategoryTreeItem) && newCategoryName.isEmpty()) {
-            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE, "Category must be selected/created");
+            AlertDialog.showErrorDialog("Category must be selected/created");
             return;
         }
 
@@ -116,7 +115,7 @@ public class ProductCategoryAddController {
                     .build();
         } else {
             if (selectedCategory.isEmpty()) {
-                AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE, "Category must be selected/created");
+                AlertDialog.showErrorDialog("Category must be selected/created");
                 return;
             }
 

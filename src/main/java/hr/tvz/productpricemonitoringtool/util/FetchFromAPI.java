@@ -2,7 +2,6 @@ package hr.tvz.productpricemonitoringtool.util;
 
 import hr.tvz.productpricemonitoringtool.exception.UnsuccessfulHTTPResponseCode;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;

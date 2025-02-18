@@ -38,7 +38,7 @@ public class CompanyAddController {
 
         String validationMessage = validateInput(name);
         if(!validationMessage.isEmpty()) {
-            AlertDialog.showErrorDialog("Validation error", validationMessage);
+            AlertDialog.showErrorDialog(validationMessage);
             logger.error("Validation failed while creating a Company: {}", validationMessage);
             return;
         }
@@ -48,8 +48,7 @@ public class CompanyAddController {
         try {
             address = addressRepository.save(address);
         } catch (DatabaseConnectionActiveException e) {
-            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
-                    Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
+            AlertDialog.showErrorDialog(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
             logger.error(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE, e.getMessage());
             return;
         }
@@ -61,8 +60,7 @@ public class CompanyAddController {
         try {
             companyRepository.save(company);
         } catch (DatabaseConnectionActiveException e) {
-            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
-                    Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
+            AlertDialog.showErrorDialog(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
             logger.error(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE, e.getMessage());
             return;
         }
@@ -70,8 +68,7 @@ public class CompanyAddController {
         try {
             companyRepository.addUser(user.getId(), company.getId());
         } catch (DatabaseConnectionActiveException e) {
-            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
-                    Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
+            AlertDialog.showErrorDialog(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
             logger.error(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE, e.getMessage());
             return;
         }
@@ -79,8 +76,7 @@ public class CompanyAddController {
         try {
             user.setCompanies(companyRepository.findAllByUserId(user.getId()));
         } catch (DatabaseConnectionActiveException e) {
-            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
-                    Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
+            AlertDialog.showErrorDialog(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
             logger.error(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE, e.getMessage());
             return;
         }
@@ -95,8 +91,7 @@ public class CompanyAddController {
         Optional<FXMLLoader> loader = SceneLoader.loadPopupScene("map_picker", "Map Picker");
 
         if (loader.isEmpty()) {
-            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
-                    "Error fetching data from popup window");
+            AlertDialog.showErrorDialog("Error fetching data from popup window");
             return;
         }
 

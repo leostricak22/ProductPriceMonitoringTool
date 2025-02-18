@@ -31,14 +31,13 @@ public class LoginController  {
         try {
             user = userRepository.findByEmailAndPassword(email, password);
         } catch (DatabaseConnectionActiveException e) {
-            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
-                    Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
+            AlertDialog.showErrorDialog(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
             logger.error("Database connection is active. Please try again later.");
             return;
         }
 
         if (user.isEmpty()) {
-            AlertDialog.showErrorDialog("Error", "Invalid email or password");
+            AlertDialog.showErrorDialog("Invalid email or password");
             logger.error("Invalid email or password");
             return;
         }

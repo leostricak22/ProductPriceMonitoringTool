@@ -8,7 +8,6 @@ import hr.tvz.productpricemonitoringtool.model.Product;
 import hr.tvz.productpricemonitoringtool.repository.CategoryRepository;
 import hr.tvz.productpricemonitoringtool.repository.CompanyProductRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
-import hr.tvz.productpricemonitoringtool.util.Constants;
 import hr.tvz.productpricemonitoringtool.util.SceneLoader;
 import hr.tvz.productpricemonitoringtool.util.Session;
 import javafx.fxml.FXML;
@@ -61,7 +60,7 @@ public class ProductDetailsController {
             productCategoryLabel.setText(categoryRepository.findCategoryHierarchy(selectedProduct.getCategory().getId()));
             companyProducts = new ArrayList<>(companyProductRepository.findByProductId(selectedProduct.getId()));
         } catch (DatabaseConnectionActiveException e) {
-            AlertDialog.showErrorDialog("Database connection active", "Please try again later.");
+            AlertDialog.showErrorDialog("Please try again later.");
             SceneLoader.loadScene("dashboard", "Dashboard");
         }
 
@@ -135,8 +134,7 @@ public class ProductDetailsController {
         Optional<FXMLLoader> loader = SceneLoader.loadPopupScene("change_product_price", "Change price");
 
         if (loader.isEmpty()) {
-            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
-                    "Error fetching data from popup window");
+            AlertDialog.showErrorDialog("Error fetching data from popup window");
             return;
         }
 
@@ -156,7 +154,7 @@ public class ProductDetailsController {
                         Session.getSelectedProduct().get().getId(),
                         controller.getNewPrice());
             } catch (DatabaseConnectionActiveException e) {
-                AlertDialog.showErrorDialog("Database connection active", "Please try again later.");
+                AlertDialog.showErrorDialog("Please try again later.");
                 return;
             }
 
@@ -165,8 +163,7 @@ public class ProductDetailsController {
     }
 
     public void handleUnselectedProductOrCompany() {
-        AlertDialog.showErrorDialog(
-                "No product selected", "Please select a product first.");
+        AlertDialog.showErrorDialog("Please select a product first.");
         SceneLoader.loadScene("dashboard", "Dashboard");
     }
 }

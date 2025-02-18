@@ -66,15 +66,14 @@ public class ProductAddController {
 
     public void handleAddProduct() {
         if (Session.getSelectedCompany().isEmpty()) {
-            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
-                    "No company selected. Please select company first.");
+            AlertDialog.showErrorDialog("No company selected. Please select company first.");
             SceneLoader.loadScene("company_select", "Select company");
         }
         Company selectedCompany = Session.getSelectedCompany().get();
 
         String error = validateFormData();
         if (!error.isEmpty()) {
-            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE, error);
+            AlertDialog.showErrorDialog(error);
             return;
         }
 
@@ -106,8 +105,7 @@ public class ProductAddController {
             SceneLoader.loadScene("company_products_list", "Company products");
         } catch (DatabaseConnectionActiveException e) {
             logger.error("Error saving category", e);
-            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
-                    Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
+            AlertDialog.showErrorDialog(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
         }
     }
 
@@ -128,8 +126,7 @@ public class ProductAddController {
         Optional<FXMLLoader> loader = SceneLoader.loadPopupScene("product_category_add", "Add category");
 
         if (loader.isEmpty()) {
-            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
-                    "Error fetching data from popup window");
+            AlertDialog.showErrorDialog("Error fetching data from popup window");
             return;
         }
 

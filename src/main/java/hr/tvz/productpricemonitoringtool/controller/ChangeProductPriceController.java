@@ -7,6 +7,7 @@ import hr.tvz.productpricemonitoringtool.model.Price;
 import hr.tvz.productpricemonitoringtool.model.Product;
 import hr.tvz.productpricemonitoringtool.repository.CompanyProductRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
+import hr.tvz.productpricemonitoringtool.util.Constants;
 import hr.tvz.productpricemonitoringtool.util.Session;
 import hr.tvz.productpricemonitoringtool.util.ValidationUtil;
 import javafx.fxml.FXML;
@@ -31,8 +32,7 @@ public class ChangeProductPriceController {
         Optional<Company> selectedCompany = Session.getSelectedCompany();
 
         if (selectedProduct.isEmpty() || selectedCompany.isEmpty()) {
-            AlertDialog.showErrorDialog(
-                    "No product or company selected", "Please select a product and company first.");
+            AlertDialog.showErrorDialog("Please select a product and company first.");
             return;
         }
 
@@ -40,7 +40,7 @@ public class ChangeProductPriceController {
         try {
             companyProducts = companyProductRepository.findByProductId(selectedProduct.get().getId());
         } catch (DatabaseConnectionActiveException e) {
-            AlertDialog.showErrorDialog("Database connection active", "Please try again later.");
+            AlertDialog.showErrorDialog(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
             return;
         }
 
@@ -52,12 +52,12 @@ public class ChangeProductPriceController {
 
     public void handleSave() {
         if (newPriceTextField.getText().isEmpty()) {
-            AlertDialog.showErrorDialog("Empty field", "Please enter new price.");
+            AlertDialog.showErrorDialog("Please enter new price.");
             return;
         }
 
         if (!ValidationUtil.isPositiveBigDecimal(newPriceTextField.getText())) {
-            AlertDialog.showErrorDialog("Invalid price", "Please enter valid price.");
+            AlertDialog.showErrorDialog("Please enter valid price.");
             return;
         }
 

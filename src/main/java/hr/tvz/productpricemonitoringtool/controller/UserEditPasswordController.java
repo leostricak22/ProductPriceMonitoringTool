@@ -25,7 +25,7 @@ public class UserEditPasswordController {
 
         String validationMessage = validateInput(password, confirmPassword);
         if (!validationMessage.isEmpty()) {
-            AlertDialog.showErrorDialog("Validation error", validationMessage);
+            AlertDialog.showErrorDialog(validationMessage);
             return;
         }
 

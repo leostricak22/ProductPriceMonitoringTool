@@ -35,9 +35,6 @@ public class MapUtil {
     private static final double EARTH_RADIUS_KM = 6371.0;
 
     public static BigDecimal calculateDistance(Coordinates coordinates1, Coordinates coordinates2) {
-        System.out.println("First coordinates: " + coordinates1.getLatitude() + " " + coordinates1.getLongitude());
-        System.out.println("Second coordinates: " + coordinates2.getLatitude() + " " + coordinates2.getLongitude());
-
         double lat1 = Math.toRadians(coordinates1.getLatitude().doubleValue());
         double lon1 = Math.toRadians(coordinates1.getLongitude().doubleValue());
         double lat2 = Math.toRadians(coordinates2.getLatitude().doubleValue());

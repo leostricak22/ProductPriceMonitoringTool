@@ -29,7 +29,7 @@ public class SceneLoader {
             ProductPriceMonitoringToolApplication.getMainStage().setScene(scene);
             ProductPriceMonitoringToolApplication.getMainStage().show();
         } catch (IOException e) {
-            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE, Constants.ERROR_LOADING_SCENE_MESSAGE + fxmlFileName);
+            AlertDialog.showErrorDialog(Constants.ERROR_LOADING_SCENE_MESSAGE + fxmlFileName);
             logger.error(Constants.ERROR_LOADING_SCENE_MESSAGE + "{}", fxmlFileName, e);
         }
     }
@@ -49,8 +49,7 @@ public class SceneLoader {
 
             return Optional.of(fxmlLoader);
         } catch (IOException e) {
-            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
-                    Constants.ERROR_LOADING_SCENE_MESSAGE + fxmlFileName);
+            AlertDialog.showErrorDialog(Constants.ERROR_LOADING_SCENE_MESSAGE + fxmlFileName);
             logger.error(Constants.ERROR_LOADING_SCENE_MESSAGE + "{}", fxmlFileName, e);
         }
         return Optional.empty();
@@ -70,7 +69,7 @@ public class SceneLoader {
 
             ProductPriceMonitoringToolApplication.getMainStage().show();
         } catch (IOException e) {
-            AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE, Constants.ERROR_LOADING_SCENE_MESSAGE + fxmlFileName);
+            AlertDialog.showErrorDialog(Constants.ERROR_LOADING_SCENE_MESSAGE + fxmlFileName);
             logger.error(Constants.ERROR_LOADING_SCENE_MESSAGE + "{}", fxmlFileName, e);
         }
     }

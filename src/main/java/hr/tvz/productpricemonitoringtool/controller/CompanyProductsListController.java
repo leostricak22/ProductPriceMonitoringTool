@@ -4,10 +4,7 @@ import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveExcep
 import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.CompanyProduct;
 import hr.tvz.productpricemonitoringtool.repository.CompanyProductRepository;
-import hr.tvz.productpricemonitoringtool.util.AlertDialog;
-import hr.tvz.productpricemonitoringtool.util.FileUtil;
-import hr.tvz.productpricemonitoringtool.util.SceneLoader;
-import hr.tvz.productpricemonitoringtool.util.Session;
+import hr.tvz.productpricemonitoringtool.util.*;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
@@ -29,7 +26,7 @@ public class CompanyProductsListController {
 
     public void initialize() {
         if (Session.getSelectedCompany().isEmpty()) {
-            AlertDialog.showErrorDialog("No company selected", "Please select a company first.");
+            AlertDialog.showErrorDialog("Please select a company first.");
             SceneLoader.loadScene("dashboard", "Dashboard");
         }
 
@@ -40,7 +37,7 @@ public class CompanyProductsListController {
             companyProducts.sort(
                     (cp1, cp2) -> cp1.getProduct().getName().compareToIgnoreCase(cp2.getProduct().getName()));
         } catch (DatabaseConnectionActiveException e) {
-            AlertDialog.showErrorDialog("Database connection active", "Please try again later.");
+            AlertDialog.showErrorDialog(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
             SceneLoader.loadScene("dashboard", "Dashboard");
         }
 

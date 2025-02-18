@@ -7,9 +7,9 @@ public class AlertDialog {
 
     private AlertDialog() {}
 
-    public static void showErrorDialog(String title, String message) {
+    public static void showErrorDialog(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(title);
+        alert.setTitle(Constants.ALERT_ERROR_TITLE);
         alert.setHeaderText(null);
         alert.setContentText(message);
         alert.showAndWait();

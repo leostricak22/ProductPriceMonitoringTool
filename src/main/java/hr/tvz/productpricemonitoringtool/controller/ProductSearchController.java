@@ -93,8 +93,7 @@ public class ProductSearchController {
             protected void succeeded() {
                 if (Boolean.FALSE.equals(fetchProductsThread.getSuccess())) {
                     progressBar.remove();
-                    AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
-                            "Error while fetching products from database");
+                    AlertDialog.showErrorDialog("Error while fetching products from database");
                     return;
                 }
 
@@ -119,8 +118,7 @@ public class ProductSearchController {
             protected void failed() {
                 super.failed();
                 progressBar.remove();
-                AlertDialog.showErrorDialog(Constants.ALERT_ERROR_TITLE,
-                        "Error while fetching products from database");
+                AlertDialog.showErrorDialog("Error while fetching products from database");
             }
         };
 
