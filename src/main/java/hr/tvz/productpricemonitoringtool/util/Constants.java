@@ -38,4 +38,7 @@ public class Constants {
     public static final String POSITIVE_INTEGER_REGEX = "^[1-9]\\d*$";
 
     public static final String GEOLOCATION_API_URL = "https://nominatim.openstreetmap.org";
+
+    public static final String SESSION_COMPANY_PRODUCT_SERIALIZATION_FILE =
+            "files/session/companyProducts.dat";
 }

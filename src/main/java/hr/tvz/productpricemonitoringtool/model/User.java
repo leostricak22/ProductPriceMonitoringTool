@@ -2,9 +2,10 @@ package hr.tvz.productpricemonitoringtool.model;
 
 import hr.tvz.productpricemonitoringtool.enumeration.Role;
 
+import java.io.Serializable;
 import java.util.Set;
 
-public class User extends Entity {
+public class User extends Entity  implements Serializable {
 
     private String surname;
     private String email;

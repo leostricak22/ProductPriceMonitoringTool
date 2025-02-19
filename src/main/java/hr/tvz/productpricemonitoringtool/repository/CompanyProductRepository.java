@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -53,6 +54,47 @@ public class CompanyProductRepository {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
             notifyAll();
         }
+    }
+
+    public synchronized Set<CompanyProductDBO> findByDateAndCompanyId(LocalDateTime date,Long companyId) throws DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
+        String query = """
+            SELECT DISTINCT ON (company_id, product_id) id, company_id, product_id, price, created_at
+            FROM "company_product"
+            WHERE created_at > ? AND company_id = ?
+            ORDER BY company_id, product_id, created_at DESC;
+        """;
+
+        Set<CompanyProductDBO> companyProductsDBO = new HashSet<>();
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setObject(1, date);
+            stmt.setLong(2, companyId);
+
+            ResultSet resultSet = stmt.executeQuery();
+
+            while (resultSet.next()) {
+                companyProductsDBO.add(ObjectMapper.mapResultSetToCompanyProductDBO(resultSet));
+            }
+        } catch (SQLException | IOException e) {
+            throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
+        }
+
+        return companyProductsDBO;
     }
 
     public synchronized Set<CompanyProduct> findByProductIdAndCompanyId(

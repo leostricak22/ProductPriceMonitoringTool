@@ -140,7 +140,7 @@ public class ObjectMapper {
 
     public static CompanyProduct mapCompanyProductDBOToCompanyProduct(CompanyProductDBO companyProductDBO, String finding) throws DatabaseConnectionActiveException {
         if (finding.equals("company")) {
-            return new CompanyProduct.Builder()
+            return new CompanyProduct.Builder(companyProductDBO.getId())
                     .company(companyRepository.findById(companyProductDBO.getCompanyId())
                             .orElseThrow(() -> new RepositoryQueryException("Company not found")))
                     .product(new Product.Builder(companyProductDBO.getProductId()).build())
@@ -149,7 +149,7 @@ public class ObjectMapper {
                     .build();
         }
 
-        return new CompanyProduct.Builder()
+        return new CompanyProduct.Builder(companyProductDBO.getId())
                 .company(new Company.Builder(companyProductDBO.getCompanyId(), companyProductDBO.getName()).build())
                 .product(productRepository.findByIdWithoutCompanies(companyProductDBO.getProductId())
                         .orElseThrow(() -> new RepositoryQueryException("Product not found")))

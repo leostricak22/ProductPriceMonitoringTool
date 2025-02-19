@@ -3,9 +3,10 @@ package hr.tvz.productpricemonitoringtool.model.dbo;
 import hr.tvz.productpricemonitoringtool.model.Entity;
 import hr.tvz.productpricemonitoringtool.model.Price;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class CompanyProductDBO extends Entity {
+public class CompanyProductDBO extends Entity implements Serializable {
 
     private Long companyId;
     private Long productId;

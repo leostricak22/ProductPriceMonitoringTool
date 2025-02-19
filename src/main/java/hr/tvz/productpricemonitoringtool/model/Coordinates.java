@@ -1,8 +1,9 @@
 package hr.tvz.productpricemonitoringtool.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class Coordinates {
+public class Coordinates implements Serializable {
     private BigDecimal latitude;
     private BigDecimal longitude;
 

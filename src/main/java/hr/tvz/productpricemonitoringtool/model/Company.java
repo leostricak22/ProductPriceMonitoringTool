@@ -1,8 +1,9 @@
 package hr.tvz.productpricemonitoringtool.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Company extends Entity {
+public class Company extends Entity implements Serializable {
 
     private Address address;
     private String joinCode;

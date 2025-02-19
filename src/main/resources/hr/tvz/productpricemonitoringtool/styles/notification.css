@@ -1,0 +1,33 @@
+.notification-box {
+    -fx-background-color: white;
+    -fx-padding: 10;
+    -fx-spacing: 5;
+    -fx-border-color: lightgray;
+    -fx-border-width: 1;
+}
+
+.notification-scroll-pane {
+    -fx-pref-width: 700;
+    -fx-max-height: 1000;
+    -fx-background-insets: 0;
+}
+
+.notification-item {
+    -fx-background-color: #f5f5f5;
+    -fx-padding: 15;
+    -fx-spacing: 15;
+    -fx-border-color: lightgray;
+    -fx-border-width: 1;
+    -fx-alignment: center-left;
+}
+
+.notification-label {
+    -fx-text-fill: #333333;
+    -fx-font-size: 14px;
+}
+
+.notification-box:focused,
+.notification-scroll-pane:focused {
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}

@@ -83,7 +83,7 @@ public class ProductAddController {
                 newCategory = categoryRepository.save(newCategory);
             }
 
-            CompanyProduct companyProduct = new CompanyProduct.Builder()
+            CompanyProduct companyProduct = new CompanyProduct.Builder(0L)
                     .company(selectedCompany)
                     .price(new Price(new BigDecimal(priceTextField.getText())))
                     .build();

@@ -1,10 +1,11 @@
 package hr.tvz.productpricemonitoringtool.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import static java.util.Objects.isNull;
 
-public class Address extends Entity {
+public class Address extends Entity implements Serializable {
 
     private BigDecimal latitude;
     private BigDecimal longitude;

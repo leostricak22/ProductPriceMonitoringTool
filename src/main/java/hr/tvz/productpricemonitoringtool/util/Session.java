@@ -4,6 +4,7 @@ import hr.tvz.productpricemonitoringtool.exception.AuthenticationException;
 import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.Product;
 import hr.tvz.productpricemonitoringtool.model.User;
+import hr.tvz.productpricemonitoringtool.thread.CheckNotificationsThread;
 import javafx.scene.image.Image;
 
 import java.io.File;
@@ -19,6 +20,7 @@ public class Session {
 
     public static void setLoggedInUser(User user) {
         loggedInUser = Optional.of(user);
+        CheckNotificationsThread.start();
     }
 
     public static Optional<User> getLoggedInUser() {
@@ -68,5 +70,7 @@ public class Session {
         loggedInUser = Optional.empty();
         selectedCompany = Optional.empty();
         selectedProduct = Optional.empty();
+
+        CheckNotificationsThread.stop();
     }
 }

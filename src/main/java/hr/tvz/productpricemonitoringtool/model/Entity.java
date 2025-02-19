@@ -1,6 +1,8 @@
 package hr.tvz.productpricemonitoringtool.model;
 
-public abstract class Entity {
+import java.io.Serializable;
+
+public abstract class Entity implements Serializable {
 
     Long id;
     String name;

@@ -12,44 +12,65 @@
 <?import javafx.scene.shape.Circle?>
 <?import javafx.scene.shape.Rectangle?>
 
-<GridPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="75.0" style="-fx-background-color: white;" stylesheets="@styles/topBar.css, @styles/main.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.tvz.productpricemonitoringtool.controller.TopBarController">
+<GridPane maxHeight="-Infinity"
+          maxWidth="-Infinity"
+          minHeight="-Infinity"
+          minWidth="-Infinity"
+          prefHeight="75.0"
+          style="-fx-background-color: white;"
+          stylesheets="@styles/topBar.css, @styles/main.css"
+          xmlns="http://javafx.com/javafx/23.0.1"
+          xmlns:fx="http://javafx.com/fxml/1"
+          fx:controller="hr.tvz.productpricemonitoringtool.controller.TopBarController">
     <columnConstraints>
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="200.0" prefWidth="689.0" />
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0" />
-        <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="135.0" prefWidth="135.0" />
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.7976931348623157E308" minWidth="200.0" prefWidth="689.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="100.0" minWidth="100.0" prefWidth="100.0"/>
+        <ColumnConstraints hgrow="SOMETIMES" maxWidth="135.0" minWidth="135.0" prefWidth="135.0"/>
     </columnConstraints>
     <rowConstraints>
-        <RowConstraints maxHeight="75.0" minHeight="75.0" prefHeight="75.0" vgrow="SOMETIMES" />
+        <RowConstraints maxHeight="75.0" minHeight="75.0" prefHeight="75.0" vgrow="SOMETIMES"/>
     </rowConstraints>
     <children>
-      <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308">
-         <GridPane.margin>
-            <Insets left="5.0" right="5.0" />
-         </GridPane.margin>
-         <children>
-              <TextField fx:id="searchProductsTextField" maxHeight="50.0" maxWidth="1.7976931348623157E308" prefHeight="50.0" promptText="Search products..." HBox.hgrow="ALWAYS">
-               <styleClass>
-                  <String fx:value="search-text-field" />
-                  <String fx:value="textFieldWithButtonTextField" />
-               </styleClass></TextField>
-            <Button maxHeight="49.0" mnemonicParsing="false" onAction="#handleSearch" styleClass="textFieldWithButtonButton" text="Search" />
-         </children>
-      </HBox>
+        <HBox alignment="CENTER_LEFT" maxWidth="1.7976931348623157E308">
+            <GridPane.margin>
+                <Insets left="5.0" right="5.0"/>
+            </GridPane.margin>
+            <children>
+                <TextField fx:id="searchProductsTextField" maxHeight="50.0" maxWidth="1.7976931348623157E308"
+                           prefHeight="50.0" promptText="Search products..." HBox.hgrow="ALWAYS">
+                    <styleClass>
+                        <String fx:value="search-text-field"/>
+                        <String fx:value="textFieldWithButtonTextField"/>
+                    </styleClass>
+                </TextField>
+                <Button maxHeight="49.0" mnemonicParsing="false" onAction="#handleSearch"
+                        styleClass="textFieldWithButtonButton" text="Search"/>
+            </children>
+        </HBox>
         <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-spacing: 10;" GridPane.columnIndex="2">
             <children>
-                <Rectangle fx:id="notificationIconRectangle" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="40.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" width="40.0" />
-                <Circle fx:id="userProfilePictureCircle" fill="DODGERBLUE" onMousePressed="#handleUserEditRedirect" radius="30.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0">
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor></Circle>
+                <Rectangle fx:id="notificationIconRectangle" arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="35.0"
+                           onMouseClicked="#handleNotifications" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0"
+                           width="35.0">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                </Rectangle>
+                <Circle fx:id="userProfilePictureCircle" fill="DODGERBLUE" onMousePressed="#handleUserEditRedirect"
+                        radius="30.0" stroke="TRANSPARENT" strokeType="INSIDE" strokeWidth="0.0">
+                    <cursor>
+                        <Cursor fx:constant="HAND"/>
+                    </cursor>
+                </Circle>
             </children>
             <opaqueInsets>
-                <Insets />
+                <Insets/>
             </opaqueInsets>
             <GridPane.margin>
-                <Insets />
+                <Insets/>
             </GridPane.margin>
         </HBox>
-      <Button fx:id="filterButton" mnemonicParsing="false" onAction="#handleFilter" prefHeight="49.0" prefWidth="329.0" styleClass="secondary-button" text="Filter" GridPane.columnIndex="1" />
+        <Button fx:id="filterButton" mnemonicParsing="false" onAction="#handleFilter" prefHeight="49.0"
+                prefWidth="329.0" styleClass="secondary-button" text="Filter" GridPane.columnIndex="1"/>
     </children>
 </GridPane>

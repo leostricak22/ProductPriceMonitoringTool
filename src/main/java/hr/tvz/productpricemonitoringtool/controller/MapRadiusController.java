@@ -25,7 +25,6 @@ import java.util.Set;
 
 public class MapRadiusController {
 
-    private static final Logger log = LoggerFactory.getLogger(MapRadiusController.class);
     @FXML public WebView webView;
     @FXML public Slider radiusSlider;
     @FXML public TextField radiusTextField;
@@ -63,14 +62,6 @@ public class MapRadiusController {
 
         Stage stage = (Stage) radiusTextField.getScene().getWindow();
         stage.close();
-    }
-
-    private void showAlert(String content) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Data from HTML");
-        alert.setHeaderText(null);
-        alert.setContentText(content);
-        alert.showAndWait();
     }
 
     public void handleSliderDragDone(Number newValue) {

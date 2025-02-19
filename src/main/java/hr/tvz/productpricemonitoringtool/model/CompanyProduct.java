@@ -1,8 +1,9 @@
 package hr.tvz.productpricemonitoringtool.model;
 
+import java.io.*;
 import java.time.LocalDateTime;
 
-public class CompanyProduct {
+public class CompanyProduct extends Entity implements Serializable {
 
     private Product product;
     private Company company;
@@ -10,6 +11,7 @@ public class CompanyProduct {
     private LocalDateTime createdAt;
 
     public CompanyProduct(Builder builder) {
+        super(builder.id, builder.name);
         this.product = builder.product;
         this.company = builder.company;
         this.price = builder.price;
@@ -49,10 +51,17 @@ public class CompanyProduct {
     }
 
     public static class Builder {
+        private Long id;
+        private String name;
         private Company company;
         private Price price;
         private Product product;
         private LocalDateTime createdAt;
+
+        public Builder(Long id) {
+            this.id = id;
+            this.name = "";
+        }
 
         public Builder product(Product product) {
             this.product = product;

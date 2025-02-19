@@ -5,9 +5,10 @@ import hr.tvz.productpricemonitoringtool.util.FileUtil;
 import javafx.scene.image.Image;
 
 import java.io.File;
+import java.io.Serializable;
 import java.util.Set;
 
-public class Product extends Entity {
+public class Product extends Entity implements Serializable {
 
     private Category category;
     private Set<CompanyProduct> companyProducts;
