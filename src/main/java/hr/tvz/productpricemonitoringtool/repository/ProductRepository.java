@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import static java.util.Objects.isNull;
+
 public class ProductRepository extends AbstractRepository<Product> {
 
     private final CategoryRepository categoryRepository = new CategoryRepository();
@@ -152,9 +154,74 @@ public class ProductRepository extends AbstractRepository<Product> {
         }
 
         for (Product product : entities) {
-            companyProductRepository.saveProductToCompanies(product);
+            if (!isNull(product.getCompanyProducts())) {
+                companyProductRepository.saveProductToCompanies(product);
+            }
         }
 
         return entities;
+    }
+
+    public synchronized void update(Product product) throws RepositoryAccessException, DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
+        String query = """
+        UPDATE "product" SET name = ?, category_id = ?, description = ? WHERE id = ?;
+        """;
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, product.getName());
+            stmt.setLong(2, product.getCategory().getId());
+            stmt.setString(3, product.getDescription());
+            stmt.setLong(4, product.getId());
+
+            stmt.executeUpdate();
+        } catch (SQLException | IOException e) {
+            throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
+        }
+
+        companyProductRepository.saveProductToCompanies(product);
+    }
+
+    public synchronized void delete(Product product) throws RepositoryAccessException, DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
+        String query = """
+        DELETE FROM "product" WHERE id = ?;
+        """;
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setLong(1, product.getId());
+
+            stmt.executeUpdate();
+        } catch (SQLException | IOException e) {
+            throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
+        }
     }
 }

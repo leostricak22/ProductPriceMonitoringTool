@@ -171,3 +171,11 @@
     -fx-background-color: #526997;
     -fx-text-fill: white;
 }
+
+.danger-button {
+    -fx-background-color: #782c2c;
+}
+
+.danger-button:hover, .danger-button:pressed, .danger-button:focused, .danger-button:selected {
+    -fx-background-color: #4a2020;
+}

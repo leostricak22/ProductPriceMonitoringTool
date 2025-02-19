@@ -112,6 +112,21 @@ public class AdminCompanyController implements SearchController {
         filter();
     }
 
+    @Override
+    public void handleAddNewButtonClick() {
+
+    }
+
+    @Override
+    public void handleEditButtonClick() {
+
+    }
+
+    @Override
+    public void handleDeleteButtonClick() {
+
+    }
+
     private void showFilterLabel() {
         removeFiltersLabel.setVisible(
                 !idTextField.getText().isEmpty() ||

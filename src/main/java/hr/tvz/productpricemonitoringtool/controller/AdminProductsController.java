@@ -16,6 +16,7 @@ import javafx.scene.control.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
@@ -70,6 +71,7 @@ public class AdminProductsController implements SearchController {
         List<Product> products = new ArrayList<>();
         try {
             products = new ArrayList<>(productRepository.findAll());
+            products.sort((p1, p2) -> (int) (p1.getId() - p2.getId()));
         } catch (DatabaseConnectionActiveException e) {
             AlertDialog.showErrorDialog("Error while loading products.");
             SceneLoader.loadScene("dashboard", "Dashboard");
@@ -100,6 +102,50 @@ public class AdminProductsController implements SearchController {
         categoryComboBox.getSelectionModel().clearSelection();
 
         filter();
+    }
+
+    @Override
+    public void handleAddNewButtonClick() {
+        SceneLoader.loadProductFormPopupScene(
+                "admin_product_form", "Edit product", Optional.empty());
+
+        filter();
+    }
+
+    @Override
+    public void handleEditButtonClick() {
+        Product selectedProduct = productTableView.getSelectionModel().getSelectedItem();
+
+        if (isNull(selectedProduct)) {
+            AlertDialog.showErrorDialog("No product selected");
+            return;
+        }
+
+        SceneLoader.loadProductFormPopupScene(
+                "admin_product_form", "Edit product", Optional.of(selectedProduct));
+
+        filter();
+    }
+
+    @Override
+    public void handleDeleteButtonClick() {
+        Product selectedProduct = productTableView.getSelectionModel().getSelectedItem();
+
+        if (isNull(selectedProduct)) {
+            AlertDialog.showErrorDialog("No product selected");
+            return;
+        }
+
+        Optional<ButtonType> result = AlertDialog.showConfirmationDialog(
+                "Are you sure you want to delete the selected product?");
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                productRepository.delete(selectedProduct);
+                filter();
+            } catch (DatabaseConnectionActiveException e) {
+                AlertDialog.showErrorDialog("Error while deleting product.");
+            }
+        }
     }
 
     private void showFilterLabel() {
