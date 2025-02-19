@@ -18,15 +18,15 @@ import javafx.scene.control.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static java.util.Objects.isNull;
 
 public class AdminCompanyUsersController implements SearchController {
 
-    @FXML
-    public TextField idTextField;
+    @FXML public TextField idTextField;
     @FXML public ComboBox<Company> companyComboBox;
     @FXML public ComboBox<User> userComboBox;
     @FXML public DatePicker dateFromPicker;
@@ -74,8 +74,8 @@ public class AdminCompanyUsersController implements SearchController {
 
     @Override
     public void filter() {
-        Set<UserCompanyDBO> companyUsers = companyRepository.findAllUserCompanyDBO();
-        companyUsersTableView.setItems(FXCollections.observableArrayList(companyUsers));
+        List<UserCompanyDBO> companyUsers = new ArrayList<>(companyRepository.findAllUserCompanyDBO());
+        companyUsers.sort((cu1, cu2) -> (int) (cu1.getId() - cu2.getId()));
 
         String idValue = idTextField.getText();
         Company companyValue = companyComboBox.getValue();
@@ -108,17 +108,44 @@ public class AdminCompanyUsersController implements SearchController {
 
     @Override
     public void handleAddNewButtonClick() {
-
+        SceneLoader.loadCompanyUsersFormPopupScene("admin_company_staff_form", "Add company user", Optional.empty());
+        filter();
     }
 
     @Override
     public void handleEditButtonClick() {
+        UserCompanyDBO selectedCompanyUser = companyUsersTableView.getSelectionModel().getSelectedItem();
 
+        if (isNull(selectedCompanyUser)) {
+            AlertDialog.showErrorDialog("No company user selected");
+            return;
+        }
+
+        SceneLoader.loadCompanyUsersFormPopupScene("admin_company_staff_form", "Edit company user", Optional.of(selectedCompanyUser));
+        filter();
     }
 
     @Override
     public void handleDeleteButtonClick() {
+        UserCompanyDBO selectedCompanyUser = companyUsersTableView.getSelectionModel().getSelectedItem();
 
+        if (isNull(selectedCompanyUser)) {
+            AlertDialog.showErrorDialog("No company user selected");
+            return;
+        }
+
+        Optional<ButtonType> result = AlertDialog.showConfirmationDialog(
+                "Are you sure you want to delete the selected product?");
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                companyRepository.deleteUserCompany(selectedCompanyUser);
+                filter();
+            } catch (DatabaseConnectionActiveException e) {
+                AlertDialog.showErrorDialog("Error while deleting product.");
+            }
+        }
+
+        filter();
     }
 
     private void showFilterLabel() {

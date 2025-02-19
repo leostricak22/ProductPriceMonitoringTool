@@ -359,4 +359,68 @@ public class CompanyRepository extends AbstractRepository<Company> {
 
         return userCompanyDBO;
     }
+
+    public synchronized UserCompanyDBO updateUserCompany(UserCompanyDBO userCompany) throws RepositoryAccessException, DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
+        String query = """
+        UPDATE "user_company" SET user_id = ?, company_id = ?
+        WHERE id = ?
+        """;
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setLong(1, userCompany.getUserId());
+            stmt.setLong(2, userCompany.getCompanyId());
+            stmt.setLong(3, userCompany.getId());
+
+            stmt.executeUpdate();
+        } catch (IOException | SQLException e) {
+            throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
+        }
+
+        return userCompany;
+    }
+
+    public synchronized void deleteUserCompany(UserCompanyDBO userCompany) throws RepositoryAccessException, DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
+        String query = """
+        DELETE FROM "user_company"
+        WHERE id = ?
+        """;
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setLong(1, userCompany.getId());
+
+            stmt.executeUpdate();
+        } catch (IOException | SQLException e) {
+            throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
+        }
+    }
 }

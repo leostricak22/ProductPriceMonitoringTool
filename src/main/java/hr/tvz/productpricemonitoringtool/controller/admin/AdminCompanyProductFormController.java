@@ -61,6 +61,7 @@ public class AdminCompanyProductFormController {
                 return;
             }
 
+            submitButton.setText("Edit");
             priceTextField.setText(cp.getPrice().value().toString());
 
             this.companyProductEdit = companyProduct;
