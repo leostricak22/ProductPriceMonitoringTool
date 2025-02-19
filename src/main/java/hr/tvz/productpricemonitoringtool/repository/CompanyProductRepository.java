@@ -302,7 +302,7 @@ public class CompanyProductRepository {
         }
     }
 
-    public synchronized Set<CompanyProduct> findAll() throws DatabaseConnectionActiveException {
+    public synchronized Set<CompanyProduct> findAll(CompanyProductRecordType companyProductRecordType) throws DatabaseConnectionActiveException {
         while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
             try {
                 wait();
@@ -319,6 +319,13 @@ public class CompanyProductRepository {
             FROM "company_product"
             ORDER BY company_id, product_id, created_at DESC;
         """;
+
+        if (companyProductRecordType.equals(CompanyProductRecordType.ALL_RECORDS)) {
+            query = """
+                SELECT id, company_id, product_id, price, created_at
+                FROM "company_product"
+            """;
+        }
 
         Set<CompanyProductDBO> companyProductsDBO = new HashSet<>();
 
@@ -345,5 +352,41 @@ public class CompanyProductRepository {
                     }
                 })
                 .collect(Collectors.toSet());
+    }
+
+    public synchronized Set<CompanyProductDBO> findAllDBO() throws DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
+        String query = """
+        SELECT id, company_id, product_id, price, created_at
+        FROM "company_product";
+        """;
+
+        Set<CompanyProductDBO> companyProductsDBO = new HashSet<>();
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+            ResultSet resultSet = stmt.executeQuery();
+
+            while (resultSet.next()) {
+                companyProductsDBO.add(ObjectMapper.mapResultSetToCompanyProductDBO(resultSet));
+            }
+        } catch (SQLException | IOException e) {
+            throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
+        }
+
+        return companyProductsDBO;
     }
 }

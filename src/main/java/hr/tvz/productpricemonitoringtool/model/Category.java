@@ -50,11 +50,11 @@ public class Category extends Entity implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Category category = (Category) o;
-        return Objects.equals(parentCategory, category.parentCategory);
+        return Objects.equals(id, category.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(parentCategory);
+        return Objects.hashCode(id);
     }
 }

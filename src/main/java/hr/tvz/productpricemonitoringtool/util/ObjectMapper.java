@@ -10,7 +10,9 @@ import hr.tvz.productpricemonitoringtool.repository.*;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class ObjectMapper {
@@ -84,11 +86,12 @@ public class ObjectMapper {
                 .build();
     }
 
-    public static Set<Category> mapCategoryDBOToCategory(Set<CategoryDBO> categoryDBOSet) throws DatabaseConnectionActiveException {
-        Set<Category> categories = new HashSet<>();
+    public static List<Category> mapCategoryDBOToCategory(Set<CategoryDBO> categoryDBOSet) throws DatabaseConnectionActiveException {
+        List<Category> categories = new ArrayList<>();
         for (CategoryDBO categoryDBO : categoryDBOSet) {
             categories.add(mapCategoryDBOToCategory(categoryDBO));
         }
+
         return categories;
     }
 

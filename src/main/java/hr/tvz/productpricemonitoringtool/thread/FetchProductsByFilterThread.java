@@ -1,5 +1,6 @@
 package hr.tvz.productpricemonitoringtool.thread;
 
+import hr.tvz.productpricemonitoringtool.enumeration.CompanyProductRecordType;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.model.FilterSearch;
 import hr.tvz.productpricemonitoringtool.model.Product;
@@ -28,7 +29,7 @@ public class FetchProductsByFilterThread implements Runnable {
             Set<Long> productIds = new HashSet<>();
             Set<Product> uniqueProducts = new HashSet<>();
 
-            companyProductRepository.findAll().stream()
+            companyProductRepository.findAll(CompanyProductRecordType.LATEST_RECORD).stream()
                     .filter(companyProduct -> filterSearch.getCompaniesInRadius().isEmpty() ||
                             filterSearch.getCompaniesInRadius().get().stream()
                                     .anyMatch(company -> company.getId().equals(companyProduct.getCompany().getId())))

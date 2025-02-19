@@ -86,7 +86,7 @@ public class CategoryRepository extends AbstractRepository<Category> {
             notifyAll();
         }
 
-        return ObjectMapper.mapCategoryDBOToCategory(categoriesDBO);
+        return new HashSet<>(ObjectMapper.mapCategoryDBOToCategory(categoriesDBO));
     }
 
     @Override

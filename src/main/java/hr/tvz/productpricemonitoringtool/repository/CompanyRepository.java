@@ -253,6 +253,42 @@ public class CompanyRepository extends AbstractRepository<Company> {
         return users;
     }
 
+    public synchronized Set<UserCompanyDBO> findAllUserCompanyDBO() {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
+        String query = """
+        SELECT uc.id, uc.user_id, uc.company_id, uc.created_at
+        FROM "user_company" uc
+        """;
+
+        Set<UserCompanyDBO> userCompanyDBO = new HashSet<>();
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+             Statement stmt = connection.createStatement()) {
+            ResultSet resultSet = stmt.executeQuery(query);
+
+            while (resultSet.next()) {
+                userCompanyDBO.add(ObjectMapper.mapResultSetToUserCompanyDBO(resultSet));
+            }
+
+        } catch (IOException | SQLException e) {
+            throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
+        }
+
+        return userCompanyDBO;
+    }
+
     public synchronized Set<UserCompanyDBO> findAllUserCompanyByUserId(LocalDateTime date, Long userId) throws RepositoryAccessException, DatabaseConnectionActiveException {
         while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
             try {
