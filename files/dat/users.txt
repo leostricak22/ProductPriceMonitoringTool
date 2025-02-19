@@ -1,0 +1,6 @@
+1
+admin
+admin
+admin
+$2a$10$cSVx/W3JShMhMNDeGlm2ROQBRwHEEIciAylZRXBnoSc3PC5YoXMTS
+ADMIN

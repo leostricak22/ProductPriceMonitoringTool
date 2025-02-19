@@ -63,6 +63,9 @@ public class ProductSearchController {
         String hierarchy = "";
         Boolean success = false;
 
+        productsFlowPane.getChildren().clear();
+        products.clear();
+
         FetchProductsByCategoriesThread fetchProductsThread = new FetchProductsByCategoriesThread(productRepository,
                 categoryRepository,
                 products,

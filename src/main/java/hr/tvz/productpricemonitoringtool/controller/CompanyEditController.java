@@ -7,10 +7,9 @@ import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.User;
 import hr.tvz.productpricemonitoringtool.repository.AddressRepository;
 import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
-import hr.tvz.productpricemonitoringtool.repository.UserRepository;
+import hr.tvz.productpricemonitoringtool.repository.UserFileRepository;
 import hr.tvz.productpricemonitoringtool.util.*;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import org.slf4j.Logger;
@@ -31,7 +30,7 @@ public class CompanyEditController {
     private final Logger logger = LoggerFactory.getLogger(CompanyEditController.class);
     private final AddressRepository addressRepository = new AddressRepository();
     private final CompanyRepository companyRepository = new CompanyRepository();
-    private final UserRepository userRepository = new UserRepository();
+    private final UserFileRepository userFileRepository = new UserFileRepository();
 
     public void initialize() {
         Company company = Session.getSelectedCompany().orElseThrow(() ->
@@ -69,12 +68,7 @@ public class CompanyEditController {
         companyRepository.update(company);
 
         Session.getLoggedInUser().ifPresentOrElse(user -> {
-            Optional<User> optionalUser;
-            try {
-                optionalUser = userRepository.findById(user.getId());
-            } catch (DatabaseConnectionActiveException e) {
-                throw new AuthenticationException(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
-            }
+            Optional<User> optionalUser = userFileRepository.findById(user.getId());
 
             if (optionalUser.isEmpty()) {
                 throw new AuthenticationException("User not found");

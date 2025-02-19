@@ -11,6 +11,7 @@ module hr.tvz.productpricemonitoringtool {
     requires com.h2database;
     requires java.sql;
     requires com.google.gson;
+    requires jbcrypt;
 
     opens hr.tvz.productpricemonitoringtool to javafx.fxml;
     opens hr.tvz.productpricemonitoringtool.util to javafx.web;

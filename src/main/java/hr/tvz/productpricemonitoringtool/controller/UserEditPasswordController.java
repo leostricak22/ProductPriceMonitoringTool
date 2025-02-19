@@ -2,7 +2,7 @@ package hr.tvz.productpricemonitoringtool.controller;
 
 import hr.tvz.productpricemonitoringtool.exception.AuthenticationException;
 import hr.tvz.productpricemonitoringtool.model.User;
-import hr.tvz.productpricemonitoringtool.repository.UserRepository;
+import hr.tvz.productpricemonitoringtool.repository.UserFileRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
 import hr.tvz.productpricemonitoringtool.util.CryptoUtil;
 import hr.tvz.productpricemonitoringtool.util.SceneLoader;
@@ -15,7 +15,7 @@ public class UserEditPasswordController {
     @FXML public PasswordField passwordField;
     @FXML public PasswordField confirmPasswordField;
 
-    UserRepository userRepository = new UserRepository();
+    UserFileRepository userFileRepository = new UserFileRepository();
 
     public void handleEditPassword() {
         User user = Session.getLoggedInUser().orElseThrow(() -> new AuthenticationException("No user is logged in."));
@@ -32,7 +32,7 @@ public class UserEditPasswordController {
         String hashedPassword = CryptoUtil.hash(password);
         user.setPassword(hashedPassword);
 
-        userRepository.updatePassword(user);
+        userFileRepository.updatePassword(user);
         AlertDialog.showInformationDialog("Success", "Password successfully changed.");
         SceneLoader.loadScene("user_edit", "Edit user");
     }

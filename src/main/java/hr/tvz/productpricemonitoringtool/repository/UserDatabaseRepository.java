@@ -13,7 +13,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
-public class UserRepository extends AbstractRepository<User> {
+public class UserDatabaseRepository extends AbstractRepository<User> {
 
     @Override
     public Optional<User> findById(Long id) throws RepositoryAccessException, DatabaseConnectionActiveException {

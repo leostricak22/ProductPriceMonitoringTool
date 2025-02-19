@@ -2,7 +2,7 @@ package hr.tvz.productpricemonitoringtool.controller;
 
 import hr.tvz.productpricemonitoringtool.exception.AuthenticationException;
 import hr.tvz.productpricemonitoringtool.model.User;
-import hr.tvz.productpricemonitoringtool.repository.UserRepository;
+import hr.tvz.productpricemonitoringtool.repository.UserFileRepository;
 import hr.tvz.productpricemonitoringtool.util.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
@@ -26,7 +26,7 @@ public class UserEditController {
     private String imageUrl;
     boolean isImageChanged = false;
 
-    private final UserRepository userRepository = new UserRepository();
+    private final UserFileRepository userFileRepository = new UserFileRepository();
 
     public void initialize() {
         user = Session.getLoggedInUser().orElseThrow(() -> new AuthenticationException("No user is logged in."));
@@ -53,7 +53,7 @@ public class UserEditController {
     public void handleEdtUser() {
         user.setName(nameTextField.getText());
 
-        userRepository.update(user);
+        userFileRepository.update(user);
         if (isImageChanged) {
             FileUtil.saveImage(imageUrl,
                     Constants.USER_PROFILE_PICTURES_PATH +

@@ -6,6 +6,7 @@ import java.util.Set;
 
 public class User extends Entity {
 
+    private String surname;
     private String email;
     private String password;
     private Role role;
@@ -13,6 +14,7 @@ public class User extends Entity {
 
     public User(Builder builder) {
         super(builder.id, builder.name);
+        this.surname = builder.surname;
         this.email = builder.email;
         this.password = builder.password;
         this.role = builder.role;
@@ -51,9 +53,18 @@ public class User extends Entity {
         this.companies = companies;
     }
 
+    public String getSurname() {
+        return surname;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
     public static class Builder {
         private final Long id;
         private final String name;
+        private String surname;
         private String email;
         private String password;
         private Role role;
@@ -62,6 +73,11 @@ public class User extends Entity {
         public Builder(Long id, String name) {
             this.id = id;
             this.name = name;
+        }
+
+        public Builder surname(String surname) {
+            this.surname = surname;
+            return this;
         }
 
         public Builder email(String email) {
