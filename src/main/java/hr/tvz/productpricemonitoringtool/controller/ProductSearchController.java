@@ -4,11 +4,13 @@ import hr.tvz.productpricemonitoringtool.enumeration.CompanyProductRecordType;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.model.Category;
 import hr.tvz.productpricemonitoringtool.model.CompanyProduct;
+import hr.tvz.productpricemonitoringtool.model.FilterSearch;
 import hr.tvz.productpricemonitoringtool.model.Product;
 import hr.tvz.productpricemonitoringtool.repository.CategoryRepository;
 import hr.tvz.productpricemonitoringtool.repository.CompanyProductRepository;
 import hr.tvz.productpricemonitoringtool.repository.ProductRepository;
 import hr.tvz.productpricemonitoringtool.thread.FetchProductsByCategoriesThread;
+import hr.tvz.productpricemonitoringtool.thread.FetchProductsByFilterThread;
 import hr.tvz.productpricemonitoringtool.util.*;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -32,8 +34,12 @@ public class ProductSearchController {
     @FXML public HBox categoryHBox;
     @FXML public FlowPane productsFlowPane;
     @FXML public Label hierarchyLabel;
+    @FXML public Label categoriesTitleLabel;
+    @FXML public Label noCategoriesTitleLabel;
 
     private Optional<Category> parentCategory = Optional.empty();
+    private FilterSearch filterSearch;
+    private final List<Product> products = new ArrayList<>();
 
     private final CategoryRepository categoryRepository = new CategoryRepository();
     private final ProductRepository productRepository = new ProductRepository();
@@ -45,8 +51,14 @@ public class ProductSearchController {
         loadProducts();
     }
 
+    public void initialize(FilterSearch filterSearch) {
+        this.parentCategory = Optional.empty();
+        this.filterSearch = filterSearch;
+
+        loadFilteredProducts();
+    }
+
     public void loadProducts() {
-        List<Product> products = new ArrayList<>();
         List<Category> categories = new ArrayList<>();
         String hierarchy = "";
         Boolean success = false;
@@ -120,6 +132,73 @@ public class ProductSearchController {
                 super.failed();
                 progressBar.remove();
                 AlertDialog.showErrorDialog("Error while fetching products from database");
+            }
+        };
+
+        new Thread(task).start();
+    }
+
+    private void loadFilteredProducts() {
+        categoryHBox.getChildren().clear();
+        productsFlowPane.getChildren().clear();
+
+        FetchProductsByFilterThread fetchProductsThread = new FetchProductsByFilterThread(filterSearch,
+                companyProductRepository,
+                products);
+        Thread thread = new Thread(fetchProductsThread);
+        thread.start();
+
+        ProgressBarUtil progressBar = new ProgressBarUtil(mainPane);
+
+        Task<Void> task = new Task<>() {
+            @Override
+            protected Void call() {
+                BigDecimal counter = BigDecimal.ZERO;
+                Instant startTime = Instant.now();
+
+                while (thread.isAlive()) {
+                    try {
+                        Thread.sleep(50);
+
+                        if (Instant.now().minusSeconds(Constants.MAX_DB_CONNECTION_WAIT_TIME_IN_SECONDS).isAfter(startTime)) {
+                            thread.interrupt();
+                        }
+
+                        counter = ProgressBarUtil.imitateProgressCounter(counter);
+
+                        progressBar.update(BigDecimal.valueOf(counter.divide(BigDecimal.valueOf(100),
+                                RoundingMode.HALF_UP).doubleValue()));
+                    } catch (InterruptedException e) {
+                        thread.interrupt();
+                        return null;
+                    }
+                }
+
+                return null;
+            }
+
+            @Override
+            protected void succeeded() {
+                super.succeeded();
+                progressBar.update(BigDecimal.ONE);
+                progressBar.remove();
+
+                categoryHBox.getChildren().clear();
+                productsFlowPane.getChildren().clear();
+
+                addProductPanes(products);
+                hierarchyLabel.setText("Filtered products");
+                hierarchyLabel.getStyleClass().add("sectionHeading");
+
+                categoriesTitleLabel.setVisible(false);
+                noCategoriesTitleLabel.setVisible(true);
+            }
+
+            @Override
+            protected void failed() {
+                super.failed();
+                progressBar.remove();
+                AlertDialog.showErrorDialog("Error while fetching filtered products from database");
             }
         };
 

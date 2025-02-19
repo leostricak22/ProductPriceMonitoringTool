@@ -259,4 +259,49 @@ public class CompanyProductRepository {
             notifyAll();
         }
     }
+
+    public synchronized Set<CompanyProduct> findAll() throws DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
+        String query = """
+            SELECT DISTINCT ON (company_id, product_id) id, company_id, product_id, price, created_at
+            FROM "company_product"
+            ORDER BY company_id, product_id, created_at DESC;
+        """;
+
+        Set<CompanyProductDBO> companyProductsDBO = new HashSet<>();
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+            ResultSet resultSet = stmt.executeQuery();
+
+            while (resultSet.next()) {
+                companyProductsDBO.add(ObjectMapper.mapResultSetToCompanyProductDBO(resultSet));
+            }
+        } catch (SQLException | IOException e) {
+            throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
+        }
+
+        return companyProductsDBO.stream()
+                .map(companyProductDBO -> {
+                    try {
+                        return ObjectMapper.mapCompanyProductDBOToCompanyProduct(companyProductDBO, "product");
+                    } catch (DatabaseConnectionActiveException e) {
+                        throw new RepositoryAccessException(e);
+                    }
+                })
+                .collect(Collectors.toSet());
+    }
 }

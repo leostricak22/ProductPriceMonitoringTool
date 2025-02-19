@@ -11,6 +11,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import javafx.stage.Stage;
 import netscape.javascript.JSObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +19,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -29,6 +31,8 @@ public class MapRadiusController {
     @FXML public TextField radiusTextField;
 
     private final CompanyRepository companyRepository = new CompanyRepository();
+
+    Set<Company> companiesInRadius = null;
 
     public void initialize() {
         WebEngine webEngine = webView.getEngine();
@@ -54,7 +58,11 @@ public class MapRadiusController {
     public void onFetchData() {
         WebEngine webEngine = webView.getEngine();
         String data = (String) webEngine.executeScript("sendData()");
-        showAlert(data);
+
+        findLonAndLatOnMap(data);
+
+        Stage stage = (Stage) radiusTextField.getScene().getWindow();
+        stage.close();
     }
 
     private void showAlert(String content) {
@@ -103,6 +111,7 @@ public class MapRadiusController {
         }
 
         BigDecimal radius = new BigDecimal(radiusTextField.getText());
+        Set<Company> companiesInRadius = new HashSet<>();
         for (Company company : companies) {
             Coordinates companyCoordinates = new Coordinates.Builder()
                     .latitude(company.getAddress().getLatitude())
@@ -110,13 +119,15 @@ public class MapRadiusController {
                     .build();
 
             BigDecimal distance = MapUtil.calculateDistance(coordinates, companyCoordinates);
-            log.info("Distance between coordinates and {} is {}", companyCoordinates, distance);
             if (distance.compareTo(radius) <= 0) {
-                log.info("Company {} is in radius.", company.getName());
-            } else {
-                log.info("Company {} is NOT in radius.", company.getName());
+                companiesInRadius.add(company);
             }
-
         }
+
+        this.companiesInRadius = companiesInRadius;
+    }
+
+    public Set<Company> getCompaniesInRadius() {
+        return companiesInRadius;
     }
 }

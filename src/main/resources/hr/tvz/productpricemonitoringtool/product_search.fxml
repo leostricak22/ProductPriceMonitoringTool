@@ -45,7 +45,7 @@
                         <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <Label prefHeight="17.0" prefWidth="133.0" text="Search by categories:">
+                        <Label fx:id="categoriesTitleLabel" prefHeight="17.0" prefWidth="133.0" text="Search by categories:">
                             <GridPane.margin>
                                 <Insets bottom="10.0" left="5.0" />
                             </GridPane.margin>
@@ -59,6 +59,14 @@
                                 </HBox>
                             </content>
                         </ScrollPane>
+                  <Label fx:id="noCategoriesTitleLabel" text="You can search by categories on &quot;Products -&gt; Search&quot;" visible="false" GridPane.columnSpan="2">
+                     <GridPane.margin>
+                        <Insets />
+                     </GridPane.margin>
+                     <padding>
+                        <Insets bottom="10.0" />
+                     </padding>
+                  </Label>
                     </children>
                <GridPane.margin>
                   <Insets top="10.0" />

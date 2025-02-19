@@ -4,9 +4,7 @@ import hr.tvz.productpricemonitoringtool.controller.CompanyProductChartControlle
 import hr.tvz.productpricemonitoringtool.controller.MapPickerController;
 import hr.tvz.productpricemonitoringtool.controller.ProductSearchController;
 import hr.tvz.productpricemonitoringtool.main.ProductPriceMonitoringToolApplication;
-import hr.tvz.productpricemonitoringtool.model.Address;
-import hr.tvz.productpricemonitoringtool.model.Category;
-import hr.tvz.productpricemonitoringtool.model.Company;
+import hr.tvz.productpricemonitoringtool.model.*;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
@@ -70,6 +68,25 @@ public class SceneLoader {
 
             ProductSearchController productSearchController = fxmlLoader.getController();
             productSearchController.initialize(category);
+
+            ProductPriceMonitoringToolApplication.getMainStage().show();
+        } catch (IOException e) {
+            AlertDialog.showErrorDialog(Constants.ERROR_LOADING_SCENE_MESSAGE + fxmlFileName);
+            logger.error(Constants.ERROR_LOADING_SCENE_MESSAGE + "{}", fxmlFileName, e);
+        }
+    }
+
+    public static void loadProductSearchScene(String fxmlFileName, String title, FilterSearch filterSearch) {
+        try {
+            FXMLLoader fxmlLoader = FXMLLoaderHelper.fxmlFilePath(fxmlFileName + Constants.SCENE_EXTENSION);
+
+            Scene scene = new Scene(fxmlLoader.load());
+
+            ProductPriceMonitoringToolApplication.getMainStage().setTitle(title);
+            ProductPriceMonitoringToolApplication.getMainStage().setScene(scene);
+
+            ProductSearchController productSearchController = fxmlLoader.getController();
+            productSearchController.initialize(filterSearch);
 
             ProductPriceMonitoringToolApplication.getMainStage().show();
         } catch (IOException e) {
