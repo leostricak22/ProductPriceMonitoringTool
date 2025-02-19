@@ -5,6 +5,7 @@ import hr.tvz.productpricemonitoringtool.exception.SerializationException;
 import hr.tvz.productpricemonitoringtool.model.dbo.CompanyProductDBO;
 import hr.tvz.productpricemonitoringtool.repository.CompanyProductRepository;
 import hr.tvz.productpricemonitoringtool.util.Constants;
+import hr.tvz.productpricemonitoringtool.util.Session;
 
 import java.io.*;
 import java.time.LocalDateTime;
@@ -12,15 +13,12 @@ import java.util.*;
 
 public non-sealed class PriceNotification extends Notification  implements Serializable {
 
-    private Set<Company> companies = new HashSet<>();
     public static List<CompanyProductDBO> deserializedCompanyProductDBOList = new ArrayList<>();
     public static List<CompanyProductDBO> newCompanyProductRecords = new ArrayList<>();
 
     private static final CompanyProductRepository companyProductRepository = new CompanyProductRepository();
 
-    public PriceNotification(Set<Company> companies) {
-        this.companies = companies;
-    }
+    public PriceNotification() {}
 
     @Override
     public void save() {
@@ -30,8 +28,9 @@ public non-sealed class PriceNotification extends Notification  implements Seria
 
     public void serializeToFile(List<CompanyProductDBO> companyProducts) {
         try {
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(
-                    Constants.SESSION_COMPANY_PRODUCT_SERIALIZATION_FILE));
+            File file = new File(Constants.SESSION_SERIALIZATION_FILE_DIRECTORY + Session.getLoggedInUser().get().getId() + "/companyProducts.dat");
+            file.getParentFile().mkdirs();
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(file));
 
             out.writeObject(companyProducts);
             out.close();
@@ -43,7 +42,7 @@ public non-sealed class PriceNotification extends Notification  implements Seria
     public void deserializeFromFile() {
         newCompanyProductRecords.clear();
 
-        File file = new File(Constants.SESSION_COMPANY_PRODUCT_SERIALIZATION_FILE);
+        File file = new File(Constants.SESSION_SERIALIZATION_FILE_DIRECTORY + Session.getLoggedInUser().get().getId() + "/companyProducts.dat");
         if (file.length() == 0) {
             return;
         }
@@ -60,7 +59,6 @@ public non-sealed class PriceNotification extends Notification  implements Seria
         deserializeFromFile();
 
         CompanyProductDBO lastCompanyProduct = new CompanyProductDBO.Builder(0L)
-                .companyId(1L)
                 .createdAt(LocalDateTime.of(1990, 1, 1, 0, 0))
                 .build();
 
@@ -69,7 +67,7 @@ public non-sealed class PriceNotification extends Notification  implements Seria
         }
 
         List<CompanyProductDBO> companyProducts = new ArrayList<>();
-        for (Company company : companies) {
+        for (Company company : Session.getLoggedInUser().get().getCompanies()) {
             companyProducts.addAll(companyProductRepository.findByDateAndCompanyId(lastCompanyProduct.getCreatedAt(),
                             company.getId()).stream().toList());
         }

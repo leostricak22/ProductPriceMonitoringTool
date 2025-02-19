@@ -4,3 +4,9 @@ admin
 admin
 $2a$10$cSVx/W3JShMhMNDeGlm2ROQBRwHEEIciAylZRXBnoSc3PC5YoXMTS
 ADMIN
+2
+merchant
+merchantanovic
+merchant@merchant.com
+$2a$10$cSVx/W3JShMhMNDeGlm2ROQBRwHEEIciAylZRXBnoSc3PC5YoXMTS
+ADMIN

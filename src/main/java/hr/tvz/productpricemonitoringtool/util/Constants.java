@@ -41,4 +41,8 @@ public class Constants {
 
     public static final String SESSION_COMPANY_PRODUCT_SERIALIZATION_FILE =
             "files/session/companyProducts.dat";
+    public static final String SESSION_USER_COMPANY_SERIALIZATION_FILE =
+            "files/session/userCompany.dat";
+    public static final String SESSION_SERIALIZATION_FILE_DIRECTORY =
+            "files/session/";
 }

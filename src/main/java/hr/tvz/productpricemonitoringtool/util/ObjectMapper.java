@@ -5,10 +5,7 @@ import hr.tvz.productpricemonitoringtool.enumeration.Role;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.exception.RepositoryQueryException;
 import hr.tvz.productpricemonitoringtool.model.*;
-import hr.tvz.productpricemonitoringtool.model.dbo.CategoryDBO;
-import hr.tvz.productpricemonitoringtool.model.dbo.CompanyDBO;
-import hr.tvz.productpricemonitoringtool.model.dbo.CompanyProductDBO;
-import hr.tvz.productpricemonitoringtool.model.dbo.ProductDBO;
+import hr.tvz.productpricemonitoringtool.model.dbo.*;
 import hr.tvz.productpricemonitoringtool.repository.*;
 
 import java.sql.ResultSet;
@@ -155,6 +152,14 @@ public class ObjectMapper {
                         .orElseThrow(() -> new RepositoryQueryException("Product not found")))
                 .price(companyProductDBO.getPrice())
                 .createdAt(companyProductDBO.getCreatedAt())
+                .build();
+    }
+
+    public static UserCompanyDBO mapResultSetToUserCompanyDBO(ResultSet resultSet) throws SQLException {
+        return new UserCompanyDBO.Builder(resultSet.getLong("id"))
+                .userId(resultSet.getLong("user_id"))
+                .companyId(resultSet.getLong("company_id"))
+                .createdAt(resultSet.getTimestamp("created_at").toLocalDateTime())
                 .build();
     }
 }

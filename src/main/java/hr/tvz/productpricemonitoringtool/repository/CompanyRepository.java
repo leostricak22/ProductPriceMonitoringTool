@@ -5,11 +5,13 @@ import hr.tvz.productpricemonitoringtool.exception.RepositoryAccessException;
 import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.User;
 import hr.tvz.productpricemonitoringtool.model.dbo.CompanyDBO;
+import hr.tvz.productpricemonitoringtool.model.dbo.UserCompanyDBO;
 import hr.tvz.productpricemonitoringtool.util.DatabaseUtil;
 import hr.tvz.productpricemonitoringtool.util.ObjectMapper;
 
 import java.io.IOException;
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
@@ -249,5 +251,46 @@ public class CompanyRepository extends AbstractRepository<Company> {
         }
 
         return users;
+    }
+
+    public synchronized Set<UserCompanyDBO> findAllUserCompanyByUserId(LocalDateTime date, Long userId) throws RepositoryAccessException, DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
+        String query = """
+        SELECT uc.id, uc.user_id, uc.company_id, uc.created_at
+        FROM "user_company" uc
+        WHERE uc.user_id = ?
+        AND uc.created_at > ?
+        """;
+
+        Set<UserCompanyDBO> userCompanyDBO = new HashSet<>();
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setLong(1, userId);
+            stmt.setTimestamp(2, Timestamp.valueOf(date));
+            ResultSet resultSet = stmt.executeQuery();
+
+            while (resultSet.next()) {
+                userCompanyDBO.add(ObjectMapper.mapResultSetToUserCompanyDBO(resultSet));
+            }
+
+        } catch (IOException | SQLException e) {
+            throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
+        }
+
+        return userCompanyDBO;
     }
 }

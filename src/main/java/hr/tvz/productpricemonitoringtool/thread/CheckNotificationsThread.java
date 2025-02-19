@@ -3,6 +3,7 @@ package hr.tvz.productpricemonitoringtool.thread;
 import hr.tvz.productpricemonitoringtool.controller.TopBarController;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.model.PriceNotification;
+import hr.tvz.productpricemonitoringtool.model.StaffNotification;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
 import hr.tvz.productpricemonitoringtool.util.Session;
 import javafx.animation.Animation;
@@ -26,11 +27,16 @@ public class CheckNotificationsThread {
                 @Override
                 protected Void call() {
                     try {
-                        PriceNotification priceNotification = new PriceNotification(
-                                new HashSet<>(Session.getLoggedInUser().get().getCompanies()));
+                        PriceNotification priceNotification = new PriceNotification();
 
                         priceNotification.checkPriceChange();
                         if (!PriceNotification.newCompanyProductRecords.isEmpty()) {
+                            Platform.runLater(() -> TopBarController.getInstance().changeNotificationBellIcon());
+                        }
+
+                        StaffNotification staffNotification = new StaffNotification();
+                        staffNotification.checkStaffChange();
+                        if (!StaffNotification.newUserCompanyDBORecords.isEmpty()) {
                             Platform.runLater(() -> TopBarController.getInstance().changeNotificationBellIcon());
                         }
                     } catch (DatabaseConnectionActiveException e) {

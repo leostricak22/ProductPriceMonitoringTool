@@ -1,9 +1,12 @@
 package hr.tvz.productpricemonitoringtool.util;
 
 import hr.tvz.productpricemonitoringtool.exception.AuthenticationException;
+import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.Product;
+import hr.tvz.productpricemonitoringtool.model.StaffNotification;
 import hr.tvz.productpricemonitoringtool.model.User;
+import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
 import hr.tvz.productpricemonitoringtool.thread.CheckNotificationsThread;
 import javafx.scene.image.Image;
 
@@ -21,6 +24,13 @@ public class Session {
     public static void setLoggedInUser(User user) {
         loggedInUser = Optional.of(user);
         CheckNotificationsThread.start();
+
+        try {
+            StaffNotification staffNotification = new StaffNotification();
+            staffNotification.checkStaffChange();
+        } catch (DatabaseConnectionActiveException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static Optional<User> getLoggedInUser() {

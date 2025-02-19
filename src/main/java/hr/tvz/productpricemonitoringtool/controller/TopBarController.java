@@ -3,6 +3,7 @@ package hr.tvz.productpricemonitoringtool.controller;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.model.FilterSearch;
 import hr.tvz.productpricemonitoringtool.model.PriceNotification;
+import hr.tvz.productpricemonitoringtool.model.StaffNotification;
 import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
 import hr.tvz.productpricemonitoringtool.repository.ProductRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
@@ -57,12 +58,17 @@ public class TopBarController {
         notificationIconRectangle.setFill(new ImagePattern(
                 new Image("file:src/main/resources/hr/tvz/productpricemonitoringtool/images/icons/notifications.png")));
 
-        PriceNotification priceNotification = new PriceNotification(
-                new HashSet<>(Session.getLoggedInUser().get().getCompanies()));
+        PriceNotification priceNotification = new PriceNotification();
+        StaffNotification staffNotification = new StaffNotification();
 
         try {
             priceNotification.checkPriceChange();
             if (!PriceNotification.newCompanyProductRecords.isEmpty()) {
+                changeNotificationBellIcon();
+            }
+
+            staffNotification.checkStaffChange();
+            if (!StaffNotification.newUserCompanyDBORecords.isEmpty()) {
                 changeNotificationBellIcon();
             }
         } catch (DatabaseConnectionActiveException e) {
@@ -116,17 +122,35 @@ public class TopBarController {
                     try {
                         createNewNotification(notificationBox,
                                 "Company " + companyRepository.findById(companyProductRecord.getCompanyId()).get().getName() +
-                                        " changed or added a price for the product " + productRepository.findById(companyProductRecord.getProductId()).get().getName()
+                                        " changed or added a price for the product " + productRepository.findById(companyProductRecord.getProductId()).get().getName(),
+                                "file:src/main/resources/hr/tvz/productpricemonitoringtool/images/icons/price.png"
                         );
                     } catch (DatabaseConnectionActiveException e) {
                         AlertDialog.showErrorDialog("Error while fetching company or product name.");
                     }
                 });
 
-        PriceNotification priceNotification = new PriceNotification(Session.getLoggedInUser().get().getCompanies());
+        StaffNotification.newUserCompanyDBORecords
+                .forEach(userCompanyDBO -> {
+                    try {
+                        createNewNotification(notificationBox,
+                                "Company " + companyRepository.findById(userCompanyDBO.getCompanyId()).get().getName() +
+                                        " added a new staff member " + Session.getLoggedInUser().get().getName() + " " + Session.getLoggedInUser().get().getSurname(),
+                                "file:src/main/resources/hr/tvz/productpricemonitoringtool/images/icons/staff.png"
+                        );
+                    } catch (DatabaseConnectionActiveException e) {
+                        AlertDialog.showErrorDialog("Error while fetching company name.");
+                    }
+                });
+
+        PriceNotification priceNotification = new PriceNotification();
         priceNotification.save();
 
-        if (PriceNotification.newCompanyProductRecords.isEmpty()) {
+        StaffNotification staffNotification = new StaffNotification();
+        staffNotification.save();
+
+        if (PriceNotification.newCompanyProductRecords.isEmpty() &&
+                StaffNotification.newUserCompanyDBORecords.isEmpty()) {
             createNoNewNotifications(notificationBox);
         }
 
@@ -155,12 +179,12 @@ public class TopBarController {
         }
     }
 
-    private void createNewNotification(VBox notificationBox, String notificationText) {
+    private void createNewNotification(VBox notificationBox, String notificationText, String imagePath) {
         HBox notificationItem = new HBox();
         notificationItem.getStyleClass().add("notification-item");
 
         ImageView notificationImageView = new ImageView(
-                new Image("file:src/main/resources/hr/tvz/productpricemonitoringtool/images/icons/price.png"));
+                new Image(imagePath));
 
         notificationImageView.setFitHeight(30);
         notificationImageView.setFitWidth(30);

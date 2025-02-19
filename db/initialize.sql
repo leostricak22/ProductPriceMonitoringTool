@@ -42,6 +42,7 @@ CREATE TABLE "user_company" (
     id LONG GENERATED ALWAYS AS IDENTITY,
     user_id LONG NOT NULL,
     company_id LONG NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES "user"(id),
     FOREIGN KEY (company_id) REFERENCES "company"(id)
