@@ -92,7 +92,7 @@ public class AdminUsersController implements SearchController {
 
     @Override
     public void handleAddNewButtonClick() {
-        SceneLoader.loadUsersScene("admin_user_form", "Add new user", Optional.empty());
+        SceneLoader.loadUsersPopupScene("admin_user_form", "Add new user", Optional.empty());
         filter();
     }
 
@@ -104,7 +104,7 @@ public class AdminUsersController implements SearchController {
             return;
         }
 
-        SceneLoader.loadUsersScene("admin_user_form", "Edit user", Optional.of(selectedUser));
+        SceneLoader.loadUsersPopupScene("admin_user_form", "Edit user", Optional.of(selectedUser));
         filter();
     }
 

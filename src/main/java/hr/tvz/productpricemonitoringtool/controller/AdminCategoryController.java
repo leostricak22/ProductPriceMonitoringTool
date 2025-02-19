@@ -10,14 +10,11 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
@@ -98,17 +95,41 @@ public class AdminCategoryController implements SearchController {
 
     @Override
     public void handleAddNewButtonClick() {
-
+        SceneLoader.loadCategoryPopupScene("admin_category_form", "Add category", Optional.empty());
+        filter();
     }
 
     @Override
     public void handleEditButtonClick() {
+        Category selectedCategory = categoryTableView.getSelectionModel().getSelectedItem();
+        if (isNull(selectedCategory)) {
+            AlertDialog.showErrorDialog("No category selected");
+            return;
+        }
 
+        SceneLoader.loadCategoryPopupScene("admin_category_form", "Edit category", Optional.of(selectedCategory));
+        filter();
     }
 
     @Override
     public void handleDeleteButtonClick() {
+        Category selectedCategory = categoryTableView.getSelectionModel().getSelectedItem();
+        if (isNull(selectedCategory)) {
+            AlertDialog.showErrorDialog("No category selected");
+            return;
+        }
 
+        Optional<ButtonType> result = AlertDialog.showConfirmationDialog(
+                "Are you sure you want to delete the selected product?");
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                categoryRepository.delete(selectedCategory);
+            } catch (DatabaseConnectionActiveException e) {
+                AlertDialog.showErrorDialog("Error while deleting a company.");
+            }
+        }
+
+        filter();
     }
 
     private void showFilterLabel() {

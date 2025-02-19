@@ -189,7 +189,7 @@ public class SceneLoader {
         return Optional.empty();
     }
 
-    public static void loadUsersScene(String fxmlFileName, String title, Optional<User> user) {
+    public static void loadUsersPopupScene(String fxmlFileName, String title, Optional<User> user) {
         try {
             FXMLLoader fxmlLoader = FXMLLoaderHelper.fxmlFilePath(fxmlFileName + Constants.SCENE_EXTENSION);
             Scene scene = new Scene(fxmlLoader.load(), 500, 600);
@@ -197,6 +197,27 @@ public class SceneLoader {
 
             AdminUserFormController adminUserFormController = fxmlLoader.getController();
             adminUserFormController.initialize(user);
+
+            popupStage.setTitle(title);
+            popupStage.setScene(scene);
+            popupStage.initModality(Modality.WINDOW_MODAL);
+            popupStage.initOwner(ProductPriceMonitoringToolApplication.getMainStage());
+
+            popupStage.showAndWait();
+        } catch (IOException e) {
+            AlertDialog.showErrorDialog(Constants.ERROR_LOADING_SCENE_MESSAGE + fxmlFileName);
+            logger.error(Constants.ERROR_LOADING_SCENE_MESSAGE + "{}", fxmlFileName, e);
+        }
+    }
+
+    public static void loadCategoryPopupScene(String fxmlFileName, String title, Optional<Category> category) {
+        try {
+            FXMLLoader fxmlLoader = FXMLLoaderHelper.fxmlFilePath(fxmlFileName + Constants.SCENE_EXTENSION);
+            Scene scene = new Scene(fxmlLoader.load());
+            Stage popupStage = new Stage();
+
+            AdminCategoryFormController adminCategoryFormController = fxmlLoader.getController();
+            adminCategoryFormController.initialize(category);
 
             popupStage.setTitle(title);
             popupStage.setScene(scene);
