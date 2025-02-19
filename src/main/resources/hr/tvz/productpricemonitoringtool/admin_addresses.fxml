@@ -38,6 +38,7 @@
                 <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="450.0" minHeight="450.0" prefHeight="450.0" vgrow="SOMETIMES" />
                 <RowConstraints maxHeight="1.7976931348623157E308" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
             </rowConstraints>
             <children>
                 <Label styleClass="sectionHeading" text="All addresses" GridPane.columnSpan="2" GridPane.halignment="CENTER" />
@@ -66,10 +67,10 @@
                         <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
                     </columnConstraints>
                     <rowConstraints>
-                        <RowConstraints maxHeight="100.0" minHeight="70.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="100.0" minHeight="70.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                        <RowConstraints maxHeight="100.0" minHeight="70.0" prefHeight="30.0" vgrow="SOMETIMES" />
-                  <RowConstraints maxHeight="100.0" minHeight="70.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="100.0" minHeight="60.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="100.0" minHeight="60.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints maxHeight="100.0" minHeight="60.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                  <RowConstraints maxHeight="100.0" minHeight="60.0" prefHeight="30.0" vgrow="SOMETIMES" />
                         <RowConstraints maxHeight="50.0" minHeight="50.0" prefHeight="50.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
@@ -241,6 +242,21 @@
                   </GridPane>
                     </children>
                 </GridPane>
+            <GridPane GridPane.rowIndex="3">
+               <columnConstraints>
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="100.0" minWidth="10.0" />
+                  <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="120.0" minWidth="10.0" prefWidth="100.0" />
+                  <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <Button maxWidth="100.0" mnemonicParsing="false" onAction="#handleAddNewButtonClick" text="Add new" />
+                  <Button maxWidth="100.0" mnemonicParsing="false" onAction="#handleEditButtonClick" styleClass="secondary-button" text="Edit" GridPane.columnIndex="1" />
+                  <Button maxWidth="100.0" mnemonicParsing="false" onAction="#handleDeleteButtonClick" styleClass="danger-button" text="Delete" GridPane.columnIndex="2" />
+               </children>
+            </GridPane>
             </children>
         </GridPane>
     </GridPane>

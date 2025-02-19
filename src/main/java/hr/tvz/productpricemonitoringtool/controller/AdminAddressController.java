@@ -9,13 +9,11 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
@@ -48,25 +46,29 @@ public class AdminAddressController implements SearchController {
                 new SimpleLongProperty(cellData.getValue().getId()).asObject());
 
         roadTableColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getRoad()));
+                new SimpleStringProperty(cellData.getValue().getRoad().equals("?") ? "-" : cellData.getValue().getRoad()));
 
         houseNumberTableColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getHouseNumber()));
+                new SimpleStringProperty(cellData.getValue().getHouseNumber().equals("?") ? "-" : cellData.getValue().getHouseNumber()));
 
         cityTableColumn.setCellValueFactory(cellData ->
                 new SimpleStringProperty(
-                        isNull(cellData.getValue().getCity()) ? "-" : cellData.getValue().getCity()));
+                        isNull(cellData.getValue().getCity()) || cellData.getValue().getCity().equals("?")
+                                ? "-" : cellData.getValue().getCity()));
 
         townTableColumn.setCellValueFactory(cellData ->
                 new SimpleStringProperty(
-                        isNull(cellData.getValue().getTown()) ? "-" : cellData.getValue().getTown()));
+                        isNull(cellData.getValue().getTown()) || cellData.getValue().getTown().equals("?")
+                                ? "-" : cellData.getValue().getTown()));
 
         villageTableColumn.setCellValueFactory(cellData ->
                 new SimpleStringProperty(
-                        isNull(cellData.getValue().getVillage()) ? "-" : cellData.getValue().getVillage()));
+                        isNull(cellData.getValue().getVillage()) || cellData.getValue().getVillage().equals("?")
+                                ? "-" : cellData.getValue().getVillage()));
+
 
         countryTableColumn.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getCountry()));
+                new SimpleStringProperty(cellData.getValue().getCountry().equals("?") ? "-" : cellData.getValue().getCountry()));
 
         removeFiltersLabel.setVisible(false);
         filter();
@@ -81,6 +83,8 @@ public class AdminAddressController implements SearchController {
             AlertDialog.showErrorDialog("Error while loading addresses.");
             return;
         }
+
+        addresses.sort((a1, a2) -> a1.getId().compareTo(a2.getId()));
 
         String idValue = this.idTextField.getText();
         String roadValue = this.roadTextField.getText();
@@ -118,27 +122,51 @@ public class AdminAddressController implements SearchController {
 
     @Override
     public void handleAddNewButtonClick() {
-
+        SceneLoader.loadAddressPopupScene("admin_address_form", "Add new address", Optional.empty());
+        filter();
     }
 
     @Override
     public void handleEditButtonClick() {
+        Address selectedAddress = addressTableView.getSelectionModel().getSelectedItem();
+        if (isNull(selectedAddress)) {
+            AlertDialog.showErrorDialog("Please select an address to edit.");
+            return;
+        }
 
+        SceneLoader.loadAddressPopupScene("admin_address_form", "Edit address", Optional.of(selectedAddress));
+        filter();
     }
 
     @Override
     public void handleDeleteButtonClick() {
+        Address selectedAddress = addressTableView.getSelectionModel().getSelectedItem();
+        if (isNull(selectedAddress)) {
+            AlertDialog.showErrorDialog("Please select an address to delete.");
+            return;
+        }
 
+        Optional<ButtonType> result = AlertDialog.showConfirmationDialog(
+                "Are you sure you want to delete the selected product?");
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                addressRepository.delete(selectedAddress);
+            } catch (DatabaseConnectionActiveException e) {
+                AlertDialog.showErrorDialog("Error while deleting a company.");
+            }
+        }
+
+        filter();
     }
 
     private void showFilterLabel() {
         removeFiltersLabel.setVisible(
-                !idTextField.getText().isEmpty() ||
-                        !roadTextField.getText().isEmpty() ||
-                        !houseNumberTextField.getText().isEmpty() ||
-                        !cityTextField.getText().isEmpty() ||
-                        !townTextField.getText().isEmpty() ||
-                        !villageTextField.getText().isEmpty() ||
-                        !countryTextField.getText().isEmpty());
+        !idTextField.getText().isEmpty() ||
+        !roadTextField.getText().isEmpty() ||
+        !houseNumberTextField.getText().isEmpty() ||
+        !cityTextField.getText().isEmpty() ||
+        !townTextField.getText().isEmpty() ||
+        !villageTextField.getText().isEmpty() ||
+        !countryTextField.getText().isEmpty());
     }
 }

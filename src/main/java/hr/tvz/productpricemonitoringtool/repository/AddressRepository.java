@@ -145,4 +145,72 @@ public class AddressRepository extends AbstractRepository<Address> {
             notifyAll();
         }
     }
+
+    public synchronized void update(Address address) throws RepositoryAccessException, DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
+        String query = """
+        UPDATE "address" SET longitude = ?, latitude = ?, road = ?, house_number = ?, city = ?, town = ?, village = ?, country = ?
+        WHERE id = ?
+        """;
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+            PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setBigDecimal(1, address.getLongitude());
+            stmt.setBigDecimal(2, address.getLatitude());
+            stmt.setString(3, isNull(address.getRoad()) ? "?" : address.getRoad());
+            stmt.setString(4, isNull(address.getHouseNumber()) ? "?" : address.getHouseNumber());
+            stmt.setString(5, isNull(address.getCity()) ? "?" : address.getCity());
+            stmt.setString(6, isNull(address.getTown()) ? "?" : address.getTown());
+            stmt.setString(7, isNull(address.getVillage()) ? "?" : address.getVillage());
+            stmt.setString(8, isNull(address.getCountry()) ? "?" : address.getCountry());
+            stmt.setLong(9, address.getId());
+
+            stmt.executeUpdate();
+        } catch (IOException | SQLException e) {
+            throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
+        }
+    }
+
+    public synchronized void delete(Address address) throws RepositoryAccessException, DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
+        String query = """
+        DELETE FROM "address" WHERE id = ?
+        """;
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+            PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            stmt.setLong(1, address.getId());
+            stmt.executeUpdate();
+        } catch (IOException | SQLException e) {
+            throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
+        }
+    }
 }

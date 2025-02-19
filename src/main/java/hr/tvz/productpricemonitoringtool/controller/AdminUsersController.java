@@ -59,6 +59,7 @@ public class AdminUsersController implements SearchController {
     @Override
     public void filter() {
         List<User> users = new ArrayList<>(userRepository.findAll());
+        users.sort((user1, user2) -> user1.getId().compareTo(user2.getId()));
 
         String idValue = this.idTextField.getText();
         String nameValue = this.nameTextField.getText();
