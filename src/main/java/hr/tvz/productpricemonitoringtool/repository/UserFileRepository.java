@@ -133,4 +133,10 @@ public class UserFileRepository extends AbstractRepository<User> {
                 .max(Long::compareTo)
                 .orElse(0L) + 1;
     }
+
+    public void delete(User user) {
+        Set<User> allUsers = findAll();
+        allUsers.removeIf(u -> u.getId().equals(user.getId()));
+        writeUsersToFile(allUsers);
+    }
 }

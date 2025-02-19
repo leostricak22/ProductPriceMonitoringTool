@@ -188,4 +188,25 @@ public class SceneLoader {
 
         return Optional.empty();
     }
+
+    public static void loadUsersScene(String fxmlFileName, String title, Optional<User> user) {
+        try {
+            FXMLLoader fxmlLoader = FXMLLoaderHelper.fxmlFilePath(fxmlFileName + Constants.SCENE_EXTENSION);
+            Scene scene = new Scene(fxmlLoader.load(), 500, 600);
+            Stage popupStage = new Stage();
+
+            AdminUserFormController adminUserFormController = fxmlLoader.getController();
+            adminUserFormController.initialize(user);
+
+            popupStage.setTitle(title);
+            popupStage.setScene(scene);
+            popupStage.initModality(Modality.WINDOW_MODAL);
+            popupStage.initOwner(ProductPriceMonitoringToolApplication.getMainStage());
+
+            popupStage.showAndWait();
+        } catch (IOException e) {
+            AlertDialog.showErrorDialog(Constants.ERROR_LOADING_SCENE_MESSAGE + fxmlFileName);
+            logger.error(Constants.ERROR_LOADING_SCENE_MESSAGE + "{}", fxmlFileName, e);
+        }
+    }
 }

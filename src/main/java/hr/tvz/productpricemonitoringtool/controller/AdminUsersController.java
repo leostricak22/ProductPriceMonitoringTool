@@ -2,17 +2,17 @@ package hr.tvz.productpricemonitoringtool.controller;
 
 import hr.tvz.productpricemonitoringtool.model.User;
 import hr.tvz.productpricemonitoringtool.repository.UserFileRepository;
+import hr.tvz.productpricemonitoringtool.util.AlertDialog;
+import hr.tvz.productpricemonitoringtool.util.SceneLoader;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
@@ -92,17 +92,37 @@ public class AdminUsersController implements SearchController {
 
     @Override
     public void handleAddNewButtonClick() {
-
+        SceneLoader.loadUsersScene("admin_user_form", "Add new user", Optional.empty());
+        filter();
     }
 
     @Override
     public void handleEditButtonClick() {
+        User selectedUser = userTableView.getSelectionModel().getSelectedItem();
+        if(isNull(selectedUser)) {
+            AlertDialog.showErrorDialog("Please select a user to edit.");
+            return;
+        }
 
+        SceneLoader.loadUsersScene("admin_user_form", "Edit user", Optional.of(selectedUser));
+        filter();
     }
 
     @Override
     public void handleDeleteButtonClick() {
+        User selectedUser = userTableView.getSelectionModel().getSelectedItem();
+        if (isNull(selectedUser)) {
+            AlertDialog.showErrorDialog("Please select a company to delete.");
+            return;
+        }
 
+        Optional<ButtonType> result = AlertDialog.showConfirmationDialog(
+                "Are you sure you want to delete the selected product?");
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            userRepository.delete(selectedUser);
+        }
+
+        filter();
     }
 
     private void showFilterLabel() {
@@ -113,4 +133,4 @@ public class AdminUsersController implements SearchController {
                 !emailTextField.getText().isEmpty() ||
                 !roleTextField.getText().isEmpty());
     }
-    }
+}
