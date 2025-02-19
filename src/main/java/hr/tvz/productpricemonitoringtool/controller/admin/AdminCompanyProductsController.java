@@ -1,5 +1,6 @@
-package hr.tvz.productpricemonitoringtool.controller;
+package hr.tvz.productpricemonitoringtool.controller.admin;
 
+import hr.tvz.productpricemonitoringtool.controller.SearchController;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.Product;
@@ -14,12 +15,7 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -97,6 +93,8 @@ public class AdminCompanyProductsController implements SearchController {
 
     @Override
     public void filter() {
+        companyProducts.sort((p1, p2) -> (int) (p1.getId() - p2.getId()));
+
         String idValue = this.idTextField.getText();
         Company companyValue = this.companyComboBox.getValue();
         Product productValue = this.productComboBox.getValue();
@@ -133,17 +131,65 @@ public class AdminCompanyProductsController implements SearchController {
 
     @Override
     public void handleAddNewButtonClick() {
+        SceneLoader.loadCompanyProductPopupScene(
+                "admin_company_product_form", "Add company product", Optional.empty());
 
+        try {
+            companyProducts = new ArrayList<>(companyProductRepository.findAllDBO());
+        } catch (DatabaseConnectionActiveException e) {
+            AlertDialog.showErrorDialog("Error while loading company products.");
+            return;
+        }
+        filter();
     }
 
     @Override
     public void handleEditButtonClick() {
+        CompanyProductDBO selectedCompanyProduct = companyProductsTableView.getSelectionModel().getSelectedItem();
+        if (isNull(selectedCompanyProduct)) {
+            AlertDialog.showErrorDialog("No company product selected");
+            return;
+        }
 
+        SceneLoader.loadCompanyProductPopupScene(
+                "admin_company_product_form", "Edit company product", Optional.of(selectedCompanyProduct));
+
+        try {
+            companyProducts = new ArrayList<>(companyProductRepository.findAllDBO());
+        } catch (DatabaseConnectionActiveException e) {
+            AlertDialog.showErrorDialog("Error while loading company products.");
+            return;
+        }
+        filter();
     }
 
     @Override
     public void handleDeleteButtonClick() {
+        CompanyProductDBO selectedCompanyProduct = companyProductsTableView.getSelectionModel().getSelectedItem();
+        if (isNull(selectedCompanyProduct)) {
+            AlertDialog.showErrorDialog("No company product selected");
+            return;
+        }
 
+        Optional<ButtonType> result = AlertDialog.showConfirmationDialog(
+                "Are you sure you want to delete the selected product?");
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                companyProductRepository.delete(selectedCompanyProduct.getId());
+            } catch (DatabaseConnectionActiveException e) {
+                AlertDialog.showErrorDialog("Error while deleting a company product.");
+            }
+        }
+
+        filter();
+
+        try {
+            companyProducts = new ArrayList<>(companyProductRepository.findAllDBO());
+        } catch (DatabaseConnectionActiveException e) {
+            AlertDialog.showErrorDialog("Error while loading company products.");
+            return;
+        }
+        filter();
     }
 
     private void showFilterLabel() {

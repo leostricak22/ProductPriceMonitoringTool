@@ -1,5 +1,6 @@
-package hr.tvz.productpricemonitoringtool.controller;
+package hr.tvz.productpricemonitoringtool.controller.admin;
 
+import hr.tvz.productpricemonitoringtool.controller.SearchController;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.model.Address;
 import hr.tvz.productpricemonitoringtool.repository.AddressRepository;

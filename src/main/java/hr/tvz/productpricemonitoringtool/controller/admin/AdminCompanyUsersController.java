@@ -1,13 +1,11 @@
-package hr.tvz.productpricemonitoringtool.controller;
+package hr.tvz.productpricemonitoringtool.controller.admin;
 
+import hr.tvz.productpricemonitoringtool.controller.SearchController;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.model.Company;
-import hr.tvz.productpricemonitoringtool.model.Product;
 import hr.tvz.productpricemonitoringtool.model.User;
-import hr.tvz.productpricemonitoringtool.model.dbo.CompanyProductDBO;
 import hr.tvz.productpricemonitoringtool.model.dbo.UserCompanyDBO;
 import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
-import hr.tvz.productpricemonitoringtool.repository.ProductRepository;
 import hr.tvz.productpricemonitoringtool.repository.UserFileRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
 import hr.tvz.productpricemonitoringtool.util.ComboBoxUtil;

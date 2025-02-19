@@ -389,4 +389,106 @@ public class CompanyProductRepository {
 
         return companyProductsDBO;
     }
+
+    public synchronized CompanyProduct save(CompanyProduct companyProduct) throws DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
+        String query = """
+        INSERT INTO "company_product" (company_id, product_id, price) VALUES (?, ?, ?);
+        """;
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+             PreparedStatement stmt = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            stmt.setLong(1, companyProduct.getCompany().getId());
+            stmt.setLong(2, companyProduct.getProduct().getId());
+            stmt.setBigDecimal(3, companyProduct.getPrice().value());
+
+            stmt.executeUpdate();
+
+            ResultSet generatedKeys = stmt.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                companyProduct.setId(generatedKeys.getLong(1));
+            }
+
+            return companyProduct;
+        } catch (SQLException | IOException e) {
+            throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
+        }
+    }
+
+    public synchronized void update(CompanyProductDBO companyProduct) throws DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
+        String query = """
+        UPDATE "company_product"
+        SET company_id = ?, product_id = ?, price = ?
+        WHERE id = ?;
+        """;
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setLong(1, companyProduct.getCompanyId());
+            stmt.setLong(2, companyProduct.getProductId());
+            stmt.setBigDecimal(3, companyProduct.getPrice().value());
+            stmt.setLong(4, companyProduct.getId());
+
+            stmt.executeUpdate();
+        } catch (SQLException | IOException e) {
+            throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
+        }
+    }
+
+    public synchronized void delete(Long id) throws DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
+        String query = """
+        DELETE FROM "company_product"
+        WHERE id = ?;
+        """;
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+             PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setLong(1, id);
+
+            stmt.executeUpdate();
+        } catch (SQLException | IOException e) {
+            throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
+        }
+    }
 }

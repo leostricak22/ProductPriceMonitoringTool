@@ -1,5 +1,6 @@
-package hr.tvz.productpricemonitoringtool.controller;
+package hr.tvz.productpricemonitoringtool.controller.admin;
 
+import hr.tvz.productpricemonitoringtool.controller.SearchController;
 import hr.tvz.productpricemonitoringtool.model.User;
 import hr.tvz.productpricemonitoringtool.repository.UserFileRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;

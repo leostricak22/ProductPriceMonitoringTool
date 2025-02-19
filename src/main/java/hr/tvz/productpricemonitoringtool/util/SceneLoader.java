@@ -1,8 +1,10 @@
 package hr.tvz.productpricemonitoringtool.util;
 
 import hr.tvz.productpricemonitoringtool.controller.*;
+import hr.tvz.productpricemonitoringtool.controller.admin.*;
 import hr.tvz.productpricemonitoringtool.main.ProductPriceMonitoringToolApplication;
 import hr.tvz.productpricemonitoringtool.model.*;
+import hr.tvz.productpricemonitoringtool.model.dbo.CompanyProductDBO;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
@@ -239,6 +241,27 @@ public class SceneLoader {
 
             AdminAddressFormController adminAddressFormController = fxmlLoader.getController();
             adminAddressFormController.initialize(address);
+
+            popupStage.setTitle(title);
+            popupStage.setScene(scene);
+            popupStage.initModality(Modality.WINDOW_MODAL);
+            popupStage.initOwner(ProductPriceMonitoringToolApplication.getMainStage());
+
+            popupStage.showAndWait();
+        } catch (IOException e) {
+            AlertDialog.showErrorDialog(Constants.ERROR_LOADING_SCENE_MESSAGE + fxmlFileName);
+            logger.error(Constants.ERROR_LOADING_SCENE_MESSAGE + "{}", fxmlFileName, e);
+        }
+    }
+
+    public static void loadCompanyProductPopupScene(String fxmlFileName, String title, Optional<CompanyProductDBO> companyProduct) {
+        try {
+            FXMLLoader fxmlLoader = FXMLLoaderHelper.fxmlFilePath(fxmlFileName + Constants.SCENE_EXTENSION);
+            Scene scene = new Scene(fxmlLoader.load(), 700, 500);
+            Stage popupStage = new Stage();
+
+            AdminCompanyProductFormController adminCompanyProductFormController = fxmlLoader.getController();
+            adminCompanyProductFormController.initialize(companyProduct);
 
             popupStage.setTitle(title);
             popupStage.setScene(scene);
