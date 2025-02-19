@@ -2,6 +2,7 @@ package hr.tvz.productpricemonitoringtool.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Objects;
 
 import static java.util.Objects.isNull;
 
@@ -181,5 +182,18 @@ public class Address extends Entity implements Serializable {
         }
 
         return address.toString();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Address address = (Address) o;
+        return Objects.equals(latitude, address.latitude) && Objects.equals(longitude, address.longitude) && Objects.equals(road, address.road) && Objects.equals(houseNumber, address.houseNumber) && Objects.equals(city, address.city) && Objects.equals(town, address.town) && Objects.equals(village, address.village) && Objects.equals(country, address.country);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(latitude, longitude, road, houseNumber, city, town, village, country);
     }
 }

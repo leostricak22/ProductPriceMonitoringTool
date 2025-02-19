@@ -1,5 +1,6 @@
 package hr.tvz.productpricemonitoringtool.controller;
 
+import hr.tvz.productpricemonitoringtool.enumeration.Role;
 import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.util.SceneLoader;
 import hr.tvz.productpricemonitoringtool.util.Session;
@@ -16,6 +17,7 @@ public class MenuController {
     @FXML public MenuButton companyMenuButton;
     @FXML public MenuItem productsAddMenuItem;
     @FXML public MenuItem productsCompanyProductsMenuItem;
+    @FXML public MenuButton adminMenuButton;
 
     private Optional<Company> selectedCompany;
 
@@ -31,6 +33,9 @@ public class MenuController {
             productsAddMenuItem.setDisable(true);
             productsCompanyProductsMenuItem.setDisable(true);
         }
+
+
+        adminMenuButton.setVisible(Session.getLoggedInUser().get().getRole().equals(Role.ADMIN));
     }
 
     public void handleDashboardRedirect() {
@@ -71,5 +76,47 @@ public class MenuController {
         SceneLoader.loadScene(
                 "company_staff",
                 "Company Staff");
+    }
+
+    public void handleAdminProductRedirect() {
+        SceneLoader.loadScene(
+                "admin_products",
+                "Admin Products");
+    }
+
+    public void handleAdminCompanyRedirect() {
+        SceneLoader.loadScene(
+                "admin_companies",
+                "Admin Companies");
+    }
+
+    public void handleAdminUserRedirect() {
+        SceneLoader.loadScene(
+                "admin_users",
+                "Admin Users");
+    }
+
+    public void handleAdminCategoryRedirect() {
+        SceneLoader.loadScene(
+                "admin_categories",
+                "Admin Categories");
+    }
+
+    public void handleAdminAddressRedirect() {
+        SceneLoader.loadScene(
+                "admin_addresses",
+                "Admin Addresses");
+    }
+
+    public void handleAdminCompanyProductsRedirect() {
+        SceneLoader.loadScene(
+                "admin_company_products",
+                "Admin Company Products");
+    }
+
+    public void handleAdminCompanyStaffRedirect() {
+        SceneLoader.loadScene(
+                "admin_company_staff",
+                "Admin Company Staff");
     }
 }

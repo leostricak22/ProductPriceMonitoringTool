@@ -9,6 +9,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.control.Menu?>
 <VBox maxHeight="Infinity" maxWidth="350.0" minWidth="350.0" prefHeight="720.0" prefWidth="350.0" styleClass="menu-container" stylesheets="@styles/menuTest.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="hr.tvz.productpricemonitoringtool.controller.MenuController">
     <children>
         <ImageView fitHeight="100.0" fitWidth="320.0" pickOnBounds="true" preserveRatio="true">
@@ -40,7 +41,21 @@
             <MenuItem fx:id="productsCompanyProductsMenuItem" onAction="#handleCompanyProductsListRedirect" text="Company products" />
             </items>
         </MenuButton>
-      <VBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" prefHeight="362.0" prefWidth="350.0" VBox.vgrow="ALWAYS">
+
+        <MenuButton fx:id="adminMenuButton" popupSide="RIGHT" prefWidth="100" text="Admin tools">
+            <items>
+                <MenuItem onAction="#handleAdminProductRedirect" text="Products" />
+                <MenuItem onAction="#handleAdminCompanyRedirect" text="Company" />
+                <MenuItem onAction="#handleAdminUserRedirect" text="Users" />
+                <MenuItem onAction="#handleAdminCategoryRedirect" text="Category" />
+                <MenuItem onAction="#handleAdminAddressRedirect" text="Address" />
+                <MenuItem onAction="#handleAdminCompanyProductsRedirect" text="Company products" />
+                <MenuItem onAction="#handleAdminCompanyStaffRedirect" text="Company staff" />
+            </items>
+        </MenuButton>
+
+
+        <VBox alignment="BOTTOM_CENTER" maxHeight="1.7976931348623157E308" prefHeight="362.0" prefWidth="350.0" VBox.vgrow="ALWAYS">
          <children>
             <Label fx:id="companyNameLabel" text="Currently in: " textFill="WHITE">
                <font>

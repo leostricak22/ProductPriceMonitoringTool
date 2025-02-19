@@ -5,15 +5,12 @@ import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveExcep
 import hr.tvz.productpricemonitoringtool.model.PriceNotification;
 import hr.tvz.productpricemonitoringtool.model.StaffNotification;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
-import hr.tvz.productpricemonitoringtool.util.Session;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.util.Duration;
-
-import java.util.HashSet;
 
 public class CheckNotificationsThread {
 

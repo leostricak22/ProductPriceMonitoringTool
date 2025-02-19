@@ -1,6 +1,7 @@
 package hr.tvz.productpricemonitoringtool.model;
 
 import java.io.Serializable;
+import java.util.Objects;
 import java.util.Optional;
 
 public class Category extends Entity implements Serializable {
@@ -42,5 +43,18 @@ public class Category extends Entity implements Serializable {
         public Category build() {
             return new Category(this);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Category category = (Category) o;
+        return Objects.equals(parentCategory, category.parentCategory);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(parentCategory);
     }
 }

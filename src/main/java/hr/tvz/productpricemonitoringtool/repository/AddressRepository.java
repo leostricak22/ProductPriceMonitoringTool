@@ -55,8 +55,41 @@ public class AddressRepository extends AbstractRepository<Address> {
     }
 
     @Override
-    public Set<Address> findAll() throws RepositoryAccessException {
-        return Set.of();
+    public synchronized Set<Address> findAll() throws RepositoryAccessException, DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
+
+        Set<Address> addresses = new HashSet<>();
+
+        String query = """
+        SELECT id, longitude, latitude, road, house_number, city, town, village, country
+        FROM "address";
+        """;
+
+        try (Connection connection = DatabaseUtil.connectToDatabase();
+            PreparedStatement stmt = connection.prepareStatement(query)) {
+
+            ResultSet resultSet = stmt.executeQuery();
+
+            while (resultSet.next()) {
+                addresses.add(ObjectMapper.mapResultSetToAddress(resultSet));
+            }
+
+            return addresses;
+        } catch (IOException | SQLException e) {
+            throw new RepositoryAccessException(e);
+        } finally {
+            DatabaseUtil.setActiveConnectionWithDatabase(false);
+            notifyAll();
+        }
     }
 
     @Override
