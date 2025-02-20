@@ -59,7 +59,7 @@ public class MapUtil {
     }
 
     public static Optional<Address> handleMapPick(Address address, Label addressLabel) {
-        Optional<FXMLLoader> loader = SceneLoader.loadMapPickerPopupScene(
+        Optional<FXMLLoader> loader = PopupSceneLoader.loadMapPickerPopupScene(
                 "map_picker", "Map Picker", Optional.ofNullable(address));
 
         if (loader.isEmpty()) {

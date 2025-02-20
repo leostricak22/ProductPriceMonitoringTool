@@ -5,7 +5,8 @@ import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveExcep
 import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.CompanyProduct;
 import hr.tvz.productpricemonitoringtool.model.Product;
-import hr.tvz.productpricemonitoringtool.repository.CompanyProductRepository;
+import hr.tvz.productpricemonitoringtool.repository.CompanyProductReadRepository;
+import hr.tvz.productpricemonitoringtool.repository.CompanyProductWriteRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
 import hr.tvz.productpricemonitoringtool.util.SceneLoader;
 import hr.tvz.productpricemonitoringtool.util.Session;
@@ -25,8 +26,9 @@ public class CompanyProductChartController {
     @FXML public LineChart<String, BigDecimal> productPriceLineChart;
     @FXML public Label chartNameLabel;
 
-    private final CompanyProductRepository companyProductRepository = new CompanyProductRepository();
-    
+    private final CompanyProductWriteRepository companyProductWriteRepository = new CompanyProductWriteRepository();
+    private final CompanyProductReadRepository companyProductReadRepository = new CompanyProductReadRepository();
+
     public void initialize(Company company) {
         if (Session.getSelectedProduct().isEmpty()) {
             AlertDialog.showErrorDialog("Please select a product first.");
@@ -37,7 +39,7 @@ public class CompanyProductChartController {
         List<CompanyProduct> companyProducts = new ArrayList<>();
 
         try {
-            companyProducts = companyProductRepository.findByProductIdAndCompanyId(selectedProduct.getId(),
+            companyProducts = companyProductReadRepository.findByProductIdAndCompanyId(selectedProduct.getId(),
                             company.getId(),
                             CompanyProductRecordType.ALL_RECORDS)
                     .stream().sorted(Comparator.comparing(CompanyProduct::getCreatedAt))

@@ -8,7 +8,7 @@ import hr.tvz.productpricemonitoringtool.model.CompanyProduct;
 import hr.tvz.productpricemonitoringtool.model.Price;
 import hr.tvz.productpricemonitoringtool.model.Product;
 import hr.tvz.productpricemonitoringtool.model.dbo.CompanyProductDBO;
-import hr.tvz.productpricemonitoringtool.repository.CompanyProductRepository;
+import hr.tvz.productpricemonitoringtool.repository.CompanyProductWriteRepository;
 import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
 import hr.tvz.productpricemonitoringtool.repository.ProductRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
@@ -34,7 +34,7 @@ public class AdminCompanyProductFormController {
 
     private Optional<CompanyProductDBO> companyProductEdit;
 
-    private final CompanyProductRepository companyProductRepository = new CompanyProductRepository();
+    private final CompanyProductWriteRepository companyProductWriteRepository = new CompanyProductWriteRepository();
     private final CompanyRepository companyRepository = new CompanyRepository();
     private final ProductRepository productRepository = new ProductRepository();
 
@@ -85,7 +85,7 @@ public class AdminCompanyProductFormController {
                 cp.setProductId(productComboBox.getValue().getId());
                 cp.setPrice(new Price(new BigDecimal(priceTextField.getText())));
 
-                companyProductRepository.update(cp);
+                companyProductWriteRepository.update(cp);
             } else {
                 CompanyProduct cp = new CompanyProduct.Builder(0L)
                         .company(companyComboBox.getValue())
@@ -93,7 +93,7 @@ public class AdminCompanyProductFormController {
                         .price(new Price(new BigDecimal(priceTextField.getText())))
                         .build();
 
-                companyProductRepository.save(cp);
+                companyProductWriteRepository.save(cp);
             }
 
             Stage stage = (Stage) priceTextField.getScene().getWindow();

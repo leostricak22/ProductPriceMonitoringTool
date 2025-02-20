@@ -5,10 +5,7 @@ import hr.tvz.productpricemonitoringtool.exception.RepositoryAccessException;
 import hr.tvz.productpricemonitoringtool.exception.RepositoryQueryException;
 import hr.tvz.productpricemonitoringtool.model.*;
 import hr.tvz.productpricemonitoringtool.model.dbo.UserCompanyDBO;
-import hr.tvz.productpricemonitoringtool.repository.CompanyProductRepository;
-import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
-import hr.tvz.productpricemonitoringtool.repository.ProductRepository;
-import hr.tvz.productpricemonitoringtool.repository.UserFileRepository;
+import hr.tvz.productpricemonitoringtool.repository.*;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
 import hr.tvz.productpricemonitoringtool.util.ComboBoxUtil;
 import javafx.fxml.FXML;
@@ -29,6 +26,7 @@ public class AdminCompanyUsersFormController {
 
     private final CompanyRepository companyRepository = new CompanyRepository();
     private final UserFileRepository userFileRepository = new UserFileRepository();
+    private final UserCompanyRepository userCompanyRepository = new UserCompanyRepository();
 
     public void initialize(Optional<UserCompanyDBO> userCompany) {
         ComboBoxUtil.comboBoxStringConverter(companyComboBox);
@@ -47,7 +45,7 @@ public class AdminCompanyUsersFormController {
 
             try {
                 companyComboBox.setValue(companyRepository.findById(cp.getCompanyId()).orElseThrow(() -> new RepositoryQueryException("Error fetching data")));
-                userComboBox.setValue(userFileRepository.findById(cp.getUserId()).orElseThrow(() -> new RepositoryAccessException("Error fetching data")));
+                userComboBox.setValue(userFileRepository.findById(cp.getUserId()).orElse(null));
                 submitButton.setText("Edit");
             } catch (DatabaseConnectionActiveException e) {
                 AlertDialog.showErrorDialog("Error fetching data");
@@ -74,9 +72,9 @@ public class AdminCompanyUsersFormController {
                 userCompany.setCompanyId(companyComboBox.getValue().getId());
                 userCompany.setUserId(userComboBox.getValue().getId());
 
-                companyRepository.updateUserCompany(userCompany);
+                userCompanyRepository.updateUserCompany(userCompany);
             } else {
-                companyRepository.addUser(companyComboBox.getValue().getId(), userComboBox.getValue().getId());
+                userCompanyRepository.addUser(companyComboBox.getValue().getId(), userComboBox.getValue().getId());
             }
 
             Stage stage = (Stage) companyComboBox.getScene().getWindow();

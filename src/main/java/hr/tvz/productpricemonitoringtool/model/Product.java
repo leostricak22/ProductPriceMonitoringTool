@@ -8,6 +8,8 @@ import java.io.File;
 import java.io.Serializable;
 import java.util.Set;
 
+import static java.util.Objects.isNull;
+
 public class Product extends Entity implements Serializable {
 
     private Category category;
@@ -107,7 +109,7 @@ public class Product extends Entity implements Serializable {
     public String toString() {
         return "Product{" +
                 "category=" + category.getName() +
-                ", companyProducts=" + companyProducts.size() +
+                ", companyProducts=" + (!isNull(companyProducts) ? companyProducts.size() : '0') +
                 ", description='" + description + '\'' +
                 '}';
     }

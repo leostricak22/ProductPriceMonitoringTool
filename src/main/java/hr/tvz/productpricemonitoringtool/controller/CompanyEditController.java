@@ -7,6 +7,7 @@ import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.User;
 import hr.tvz.productpricemonitoringtool.repository.AddressRepository;
 import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
+import hr.tvz.productpricemonitoringtool.repository.UserCompanyRepository;
 import hr.tvz.productpricemonitoringtool.repository.UserFileRepository;
 import hr.tvz.productpricemonitoringtool.util.*;
 import javafx.fxml.FXML;
@@ -31,6 +32,7 @@ public class CompanyEditController {
     private final AddressRepository addressRepository = new AddressRepository();
     private final CompanyRepository companyRepository = new CompanyRepository();
     private final UserFileRepository userFileRepository = new UserFileRepository();
+    private final UserCompanyRepository userCompanyRepository = new UserCompanyRepository();
 
     public void initialize() {
         Company company = Session.getSelectedCompany().orElseThrow(() ->
@@ -65,7 +67,13 @@ public class CompanyEditController {
                 .address(address)
                 .build();
 
-        companyRepository.update(company);
+        try {
+            companyRepository.update(company);
+        } catch (DatabaseConnectionActiveException e) {
+            AlertDialog.showErrorDialog(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
+            logger.error(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE, e.getMessage());
+            return;
+        }
 
         Session.getLoggedInUser().ifPresentOrElse(user -> {
             Optional<User> optionalUser = userFileRepository.findById(user.getId());

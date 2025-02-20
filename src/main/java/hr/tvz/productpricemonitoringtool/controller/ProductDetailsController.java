@@ -7,8 +7,10 @@ import hr.tvz.productpricemonitoringtool.model.CompanyProduct;
 import hr.tvz.productpricemonitoringtool.model.Price;
 import hr.tvz.productpricemonitoringtool.model.Product;
 import hr.tvz.productpricemonitoringtool.repository.CategoryRepository;
-import hr.tvz.productpricemonitoringtool.repository.CompanyProductRepository;
+import hr.tvz.productpricemonitoringtool.repository.CompanyProductReadRepository;
+import hr.tvz.productpricemonitoringtool.repository.CompanyProductWriteRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
+import hr.tvz.productpricemonitoringtool.util.PopupSceneLoader;
 import hr.tvz.productpricemonitoringtool.util.SceneLoader;
 import hr.tvz.productpricemonitoringtool.util.Session;
 import javafx.fxml.FXML;
@@ -53,7 +55,8 @@ public class ProductDetailsController {
     @FXML
     public LineChart<String, BigDecimal> productLineChart;
 
-    private final CompanyProductRepository companyProductRepository = new CompanyProductRepository();
+    private final CompanyProductWriteRepository companyProductWriteRepository = new CompanyProductWriteRepository();
+    private final CompanyProductReadRepository companyProductReadRepository = new CompanyProductReadRepository();
     private final CategoryRepository categoryRepository = new CategoryRepository();
 
     private String sortType = "desc";
@@ -75,7 +78,7 @@ public class ProductDetailsController {
 
         try {
             productCategoryLabel.setText(categoryRepository.findCategoryHierarchy(selectedProduct.getCategory().getId()));
-            companyProducts = new ArrayList<>(companyProductRepository.findByProductId(selectedProduct.getId(),
+            companyProducts = new ArrayList<>(companyProductReadRepository.findByProductId(selectedProduct.getId(),
                     CompanyProductRecordType.LATEST_RECORD));
         } catch (DatabaseConnectionActiveException e) {
             AlertDialog.showErrorDialog("Please try again later.");
@@ -157,7 +160,7 @@ public class ProductDetailsController {
 
             productBox.setCursor(javafx.scene.Cursor.HAND);
             productBox.setOnMouseClicked(event ->
-                    SceneLoader.loadProductCompanyGraphPopupScene("company_product_graph",
+                    PopupSceneLoader.loadProductCompanyGraphPopupScene("company_product_graph",
                             "Product graph",
                             companyProduct.getCompany()));
 
@@ -192,7 +195,7 @@ public class ProductDetailsController {
 
         if (!isNull(price)) {
             try {
-                companyProductRepository.updatePrice(
+                companyProductWriteRepository.updatePrice(
                         Session.getSelectedCompany().get().getId(),
                         Session.getSelectedProduct().get().getId(),
                         controller.getNewPrice());
@@ -211,7 +214,7 @@ public class ProductDetailsController {
     }
 
     public void createProductLineChart(Long productId) throws DatabaseConnectionActiveException {
-        companyProducts = new ArrayList<>(companyProductRepository.findByProductId(
+        companyProducts = new ArrayList<>(companyProductReadRepository.findByProductId(
                 productId,
                 CompanyProductRecordType.ALL_RECORDS));
         companyProducts.sort(Comparator.comparing(CompanyProduct::getCreatedAt));

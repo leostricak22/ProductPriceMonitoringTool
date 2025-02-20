@@ -5,6 +5,7 @@ import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveExcep
 import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.User;
 import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
+import hr.tvz.productpricemonitoringtool.repository.UserCompanyRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
 import hr.tvz.productpricemonitoringtool.util.SceneLoader;
 import hr.tvz.productpricemonitoringtool.util.Session;
@@ -26,6 +27,7 @@ public class DashboardController {
     @FXML public GridPane addNewCompanyGridPane;
 
     private final CompanyRepository companyRepository = new CompanyRepository();
+    private final UserCompanyRepository userCompanyRepository = new UserCompanyRepository();
 
     public void initialize() {
         Session.setSelectedCompany(Optional.empty());
@@ -89,7 +91,7 @@ public class DashboardController {
 
         if (company.isPresent()) {
             try {
-                companyRepository.addUser(user.get().getId(), company.get().getId());
+                userCompanyRepository.addUser(user.get().getId(), company.get().getId());
                 user.get().getCompanies().add(company.get());
             } catch (DatabaseConnectionActiveException e) {
                 AlertDialog.showErrorDialog("Error while joining the company.");

@@ -1,8 +1,10 @@
 package hr.tvz.productpricemonitoringtool.controller;
 
+import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.User;
 import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
+import hr.tvz.productpricemonitoringtool.repository.UserCompanyRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
 import hr.tvz.productpricemonitoringtool.util.ClipboardUtil;
 import hr.tvz.productpricemonitoringtool.util.Session;
@@ -32,6 +34,7 @@ public class CompanyStaffController {
     @FXML public TableColumn<User, String> staffRoleTableColumn;
 
     private final CompanyRepository companyRepository = new CompanyRepository();
+    private final UserCompanyRepository userCompanyRepository = new UserCompanyRepository();
 
     public void initialize() {
         codeLabel.setVisible(false);
@@ -57,9 +60,17 @@ public class CompanyStaffController {
             selectedCompany = Session.getSelectedCompany().get();
         }
 
-        List<User> users = new ArrayList<>(companyRepository.findAllUsers(selectedCompany));
-        users.sort((u1, u2) -> u1.getId().compareTo(u2.getId()));
-        staffTableView.setItems(FXCollections.observableArrayList(users));
+        try {
+            if (selectedCompany == null) {
+                return;
+            }
+
+            List<User> users = new ArrayList<>(userCompanyRepository.findAllUsers(selectedCompany));
+            users.sort((u1, u2) -> u1.getId().compareTo(u2.getId()));
+            staffTableView.setItems(FXCollections.observableArrayList(users));
+        } catch (DatabaseConnectionActiveException e) {
+            AlertDialog.showErrorDialog("Failed to load company staff.");
+        }
     }
 
     public void handleShowCode() {

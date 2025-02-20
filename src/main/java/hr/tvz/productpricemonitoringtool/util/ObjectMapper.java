@@ -21,7 +21,7 @@ public class ObjectMapper {
     private static final CompanyRepository companyRepository = new CompanyRepository();
     private static final CategoryRepository categoryRepository = new CategoryRepository();
     private static final ProductRepository productRepository = new ProductRepository();
-    private static final CompanyProductRepository companyProductRepository = new CompanyProductRepository();
+    private static final CompanyProductReadRepository companyProductReadRepository = new CompanyProductReadRepository();
 
     private ObjectMapper() {}
 
@@ -107,7 +107,7 @@ public class ObjectMapper {
                 .name(productDBO.getName())
                 .category(categoryRepository.findById(productDBO.getCategoryId())
                         .orElseThrow(() -> new RepositoryQueryException("Category not found")))
-                .companyProducts(companyProductRepository.findByProductId(productDBO.getId(),
+                .companyProducts(companyProductReadRepository.findByProductId(productDBO.getId(),
                         CompanyProductRecordType.LATEST_RECORD))
                 .description(productDBO.getDescription())
                 .build();

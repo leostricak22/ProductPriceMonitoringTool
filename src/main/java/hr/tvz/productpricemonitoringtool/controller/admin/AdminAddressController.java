@@ -5,6 +5,7 @@ import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveExcep
 import hr.tvz.productpricemonitoringtool.model.Address;
 import hr.tvz.productpricemonitoringtool.repository.AddressRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
+import hr.tvz.productpricemonitoringtool.util.PopupSceneLoader;
 import hr.tvz.productpricemonitoringtool.util.SceneLoader;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -123,7 +124,7 @@ public class AdminAddressController implements SearchController {
 
     @Override
     public void handleAddNewButtonClick() {
-        SceneLoader.loadAddressPopupScene("admin_address_form", "Add new address", Optional.empty());
+        PopupSceneLoader.loadAddressPopupScene("admin_address_form", "Add new address", Optional.empty());
         filter();
     }
 
@@ -135,7 +136,7 @@ public class AdminAddressController implements SearchController {
             return;
         }
 
-        SceneLoader.loadAddressPopupScene("admin_address_form", "Edit address", Optional.of(selectedAddress));
+        PopupSceneLoader.loadAddressPopupScene("admin_address_form", "Edit address", Optional.of(selectedAddress));
         filter();
     }
 

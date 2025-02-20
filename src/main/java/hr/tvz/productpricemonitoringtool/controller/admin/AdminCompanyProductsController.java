@@ -5,11 +5,13 @@ import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveExcep
 import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.Product;
 import hr.tvz.productpricemonitoringtool.model.dbo.CompanyProductDBO;
-import hr.tvz.productpricemonitoringtool.repository.CompanyProductRepository;
+import hr.tvz.productpricemonitoringtool.repository.CompanyProductReadRepository;
+import hr.tvz.productpricemonitoringtool.repository.CompanyProductWriteRepository;
 import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
 import hr.tvz.productpricemonitoringtool.repository.ProductRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
 import hr.tvz.productpricemonitoringtool.util.ComboBoxUtil;
+import hr.tvz.productpricemonitoringtool.util.PopupSceneLoader;
 import hr.tvz.productpricemonitoringtool.util.SceneLoader;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -46,7 +48,8 @@ public class AdminCompanyProductsController implements SearchController {
 
     private List<CompanyProductDBO> companyProducts;
 
-    private final CompanyProductRepository companyProductRepository = new CompanyProductRepository();
+    private final CompanyProductWriteRepository companyProductWriteRepository = new CompanyProductWriteRepository();
+    private final CompanyProductReadRepository companyProductReadRepository = new CompanyProductReadRepository();
     private final ProductRepository productRepository = new ProductRepository();
     private final CompanyRepository companyRepository = new CompanyRepository();
 
@@ -82,7 +85,7 @@ public class AdminCompanyProductsController implements SearchController {
         removeFiltersLabel.setVisible(false);
 
         try {
-            companyProducts = new ArrayList<>(companyProductRepository.findAllDBO());
+            companyProducts = new ArrayList<>(companyProductReadRepository.findAllDBO());
         } catch (DatabaseConnectionActiveException e) {
             AlertDialog.showErrorDialog("Error while loading company products.");
             return;
@@ -131,11 +134,11 @@ public class AdminCompanyProductsController implements SearchController {
 
     @Override
     public void handleAddNewButtonClick() {
-        SceneLoader.loadCompanyProductPopupScene(
+        PopupSceneLoader.loadCompanyProductPopupScene(
                 "admin_company_product_form", "Add company product", Optional.empty());
 
         try {
-            companyProducts = new ArrayList<>(companyProductRepository.findAllDBO());
+            companyProducts = new ArrayList<>(companyProductReadRepository.findAllDBO());
         } catch (DatabaseConnectionActiveException e) {
             AlertDialog.showErrorDialog("Error while loading company products.");
             return;
@@ -151,11 +154,11 @@ public class AdminCompanyProductsController implements SearchController {
             return;
         }
 
-        SceneLoader.loadCompanyProductPopupScene(
+        PopupSceneLoader.loadCompanyProductPopupScene(
                 "admin_company_product_form", "Edit company product", Optional.of(selectedCompanyProduct));
 
         try {
-            companyProducts = new ArrayList<>(companyProductRepository.findAllDBO());
+            companyProducts = new ArrayList<>(companyProductReadRepository.findAllDBO());
         } catch (DatabaseConnectionActiveException e) {
             AlertDialog.showErrorDialog("Error while loading company products.");
             return;
@@ -175,7 +178,7 @@ public class AdminCompanyProductsController implements SearchController {
                 "Are you sure you want to delete the selected product?");
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
-                companyProductRepository.delete(selectedCompanyProduct.getId());
+                companyProductWriteRepository.delete(selectedCompanyProduct.getId());
             } catch (DatabaseConnectionActiveException e) {
                 AlertDialog.showErrorDialog("Error while deleting a company product.");
             }
@@ -184,7 +187,7 @@ public class AdminCompanyProductsController implements SearchController {
         filter();
 
         try {
-            companyProducts = new ArrayList<>(companyProductRepository.findAllDBO());
+            companyProducts = new ArrayList<>(companyProductReadRepository.findAllDBO());
         } catch (DatabaseConnectionActiveException e) {
             AlertDialog.showErrorDialog("Error while loading company products.");
             return;

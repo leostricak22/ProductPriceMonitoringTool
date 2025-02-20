@@ -23,7 +23,7 @@ import static java.util.Objects.isNull;
 public class ProductRepository extends AbstractRepository<Product> {
 
     private final CategoryRepository categoryRepository = new CategoryRepository();
-    private final CompanyProductRepository companyProductRepository = new CompanyProductRepository();
+    private final CompanyProductWriteRepository companyProductWriteRepository = new CompanyProductWriteRepository();
 
     @Override
     public Optional<Product> findById(Long id) throws RepositoryAccessException, DatabaseConnectionActiveException {
@@ -41,20 +41,9 @@ public class ProductRepository extends AbstractRepository<Product> {
 
     @Override
     public synchronized Set<Product> findAll() throws RepositoryAccessException, DatabaseConnectionActiveException {
-        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new DatabaseConnectionActiveException(e);
-            }
-        }
+        waitForDatabaseConnectionReady();
 
-        DatabaseUtil.setActiveConnectionWithDatabase(true);
-
-        String query = """
-        SELECT id, name, category_id, description FROM "product";
-        """;
+        String query = "SELECT id, name, category_id, description FROM \"product\";" ;
 
         Set<ProductDBO> productsDBO = new HashSet<>();
 
@@ -76,17 +65,7 @@ public class ProductRepository extends AbstractRepository<Product> {
 
     public synchronized Set<Product> findAllByCategory(Optional<Category> category) throws RepositoryAccessException, DatabaseConnectionActiveException {
         List<Category> allCategories = categoryRepository.findAllByParentCategoryRecursively(category);
-
-        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new DatabaseConnectionActiveException(e);
-            }
-        }
-
-        DatabaseUtil.setActiveConnectionWithDatabase(true);
+        waitForDatabaseConnectionReady();
 
         String query = """
         SELECT p.id, p.name, p.category_id, p.description
@@ -118,20 +97,9 @@ public class ProductRepository extends AbstractRepository<Product> {
 
     @Override
     public synchronized Set<Product> save(Set<Product> entities) throws RepositoryAccessException, DatabaseConnectionActiveException {
-        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new DatabaseConnectionActiveException(e);
-            }
-        }
+        waitForDatabaseConnectionReady();
 
-        DatabaseUtil.setActiveConnectionWithDatabase(true);
-
-        String query = """
-        INSERT INTO "product" (name, category_id, description) VALUES (?, ?, ?);
-        """;
+        String query = "INSERT INTO \"product\" (name, category_id, description) VALUES (?, ?, ?);" ;
 
         try (Connection connection = DatabaseUtil.connectToDatabase();
              PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -161,7 +129,7 @@ public class ProductRepository extends AbstractRepository<Product> {
                     Session.getLoggedInUser().orElseThrow(
                             () -> new AuthenticationException("User not logged in")));
             if (!isNull(product.getCompanyProducts())) {
-                companyProductRepository.saveProductToCompanies(product);
+                companyProductWriteRepository.saveProductToCompanies(product);
             }
         }
 
@@ -169,20 +137,9 @@ public class ProductRepository extends AbstractRepository<Product> {
     }
 
     public synchronized void update(Product product) throws RepositoryAccessException, DatabaseConnectionActiveException {
-        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new DatabaseConnectionActiveException(e);
-            }
-        }
+        waitForDatabaseConnectionReady();
 
-        DatabaseUtil.setActiveConnectionWithDatabase(true);
-
-        String query = """
-        UPDATE "product" SET name = ?, category_id = ?, description = ? WHERE id = ?;
-        """;
+        String query = "UPDATE \"product\" SET name = ?, category_id = ?, description = ? WHERE id = ?;" ;
 
         Product oldProduct = new Product(product);
 
@@ -206,25 +163,14 @@ public class ProductRepository extends AbstractRepository<Product> {
                         () -> new AuthenticationException("User not logged in")));
 
         if (!isNull(product.getCompanyProducts()) && !product.getCompanyProducts().isEmpty()) {
-            companyProductRepository.saveProductToCompanies(product);
+            companyProductWriteRepository.saveProductToCompanies(product);
         }
     }
 
     public synchronized void delete(Product product) throws RepositoryAccessException, DatabaseConnectionActiveException {
-        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new DatabaseConnectionActiveException(e);
-            }
-        }
+        waitForDatabaseConnectionReady();
 
-        DatabaseUtil.setActiveConnectionWithDatabase(true);
-
-        String query = """
-        DELETE FROM "product" WHERE id = ?;
-        """;
+        String query = "DELETE FROM \"product\" WHERE id = ?;" ;
 
         Product oldProduct = new Product(product);
 
@@ -243,5 +189,18 @@ public class ProductRepository extends AbstractRepository<Product> {
         AuditLogManager.logChange("Product", oldProduct.toString(), "-",
                 Session.getLoggedInUser().orElseThrow(
                         () -> new AuthenticationException("User not logged in")));
+    }
+
+    private synchronized void waitForDatabaseConnectionReady() throws DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
     }
 }

@@ -4,7 +4,8 @@ import hr.tvz.productpricemonitoringtool.enumeration.CompanyProductRecordType;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.model.FilterSearch;
 import hr.tvz.productpricemonitoringtool.model.Product;
-import hr.tvz.productpricemonitoringtool.repository.CompanyProductRepository;
+import hr.tvz.productpricemonitoringtool.repository.CompanyProductReadRepository;
+import hr.tvz.productpricemonitoringtool.repository.CompanyProductWriteRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
 
 import java.util.HashSet;
@@ -14,12 +15,12 @@ import java.util.Set;
 public class FetchProductsByFilterThread implements Runnable {
 
     private final FilterSearch filterSearch;
-    private final CompanyProductRepository companyProductRepository;
+    private final CompanyProductReadRepository companyProductReadRepository;
     private final List<Product> products;
 
-    public FetchProductsByFilterThread(FilterSearch filterSearch, CompanyProductRepository companyProductRepository, List<Product> products) {
+    public FetchProductsByFilterThread(FilterSearch filterSearch, CompanyProductReadRepository companyProductReadRepository, List<Product> products) {
         this.filterSearch = filterSearch;
-        this.companyProductRepository = companyProductRepository;
+        this.companyProductReadRepository = companyProductReadRepository;
         this.products = products;
     }
 
@@ -29,7 +30,7 @@ public class FetchProductsByFilterThread implements Runnable {
             Set<Long> productIds = new HashSet<>();
             Set<Product> uniqueProducts = new HashSet<>();
 
-            companyProductRepository.findAll(CompanyProductRecordType.LATEST_RECORD).stream()
+            companyProductReadRepository.findAll(CompanyProductRecordType.LATEST_RECORD).stream()
                     .filter(companyProduct -> filterSearch.getCompaniesInRadius().isEmpty() ||
                             filterSearch.getCompaniesInRadius().get().stream()
                                     .anyMatch(company -> company.getId().equals(companyProduct.getCompany().getId())))

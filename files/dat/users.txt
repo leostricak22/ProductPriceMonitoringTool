@@ -1,3 +1,9 @@
+1
+adminovickoa
+koko
+admin
+$2a$10$cSVx/W3JShMhMNDeGlm2ROQBRwHEEIciAylZRXBnoSc3PC5YoXMTS
+ADMIN
 3
 Leo
 Stričak
@@ -8,11 +14,5 @@ MERCHANT
 merchant
 merchantanovic
 merchant@merchant.com
-$2a$10$cSVx/W3JShMhMNDeGlm2ROQBRwHEEIciAylZRXBnoSc3PC5YoXMTS
-ADMIN
-1
-adminovickoa
-koko
-admin
 $2a$10$cSVx/W3JShMhMNDeGlm2ROQBRwHEEIciAylZRXBnoSc3PC5YoXMTS
 ADMIN

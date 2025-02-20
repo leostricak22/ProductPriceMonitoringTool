@@ -6,7 +6,8 @@ import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.CompanyProduct;
 import hr.tvz.productpricemonitoringtool.model.Price;
 import hr.tvz.productpricemonitoringtool.model.Product;
-import hr.tvz.productpricemonitoringtool.repository.CompanyProductRepository;
+import hr.tvz.productpricemonitoringtool.repository.CompanyProductReadRepository;
+import hr.tvz.productpricemonitoringtool.repository.CompanyProductWriteRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
 import hr.tvz.productpricemonitoringtool.util.Constants;
 import hr.tvz.productpricemonitoringtool.util.Session;
@@ -28,7 +29,7 @@ public class ChangeProductPriceController {
 
     private Price newPrice;
 
-    private final CompanyProductRepository companyProductRepository = new CompanyProductRepository();
+    private final CompanyProductReadRepository companyProductReadRepository = new CompanyProductReadRepository();
 
     public void initialize() {
         Optional<Product> selectedProduct = Session.getSelectedProduct();
@@ -41,7 +42,7 @@ public class ChangeProductPriceController {
 
         Set<CompanyProduct> companyProducts;
         try {
-            companyProducts = companyProductRepository.findByProductId(selectedProduct.get().getId(),
+            companyProducts = companyProductReadRepository.findByProductId(selectedProduct.get().getId(),
                     CompanyProductRecordType.LATEST_RECORD);
         } catch (DatabaseConnectionActiveException e) {
             AlertDialog.showErrorDialog(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);

@@ -19,16 +19,7 @@ public class AddressRepository extends AbstractRepository<Address> {
 
     @Override
     public synchronized Optional<Address> findById(Long id) throws RepositoryAccessException, DatabaseConnectionActiveException {
-        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new DatabaseConnectionActiveException(e);
-            }
-        }
-
-        DatabaseUtil.setActiveConnectionWithDatabase(true);
+        waitForDatabaseConnectionReady();
 
         String query = """
         SELECT id, longitude, latitude, road, house_number, city, town, village, country
@@ -56,16 +47,7 @@ public class AddressRepository extends AbstractRepository<Address> {
 
     @Override
     public synchronized Set<Address> findAll() throws RepositoryAccessException, DatabaseConnectionActiveException {
-        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new DatabaseConnectionActiveException(e);
-            }
-        }
-
-        DatabaseUtil.setActiveConnectionWithDatabase(true);
+        waitForDatabaseConnectionReady();
 
         Set<Address> addresses = new HashSet<>();
 
@@ -94,16 +76,8 @@ public class AddressRepository extends AbstractRepository<Address> {
 
     @Override
     public synchronized Set<Address> save(Set<Address> entities) throws RepositoryAccessException, DatabaseConnectionActiveException {
-        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new DatabaseConnectionActiveException(e);
-            }
-        }
+        waitForDatabaseConnectionReady();
 
-        DatabaseUtil.setActiveConnectionWithDatabase(true);
         Set<Address> savedAddresses = new HashSet<>();
         String query = """
         INSERT INTO "address" (longitude, latitude, road, house_number, city, town, village, country)
@@ -147,16 +121,7 @@ public class AddressRepository extends AbstractRepository<Address> {
     }
 
     public synchronized void update(Address address) throws RepositoryAccessException, DatabaseConnectionActiveException {
-        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new DatabaseConnectionActiveException(e);
-            }
-        }
-
-        DatabaseUtil.setActiveConnectionWithDatabase(true);
+        waitForDatabaseConnectionReady();
 
         String query = """
         UPDATE "address" SET longitude = ?, latitude = ?, road = ?, house_number = ?, city = ?, town = ?, village = ?, country = ?
@@ -186,16 +151,7 @@ public class AddressRepository extends AbstractRepository<Address> {
     }
 
     public synchronized void delete(Address address) throws RepositoryAccessException, DatabaseConnectionActiveException {
-        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new DatabaseConnectionActiveException(e);
-            }
-        }
-
-        DatabaseUtil.setActiveConnectionWithDatabase(true);
+        waitForDatabaseConnectionReady();
 
         String query = """
         DELETE FROM "address" WHERE id = ?
@@ -212,5 +168,18 @@ public class AddressRepository extends AbstractRepository<Address> {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
             notifyAll();
         }
+    }
+
+    private synchronized void waitForDatabaseConnectionReady() throws DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
     }
 }

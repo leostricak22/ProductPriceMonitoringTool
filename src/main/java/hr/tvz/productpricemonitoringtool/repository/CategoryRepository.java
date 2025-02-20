@@ -15,24 +15,13 @@ public class CategoryRepository extends AbstractRepository<Category> {
 
     @Override
     public synchronized Optional<Category> findById(Long id) throws RepositoryAccessException, DatabaseConnectionActiveException {
-        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new DatabaseConnectionActiveException(e);
-            }
-        }
+        waitForDatabaseConnectionReady();
 
-        DatabaseUtil.setActiveConnectionWithDatabase(true);
-
-        String query = """
-        SELECT id, name, parent_category_id FROM "category" WHERE id = ?;
-        """;
+        String query = "SELECT id, name, parent_category_id FROM \"category\" WHERE id = ?;" ;
 
         Optional<CategoryDBO> categoryDBO = Optional.empty();
         try (Connection connection = DatabaseUtil.connectToDatabase();
-             var stmt = connection.prepareStatement(query)) {
+             PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setLong(1, id);
             ResultSet resultSet = stmt.executeQuery();
 
@@ -55,22 +44,10 @@ public class CategoryRepository extends AbstractRepository<Category> {
 
     @Override
     public synchronized Set<Category> findAll() throws RepositoryAccessException, DatabaseConnectionActiveException {
-        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new DatabaseConnectionActiveException(e);
-            }
-        }
-
-        DatabaseUtil.setActiveConnectionWithDatabase(true);
+        waitForDatabaseConnectionReady();
 
         Set<CategoryDBO> categoriesDBO = new HashSet<>();
-
-        String query = """
-        SELECT id, name, parent_category_id FROM "category";
-        """;
+        String query = "SELECT id, name, parent_category_id FROM \"category\";" ;
 
         try (Connection connection = DatabaseUtil.connectToDatabase();
              Statement stmt = connection.createStatement()) {
@@ -91,20 +68,9 @@ public class CategoryRepository extends AbstractRepository<Category> {
 
     @Override
     public synchronized Set<Category> save(Set<Category> entities) throws RepositoryAccessException, DatabaseConnectionActiveException {
-        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new DatabaseConnectionActiveException(e);
-            }
-        }
+        waitForDatabaseConnectionReady();
 
-        DatabaseUtil.setActiveConnectionWithDatabase(true);
-
-        String query = """
-        INSERT INTO "category" (name, parent_category_id) VALUES (?, ?)
-        """;
+        String query = "INSERT INTO \"category\" (name, parent_category_id) VALUES (?, ?);" ;
 
         try (Connection connection = DatabaseUtil.connectToDatabase();
              PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
@@ -144,7 +110,6 @@ public class CategoryRepository extends AbstractRepository<Category> {
 
     public List<Category> findAllByParentCategoryRecursively(Optional<Category> category) throws RepositoryAccessException, DatabaseConnectionActiveException {
         List<Category> categories = new ArrayList<>(findAll());
-
         if (category.isEmpty()) {
             return categories;
         }
@@ -182,26 +147,15 @@ public class CategoryRepository extends AbstractRepository<Category> {
         Category currentCategory = category.get();
         while (currentCategory.getParentCategory().isPresent()) {
             hierarchy.insert(0," -> " +  currentCategory.getName());
-
             currentCategory = currentCategory.getParentCategory().get();
         }
 
         hierarchy.insert(0, currentCategory.getName());
-
         return hierarchy.toString();
     }
 
     public synchronized void update(Category category) throws RepositoryAccessException, DatabaseConnectionActiveException {
-        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new DatabaseConnectionActiveException(e);
-            }
-        }
-
-        DatabaseUtil.setActiveConnectionWithDatabase(true);
+        waitForDatabaseConnectionReady();
 
         String query = """
         UPDATE "category" SET name = ?, parent_category_id = ? WHERE id = ?;
@@ -223,16 +177,7 @@ public class CategoryRepository extends AbstractRepository<Category> {
     }
 
     public synchronized void delete(Category category) throws RepositoryAccessException, DatabaseConnectionActiveException {
-        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
-            try {
-                wait();
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                throw new DatabaseConnectionActiveException(e);
-            }
-        }
-
-        DatabaseUtil.setActiveConnectionWithDatabase(true);
+        waitForDatabaseConnectionReady();
 
         String query = """
         DELETE FROM "category" WHERE id = ?;
@@ -249,5 +194,18 @@ public class CategoryRepository extends AbstractRepository<Category> {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
             notifyAll();
         }
+    }
+
+    private synchronized void waitForDatabaseConnectionReady() throws DatabaseConnectionActiveException {
+        while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
+            try {
+                wait();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                throw new DatabaseConnectionActiveException(e);
+            }
+        }
+
+        DatabaseUtil.setActiveConnectionWithDatabase(true);
     }
 }

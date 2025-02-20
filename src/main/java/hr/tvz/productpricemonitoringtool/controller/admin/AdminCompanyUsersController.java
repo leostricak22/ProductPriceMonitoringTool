@@ -6,9 +6,11 @@ import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.User;
 import hr.tvz.productpricemonitoringtool.model.dbo.UserCompanyDBO;
 import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
+import hr.tvz.productpricemonitoringtool.repository.UserCompanyRepository;
 import hr.tvz.productpricemonitoringtool.repository.UserFileRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
 import hr.tvz.productpricemonitoringtool.util.ComboBoxUtil;
+import hr.tvz.productpricemonitoringtool.util.PopupSceneLoader;
 import hr.tvz.productpricemonitoringtool.util.SceneLoader;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -42,6 +44,7 @@ public class AdminCompanyUsersController implements SearchController {
 
     private final UserFileRepository userFileRepository = new UserFileRepository();
     private final CompanyRepository companyRepository = new CompanyRepository();
+    private final UserCompanyRepository userCompanyRepository = new UserCompanyRepository();
 
     @Override
     public void initialize() {
@@ -74,7 +77,13 @@ public class AdminCompanyUsersController implements SearchController {
 
     @Override
     public void filter() {
-        List<UserCompanyDBO> companyUsers = new ArrayList<>(companyRepository.findAllUserCompanyDBO());
+        List<UserCompanyDBO> companyUsers;
+        try {
+            companyUsers = new ArrayList<>(userCompanyRepository.findAllUserCompanyDBO());
+        } catch (DatabaseConnectionActiveException e) {
+            AlertDialog.showErrorDialog("Failed to fetch data from database.");
+            return;
+        }
         companyUsers.sort((cu1, cu2) -> (int) (cu1.getId() - cu2.getId()));
 
         String idValue = idTextField.getText();
@@ -108,7 +117,7 @@ public class AdminCompanyUsersController implements SearchController {
 
     @Override
     public void handleAddNewButtonClick() {
-        SceneLoader.loadCompanyUsersFormPopupScene("admin_company_staff_form", "Add company user", Optional.empty());
+        PopupSceneLoader.loadCompanyUsersFormPopupScene("admin_company_staff_form", "Add company user", Optional.empty());
         filter();
     }
 
@@ -121,7 +130,7 @@ public class AdminCompanyUsersController implements SearchController {
             return;
         }
 
-        SceneLoader.loadCompanyUsersFormPopupScene("admin_company_staff_form", "Edit company user", Optional.of(selectedCompanyUser));
+        PopupSceneLoader.loadCompanyUsersFormPopupScene("admin_company_staff_form", "Edit company user", Optional.of(selectedCompanyUser));
         filter();
     }
 
@@ -138,7 +147,7 @@ public class AdminCompanyUsersController implements SearchController {
                 "Are you sure you want to delete the selected product?");
         if (result.isPresent() && result.get() == ButtonType.OK) {
             try {
-                companyRepository.deleteUserCompany(selectedCompanyUser);
+                userCompanyRepository.deleteUserCompany(selectedCompanyUser);
                 filter();
             } catch (DatabaseConnectionActiveException e) {
                 AlertDialog.showErrorDialog("Error while deleting product.");

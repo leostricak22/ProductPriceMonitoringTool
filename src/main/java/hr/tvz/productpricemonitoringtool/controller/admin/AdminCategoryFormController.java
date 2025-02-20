@@ -73,8 +73,11 @@ public class AdminCategoryFormController {
 
         try {
             Set<Category> allCategories = categoryRepository.findAll();
-            if (!isNull(categoryEdit) && !categoryEdit.get().equals(category) && allCategories.stream().anyMatch(c -> c.getName().equals(category.getName())
-                    && c.getParentCategory().equals(category.getParentCategory()))) {
+            if ((!isNull(categoryEdit) && !categoryEdit.get().equals(category) && allCategories.stream().anyMatch(c -> c.getName().equals(category.getName())
+                    && c.getParentCategory().equals(category.getParentCategory())))
+                || isNull(categoryEdit) && allCategories.stream().anyMatch(c -> c.getName().equals(category.getName())
+                    && c.getParentCategory().equals(category.getParentCategory()))
+            ) {
                 AlertDialog.showErrorDialog("Category already exist in the database.");
                 return;
             }

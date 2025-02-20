@@ -8,6 +8,7 @@ import hr.tvz.productpricemonitoringtool.repository.AddressRepository;
 import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
 import hr.tvz.productpricemonitoringtool.util.ComboBoxUtil;
+import hr.tvz.productpricemonitoringtool.util.PopupSceneLoader;
 import hr.tvz.productpricemonitoringtool.util.SceneLoader;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -117,7 +118,7 @@ public class AdminCompanyController implements SearchController {
 
     @Override
     public void handleAddNewButtonClick() {
-        SceneLoader.loadCompanyFormPopupScene(
+        PopupSceneLoader.loadCompanyFormPopupScene(
                 "admin_company_form", "Add new company", Optional.empty());
         filter();
     }
@@ -130,7 +131,7 @@ public class AdminCompanyController implements SearchController {
             return;
         }
 
-        SceneLoader.loadCompanyFormPopupScene(
+        PopupSceneLoader.loadCompanyFormPopupScene(
                 "admin_company_form", "Edit company", Optional.of(selectedCompany));
         filter();
     }

@@ -4,6 +4,7 @@ import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveExcep
 import hr.tvz.productpricemonitoringtool.exception.SerializationException;
 import hr.tvz.productpricemonitoringtool.model.dbo.UserCompanyDBO;
 import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
+import hr.tvz.productpricemonitoringtool.repository.UserCompanyRepository;
 import hr.tvz.productpricemonitoringtool.util.Constants;
 import hr.tvz.productpricemonitoringtool.util.Session;
 
@@ -17,6 +18,7 @@ public non-sealed class StaffNotification extends Notification  implements Seria
     public static List<UserCompanyDBO> newUserCompanyDBORecords = new ArrayList<>();
 
     private static final CompanyRepository companyRepository = new CompanyRepository();
+    private final UserCompanyRepository userCompanyRepository = new UserCompanyRepository();
 
     public StaffNotification() {}
 
@@ -69,7 +71,7 @@ public non-sealed class StaffNotification extends Notification  implements Seria
 
         List<UserCompanyDBO> userCompanyDBOS = new ArrayList<>();
         for (Company company : Session.getLoggedInUser().get().getCompanies()) {
-            userCompanyDBOS.addAll(companyRepository.findAllUserCompanyByUserId(lastUserCompany.getCreatedAt(),
+            userCompanyDBOS.addAll(userCompanyRepository.findAllUserCompanyByUserId(lastUserCompany.getCreatedAt(),
                     company.getId()).stream().toList());
         }
 

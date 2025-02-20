@@ -3,7 +3,8 @@ package hr.tvz.productpricemonitoringtool.model;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.exception.SerializationException;
 import hr.tvz.productpricemonitoringtool.model.dbo.CompanyProductDBO;
-import hr.tvz.productpricemonitoringtool.repository.CompanyProductRepository;
+import hr.tvz.productpricemonitoringtool.repository.CompanyProductReadRepository;
+import hr.tvz.productpricemonitoringtool.repository.CompanyProductWriteRepository;
 import hr.tvz.productpricemonitoringtool.util.Constants;
 import hr.tvz.productpricemonitoringtool.util.Session;
 
@@ -16,7 +17,7 @@ public non-sealed class PriceNotification extends Notification  implements Seria
     public static List<CompanyProductDBO> deserializedCompanyProductDBOList = new ArrayList<>();
     public static List<CompanyProductDBO> newCompanyProductRecords = new ArrayList<>();
 
-    private static final CompanyProductRepository companyProductRepository = new CompanyProductRepository();
+    private final CompanyProductReadRepository companyProductReadRepository = new CompanyProductReadRepository();
 
     public PriceNotification() {}
 
@@ -68,7 +69,7 @@ public non-sealed class PriceNotification extends Notification  implements Seria
 
         List<CompanyProductDBO> companyProducts = new ArrayList<>();
         for (Company company : Session.getLoggedInUser().get().getCompanies()) {
-            companyProducts.addAll(companyProductRepository.findByDateAndCompanyId(lastCompanyProduct.getCreatedAt(),
+            companyProducts.addAll(companyProductReadRepository.findByDateAndCompanyId(lastCompanyProduct.getCreatedAt(),
                             company.getId()).stream().toList());
         }
 

@@ -7,6 +7,7 @@ import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.User;
 import hr.tvz.productpricemonitoringtool.repository.AddressRepository;
 import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
+import hr.tvz.productpricemonitoringtool.repository.UserCompanyRepository;
 import hr.tvz.productpricemonitoringtool.util.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
@@ -28,6 +29,7 @@ public class CompanyAddController {
     private final Logger logger = LoggerFactory.getLogger(CompanyAddController.class);
     private final AddressRepository addressRepository = new AddressRepository();
     private final CompanyRepository companyRepository = new CompanyRepository();
+    private final UserCompanyRepository userCompanyRepository = new UserCompanyRepository();
 
     public void handleCreate() {
         String name = nameTextField.getText();
@@ -63,7 +65,7 @@ public class CompanyAddController {
         }
 
         try {
-            companyRepository.addUser(user.getId(), company.getId());
+            userCompanyRepository.addUser(user.getId(), company.getId());
         } catch (DatabaseConnectionActiveException e) {
             AlertDialog.showErrorDialog(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
             logger.error(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE, e.getMessage());

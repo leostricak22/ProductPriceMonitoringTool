@@ -7,7 +7,8 @@ import hr.tvz.productpricemonitoringtool.model.CompanyProduct;
 import hr.tvz.productpricemonitoringtool.model.FilterSearch;
 import hr.tvz.productpricemonitoringtool.model.Product;
 import hr.tvz.productpricemonitoringtool.repository.CategoryRepository;
-import hr.tvz.productpricemonitoringtool.repository.CompanyProductRepository;
+import hr.tvz.productpricemonitoringtool.repository.CompanyProductReadRepository;
+import hr.tvz.productpricemonitoringtool.repository.CompanyProductWriteRepository;
 import hr.tvz.productpricemonitoringtool.repository.ProductRepository;
 import hr.tvz.productpricemonitoringtool.thread.FetchProductsByCategoriesThread;
 import hr.tvz.productpricemonitoringtool.thread.FetchProductsByFilterThread;
@@ -43,7 +44,8 @@ public class ProductSearchController {
 
     private final CategoryRepository categoryRepository = new CategoryRepository();
     private final ProductRepository productRepository = new ProductRepository();
-    private final CompanyProductRepository companyProductRepository = new CompanyProductRepository();
+    private final CompanyProductWriteRepository companyProductWriteRepository = new CompanyProductWriteRepository();
+    private final CompanyProductReadRepository companyProductReadRepository = new CompanyProductReadRepository();
 
     public void initialize(Optional<Category> parentCategory) {
         this.parentCategory = parentCategory;
@@ -146,7 +148,7 @@ public class ProductSearchController {
         productsFlowPane.getChildren().clear();
 
         FetchProductsByFilterThread fetchProductsThread = new FetchProductsByFilterThread(filterSearch,
-                companyProductRepository,
+                companyProductReadRepository,
                 products);
         Thread thread = new Thread(fetchProductsThread);
         thread.start();
@@ -239,7 +241,7 @@ public class ProductSearchController {
 
         List<CompanyProduct> companyProducts = new ArrayList<>();
         try {
-            companyProducts = new ArrayList<>(companyProductRepository.findByProductId(product.getId(),
+            companyProducts = new ArrayList<>(companyProductReadRepository.findByProductId(product.getId(),
                     CompanyProductRecordType.LATEST_RECORD));
         } catch (
         DatabaseConnectionActiveException e) {

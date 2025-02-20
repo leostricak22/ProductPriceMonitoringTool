@@ -4,7 +4,8 @@ import hr.tvz.productpricemonitoringtool.enumeration.CompanyProductRecordType;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.CompanyProduct;
-import hr.tvz.productpricemonitoringtool.repository.CompanyProductRepository;
+import hr.tvz.productpricemonitoringtool.repository.CompanyProductReadRepository;
+import hr.tvz.productpricemonitoringtool.repository.CompanyProductWriteRepository;
 import hr.tvz.productpricemonitoringtool.util.*;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -23,7 +24,8 @@ public class CompanyProductsListController {
     @FXML
     public VBox itemListVbox;
 
-    private final CompanyProductRepository companyProductRepository = new CompanyProductRepository();
+    private final CompanyProductWriteRepository companyProductWriteRepository = new CompanyProductWriteRepository();
+    private final CompanyProductReadRepository companyProductReadRepository = new CompanyProductReadRepository();
 
     public void initialize() {
         if (Session.getSelectedCompany().isEmpty()) {
@@ -34,7 +36,7 @@ public class CompanyProductsListController {
         Company selectedCompany = Session.getSelectedCompany().get();
         List<CompanyProduct> companyProducts = new ArrayList<>();
         try {
-            companyProducts = new ArrayList<>(companyProductRepository.findByCompanyId(selectedCompany.getId(),
+            companyProducts = new ArrayList<>(companyProductReadRepository.findByCompanyId(selectedCompany.getId(),
                     CompanyProductRecordType.LATEST_RECORD));
             companyProducts.sort(
                     (cp1, cp2) -> cp1.getProduct().getName().compareToIgnoreCase(cp2.getProduct().getName()));

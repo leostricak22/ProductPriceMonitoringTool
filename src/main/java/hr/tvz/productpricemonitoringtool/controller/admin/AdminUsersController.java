@@ -4,6 +4,7 @@ import hr.tvz.productpricemonitoringtool.controller.SearchController;
 import hr.tvz.productpricemonitoringtool.model.User;
 import hr.tvz.productpricemonitoringtool.repository.UserFileRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
+import hr.tvz.productpricemonitoringtool.util.PopupSceneLoader;
 import hr.tvz.productpricemonitoringtool.util.SceneLoader;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -94,7 +95,7 @@ public class AdminUsersController implements SearchController {
 
     @Override
     public void handleAddNewButtonClick() {
-        SceneLoader.loadUsersPopupScene("admin_user_form", "Add new user", Optional.empty());
+        PopupSceneLoader.loadUsersPopupScene("admin_user_form", "Add new user", Optional.empty());
         filter();
     }
 
@@ -106,7 +107,7 @@ public class AdminUsersController implements SearchController {
             return;
         }
 
-        SceneLoader.loadUsersPopupScene("admin_user_form", "Edit user", Optional.of(selectedUser));
+        PopupSceneLoader.loadUsersPopupScene("admin_user_form", "Edit user", Optional.of(selectedUser));
         filter();
     }
 
