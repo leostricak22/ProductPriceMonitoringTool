@@ -78,7 +78,7 @@
                 <Cursor fx:constant="HAND" />
             </cursor>
         </Label>
-      <Button mnemonicParsing="false" prefHeight="35.0" prefWidth="317.0" styleClass="secondary-button" text="Continue as a Guest" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+      <Button mnemonicParsing="false" onAction="#handleContinueAsGuest" prefHeight="35.0" prefWidth="317.0" styleClass="secondary-button" text="Continue as a Guest" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
          <GridPane.margin>
             <Insets left="15.0" right="15.0" top="90.0" />
          </GridPane.margin>

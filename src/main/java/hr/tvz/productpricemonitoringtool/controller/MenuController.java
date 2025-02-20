@@ -9,6 +9,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
 
+import java.util.Objects;
 import java.util.Optional;
 
 public class MenuController {
@@ -34,7 +35,7 @@ public class MenuController {
             productsCompanyProductsMenuItem.setDisable(true);
         }
 
-
+        companyMenuButton.setVisible(!Objects.equals(Session.getLoggedInUser().get().getRole(), Role.CUSTOMER));
         adminMenuButton.setVisible(Session.getLoggedInUser().get().getRole().equals(Role.ADMIN));
     }
 

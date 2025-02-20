@@ -1,10 +1,13 @@
 package hr.tvz.productpricemonitoringtool.controller;
 
+import hr.tvz.productpricemonitoringtool.enumeration.Role;
 import hr.tvz.productpricemonitoringtool.exception.AuthenticationException;
 import hr.tvz.productpricemonitoringtool.model.User;
 import hr.tvz.productpricemonitoringtool.repository.UserFileRepository;
 import hr.tvz.productpricemonitoringtool.util.*;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
@@ -20,6 +23,8 @@ public class UserEditController {
     @FXML public TextField nameTextField;
     @FXML public TextField emailTextField;
     @FXML public TextField roleTextField;
+    @FXML public Button applyChangesButton;
+    @FXML public Label passwordChangeLabel;
 
     private User user;
     private Image image;
@@ -37,9 +42,18 @@ public class UserEditController {
         emailTextField.setText(user.getEmail());
         roleTextField.setText(user.getRole().toString());
         userProfilePictureCircle.setFill(new ImagePattern(image));
+
+        if (user.getRole().equals(Role.CUSTOMER)) {
+            nameTextField.setDisable(true);
+            applyChangesButton.setDisable(true);
+            passwordChangeLabel.setVisible(false);
+        }
     }
 
     public void handlePickProfilePicture() {
+        if (user.getRole().equals(Role.CUSTOMER))
+            return;
+
         Optional<File> selectedFileOptional = FileUtil.pickFile(List.of("*.jpg", "*.jpeg", "*.png"));
         if (selectedFileOptional.isEmpty())
             return;

@@ -40,4 +40,9 @@ public class LoginController  {
     public void handleRegisterOpen() {
         SceneLoader.loadScene("register", "Register");
     }
+
+    public void handleContinueAsGuest() {
+        Session.setLoggedInUser(Session.getGuestUser());
+        SceneLoader.loadScene("dashboard", "Dashboard");
+    }
 }

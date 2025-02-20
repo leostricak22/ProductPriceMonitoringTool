@@ -1,5 +1,6 @@
 package hr.tvz.productpricemonitoringtool.controller;
 
+import hr.tvz.productpricemonitoringtool.enumeration.Role;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.User;
@@ -12,6 +13,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,7 @@ public class DashboardController {
 
     @FXML public FlowPane companyFlowPane;
     @FXML public TextField joinCodeTextField;
+    @FXML public GridPane addNewCompanyGridPane;
 
     private final CompanyRepository companyRepository = new CompanyRepository();
 
@@ -50,6 +53,10 @@ public class DashboardController {
         if (companies.isEmpty()) {
             Label noCompaniesLabel = new Label("You don't have any companies added yet.");
             companyFlowPane.getChildren().add(noCompaniesLabel);
+        }
+
+        if (user.get().getRole().equals(Role.CUSTOMER)) {
+            addNewCompanyGridPane.setVisible(false);
         }
     }
 

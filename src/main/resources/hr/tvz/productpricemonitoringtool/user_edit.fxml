@@ -87,12 +87,12 @@
                         </TextField>
                     </children>
                 </GridPane>
-                <Button mnemonicParsing="false" onAction="#handleEdtUser" prefHeight="35.0" prefWidth="175.0" text="Apply changes" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
+                <Button fx:id="applyChangesButton" mnemonicParsing="false" onAction="#handleEdtUser" prefHeight="35.0" prefWidth="175.0" text="Apply changes" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" GridPane.valignment="TOP">
                     <GridPane.margin>
                         <Insets top="15.0" />
                     </GridPane.margin>
                 </Button>
-                <Label onMouseClicked="#handleUserEditPasswordRedirect" text="Want to change your password? Click here!" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
+                <Label fx:id="passwordChangeLabel" onMouseClicked="#handleUserEditPasswordRedirect" text="Want to change your password? Click here!" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="4" GridPane.valignment="BOTTOM">
                     <GridPane.margin>
                         <Insets bottom="15.0" />
                     </GridPane.margin>

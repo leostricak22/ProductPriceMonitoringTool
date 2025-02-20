@@ -1,5 +1,6 @@
 package hr.tvz.productpricemonitoringtool.util;
 
+import hr.tvz.productpricemonitoringtool.enumeration.Role;
 import hr.tvz.productpricemonitoringtool.exception.AuthenticationException;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.model.Company;
@@ -11,6 +12,7 @@ import hr.tvz.productpricemonitoringtool.thread.CheckNotificationsThread;
 import javafx.scene.image.Image;
 
 import java.io.File;
+import java.util.HashSet;
 import java.util.Optional;
 
 public class Session {
@@ -74,6 +76,13 @@ public class Session {
 
         return FileUtil.cropImageToSquare(
                 new Image("file:files/user/default_profile_picture.png"));
+    }
+
+    public static User getGuestUser() {
+        return new User.Builder(0L, "Customer")
+                .role(Role.CUSTOMER)
+                .companies(new HashSet<>())
+                .build();
     }
 
     public static void logout() {

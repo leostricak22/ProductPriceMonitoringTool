@@ -119,11 +119,11 @@
 }
 
 .logoutButton {
-    -fx-background-color: #782c2c;
+    -fx-background-color: #4e4e4e;
 }
 
 .logoutButton:hover, .logoutButton:pressed, .logoutButton:focused, .logoutButton:selected {
-    -fx-background-color: #4a2020;
+    -fx-background-color: #393939;
 }
 
 /* Style the DatePicker text field */

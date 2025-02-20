@@ -26,19 +26,19 @@
             </graphic>
         </MenuButton>
 
+        <MenuButton fx:id="productsMenuButton" popupSide="RIGHT" prefWidth="100" text="Products">
+            <items>
+                <MenuItem onAction="#handleProductSearchRedirect" text="Search" />
+                <MenuItem fx:id="productsAddMenuItem" onAction="#handleProductAddRedirect" text="Add" />
+                <MenuItem fx:id="productsCompanyProductsMenuItem" onAction="#handleCompanyProductsListRedirect" text="Company products" />
+            </items>
+        </MenuButton>
+
         <MenuButton fx:id="companyMenuButton" popupSide="RIGHT" prefWidth="100" text="Company">
             <items>
                 <MenuItem onAction="#handleCompanyEditRedirect" text="Edit" />
                 <MenuItem onAction="#handleCompanyStaffRedirect" text="Staff" />
                 <MenuItem onAction="#handleCompanyProductsListRedirect" text="Products" />
-            </items>
-        </MenuButton>
-
-        <MenuButton fx:id="productsMenuButton" popupSide="RIGHT" prefWidth="100" text="Products">
-            <items>
-                <MenuItem onAction="#handleProductSearchRedirect" text="Search" />
-                <MenuItem fx:id="productsAddMenuItem" onAction="#handleProductAddRedirect" text="Add" />
-            <MenuItem fx:id="productsCompanyProductsMenuItem" onAction="#handleCompanyProductsListRedirect" text="Company products" />
             </items>
         </MenuButton>
 
