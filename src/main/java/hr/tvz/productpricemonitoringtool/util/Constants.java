@@ -53,4 +53,6 @@ public class Constants {
     public static final String TRY_AGAIN_LATER_ERROR_MESSAGE = "Please try again later.";
     public static final String DASHBOARD_TITLE = "Dashboard";
     public static final String DASHBOARD_FILE_NAME = "dashboard";
+
+    public static final String REPOSITORY_FETCH_ERROR_MESSAGE = "Error fetching data from the repository.";
 }

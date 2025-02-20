@@ -2,6 +2,7 @@ package hr.tvz.productpricemonitoringtool.controller;
 
 import hr.tvz.productpricemonitoringtool.enumeration.CompanyProductRecordType;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
+import hr.tvz.productpricemonitoringtool.exception.RepositoryAccessException;
 import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.CompanyProduct;
 import hr.tvz.productpricemonitoringtool.model.Price;
@@ -14,6 +15,8 @@ import hr.tvz.productpricemonitoringtool.util.ValidationUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -31,6 +34,7 @@ import static java.util.Objects.isNull;
  */
 public class ChangeProductPriceController {
 
+    private static final Logger log = LoggerFactory.getLogger(ChangeProductPriceController.class);
     @FXML public TextField oldPriceTextField;
     @FXML public TextField newPriceTextField;
 
@@ -55,8 +59,9 @@ public class ChangeProductPriceController {
         try {
             companyProducts = companyProductReadRepository.findByProductId(selectedProduct.get().getId(),
                     CompanyProductRecordType.LATEST_RECORD);
-        } catch (DatabaseConnectionActiveException e) {
-            AlertDialog.showErrorDialog(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
+        } catch (DatabaseConnectionActiveException | RepositoryAccessException e) {
+            AlertDialog.showErrorDialog(Constants.REPOSITORY_FETCH_ERROR_MESSAGE);
+            log.error("Database connection is active.", e);
             return;
         }
 
