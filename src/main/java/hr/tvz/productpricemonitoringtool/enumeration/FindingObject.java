@@ -1,5 +1,9 @@
 package hr.tvz.productpricemonitoringtool.enumeration;
 
+/**
+ * Enumeration for the finding object.
+ * Contains the product and company.
+ */
 public enum FindingObject {
     PRODUCT("product"),
     COMPANY("company");

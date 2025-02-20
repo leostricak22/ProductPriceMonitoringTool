@@ -22,6 +22,19 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Controller for the admin products view.
+ * Handles the product search and filtering.
+ * @see Product
+ * @see ProductRepository
+ * @see Category
+ * @see CategoryRepository
+ * @see SearchController
+ * @see AlertDialog
+ * @see PopupSceneLoader
+ * @see SceneLoader
+ * @see ComboBoxUtil
+ */
 public class AdminProductsController implements SearchController {
 
     @FXML public TextField idTextField;
@@ -41,6 +54,11 @@ public class AdminProductsController implements SearchController {
     private final ProductRepository productRepository = new ProductRepository();
     private final CategoryRepository categoryRepository = new CategoryRepository();
 
+    /**
+     * Initializes the view.
+     * Loads the products and categories.
+     * Sets the cell value factories for the table columns.
+     */
     @Override
     public void initialize() {
         idTableColumn.setCellValueFactory(cellData ->
@@ -68,6 +86,10 @@ public class AdminProductsController implements SearchController {
         filter();
     }
 
+    /**
+     * Filters the products based on the input values.
+     * Shows the filter label if any filter is applied.
+     */
     @Override
     public void filter() {
         List<Product> products = new ArrayList<>();
@@ -96,6 +118,10 @@ public class AdminProductsController implements SearchController {
                 .toList()));
     }
 
+    /**
+     * Removes the filters and clears the input fields.
+     * Refreshes the table.
+     */
     @Override
     public void removeFilters() {
         idTextField.clear();
@@ -106,6 +132,11 @@ public class AdminProductsController implements SearchController {
         filter();
     }
 
+    /**
+     * Handles the add new button click.
+     * Opens a popup window for adding a new product.
+     * Refreshes the table.
+     */
     @Override
     public void handleAddNewButtonClick() {
         PopupSceneLoader.loadProductFormPopupScene(
@@ -114,6 +145,11 @@ public class AdminProductsController implements SearchController {
         filter();
     }
 
+    /**
+     * Handles the edit button click.
+     * Opens a popup window for editing the selected product.
+     * Refreshes the table.
+     */
     @Override
     public void handleEditButtonClick() {
         Product selectedProduct = productTableView.getSelectionModel().getSelectedItem();
@@ -129,6 +165,11 @@ public class AdminProductsController implements SearchController {
         filter();
     }
 
+    /**
+     * Handles the delete button click.
+     * Deletes the selected product.
+     * Refreshes the table.
+     */
     @Override
     public void handleDeleteButtonClick() {
         Product selectedProduct = productTableView.getSelectionModel().getSelectedItem();
@@ -150,6 +191,9 @@ public class AdminProductsController implements SearchController {
         }
     }
 
+    /**
+     * Shows the filter label if any filter is applied.
+     */
     private void showFilterLabel() {
         removeFiltersLabel.setVisible(
                 !idTextField.getText().isEmpty() ||

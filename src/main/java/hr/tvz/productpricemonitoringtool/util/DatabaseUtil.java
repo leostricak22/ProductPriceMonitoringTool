@@ -6,6 +6,10 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
 
+/**
+ * DatabaseUtil class.
+ * Contains methods for connecting and disconnecting from database.
+ */
 public class DatabaseUtil {
 
     private static Boolean activeConnectionWithDatabase = false;

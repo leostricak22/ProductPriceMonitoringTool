@@ -1,5 +1,9 @@
 package hr.tvz.productpricemonitoringtool.exception;
 
+/**
+ * Exception for the serialization.
+ * Thrown when the serialization fails.
+ */
 public class SerializationException extends RuntimeException {
     public SerializationException(String message) {
         super(message);

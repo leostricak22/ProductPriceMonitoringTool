@@ -11,6 +11,12 @@ import javafx.scene.control.TableView;
 
 import java.time.format.DateTimeFormatter;
 
+/**
+ * Controller for the admin audit log view.
+ * Handles the audit log table.
+ * @see AuditLog
+ * @see AuditLogManager
+ */
 public class AuditLogController {
 
     @FXML
@@ -31,7 +37,11 @@ public class AuditLogController {
     @FXML
     public TableColumn<AuditLog<?, ?>, String> dateTableColumn;
 
-    @FXML
+    /**
+     * Initializes the view.
+     * Sets the cell value factories for the table columns.
+     * Loads the audit logs.
+     */
     public void initialize() {
         fieldTableColumn.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getField()));

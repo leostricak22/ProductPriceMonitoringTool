@@ -2,6 +2,10 @@ package hr.tvz.productpricemonitoringtool.model.dbo;
 
 import hr.tvz.productpricemonitoringtool.model.Entity;
 
+/**
+ * Category database object.
+ * Represents the category in the database.
+ */
 public class CategoryDBO extends Entity {
 
     private Long parentCategoryId;

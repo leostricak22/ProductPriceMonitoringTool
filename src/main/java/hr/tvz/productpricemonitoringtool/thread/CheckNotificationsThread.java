@@ -12,12 +12,20 @@ import javafx.application.Platform;
 import javafx.concurrent.Task;
 import javafx.util.Duration;
 
+/**
+ * CheckNotificationsThread class.
+ * Thread class for checking notifications.
+ * Contains methods for starting and stopping the thread.
+ */
 public class CheckNotificationsThread {
 
     private static Timeline timeline;
 
     private CheckNotificationsThread() {}
 
+    /**
+     * Start the thread.
+     */
     public static void start() {
         timeline = new Timeline(new KeyFrame(Duration.seconds(5), event -> {
             Task<Void> checkNotificationsTask = new Task<>() {
@@ -50,6 +58,9 @@ public class CheckNotificationsThread {
         timeline.play();
     }
 
+    /**
+     * Stop the thread.
+     */
     public static void stop() {
         if (timeline != null) {
             timeline.stop();

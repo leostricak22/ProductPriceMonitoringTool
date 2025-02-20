@@ -20,6 +20,14 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Controller for the company product chart view.
+ * Handles the product price chart.
+ * @see CompanyProduct
+ * @see CompanyProductReadRepository
+ * @see AlertDialog
+ * @see SceneLoader
+ */
 public class CompanyProductChartController {
 
     @FXML public LineChart<String, BigDecimal> productPriceLineChart;
@@ -27,6 +35,11 @@ public class CompanyProductChartController {
 
     private final CompanyProductReadRepository companyProductReadRepository = new CompanyProductReadRepository();
 
+    /**
+     * Initializes the view.
+     * Creates the product price chart.
+     * @param company the company to display the chart for
+     */
     public void initialize(Company company) {
         if (Session.getSelectedProduct().isEmpty()) {
             AlertDialog.showErrorDialog("Please select a product first.");
@@ -50,6 +63,10 @@ public class CompanyProductChartController {
         createChart(companyProducts, company, selectedProduct);
     }
 
+    /**
+     * Handles the company product chart back button.
+     * Redirects to the company dashboard.
+     */
     private void createChart(List<CompanyProduct> companyProducts, Company company, Product selectedProduct) {
         XYChart.Series<String, BigDecimal> series = new XYChart.Series<>();
         for (CompanyProduct companyProduct : companyProducts) {

@@ -13,7 +13,11 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public non-sealed class PriceNotification extends Notification {
+/**
+ * Price notification model.
+ * Represents the price notification in the model.
+ */
+public non-sealed class PriceNotification implements Notification {
 
     private static final Logger log = LoggerFactory.getLogger(PriceNotification.class);
     protected static List<CompanyProductDBO> deserializedCompanyProductDBOList = new ArrayList<>();
@@ -29,12 +33,22 @@ public non-sealed class PriceNotification extends Notification {
         return newCompanyProductRecords;
     }
 
+    /**
+     * Save method.
+     * Saves the new company product records to the file.
+     * Adds the new company product records to the deserialized company product list.
+     */
     @Override
     public void save() {
         deserializedCompanyProductDBOList.addAll(newCompanyProductRecords);
         serializeToFile(deserializedCompanyProductDBOList);
     }
 
+    /**
+     * Serialize to file method.
+     * Serializes the company product to the file.
+     * @param companyProducts List of company products.
+     */
     public void serializeToFile(List<CompanyProductDBO> companyProducts) {
         try {
             File file = new File(Constants.SESSION_SERIALIZATION_FILE_DIRECTORY + Session.getLoggedInUser().get().getId() + "/companyProducts.dat");
@@ -48,6 +62,10 @@ public non-sealed class PriceNotification extends Notification {
         }
     }
 
+    /**
+     * Deserialize from file method.
+     * Deserializes the company product from the file.
+     */
     public void deserializeFromFile() {
         newCompanyProductRecords.clear();
 
@@ -64,14 +82,27 @@ public non-sealed class PriceNotification extends Notification {
         }
     }
 
+    /**
+     * Check price change method.
+     * Checks the price change of the company products.
+     */
     public static void setNewCompanyProductRecords(List<CompanyProductDBO> newCompanyProductRecords) {
         PriceNotification.newCompanyProductRecords = newCompanyProductRecords;
     }
 
+    /**
+     * Set deserialized company product DBO list method.
+     * Sets the deserialized company product DBO list.
+     */
     public static void setDeserializedCompanyProductDBOList(List<CompanyProductDBO> deserializedCompanyProductDBOList) {
         PriceNotification.deserializedCompanyProductDBOList = deserializedCompanyProductDBOList;
     }
 
+    /**
+     * Check price change method.
+     * Checks the price change of the company products.
+     * @return List of company products.
+     */
     public List<CompanyProductDBO> checkPriceChange() throws DatabaseConnectionActiveException {
         deserializeFromFile();
 

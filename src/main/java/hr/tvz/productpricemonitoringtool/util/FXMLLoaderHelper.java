@@ -5,10 +5,21 @@ import javafx.fxml.FXMLLoader;
 
 import java.net.URI;
 
+/**
+ * FXMLLoaderHelper class.
+ * Contains method for loading FXML file.
+ */
 public class FXMLLoaderHelper {
 
     private FXMLLoaderHelper() {}
 
+    /**
+     * Method for loading FXML file.
+     * @param fileName File name.
+     *                 Name of the FXML file.
+     * @return FXMLLoader.
+     *         FXMLLoader object.
+     */
     public static FXMLLoader fxmlFilePath(String fileName) {
         try {
             String filePath = String.format(Constants.RELATIVE_FXML_PATH+"%s", fileName);

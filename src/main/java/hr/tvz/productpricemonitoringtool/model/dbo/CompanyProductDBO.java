@@ -6,6 +6,10 @@ import hr.tvz.productpricemonitoringtool.model.Price;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * Company product database object.
+ * Represents the company product in the database.
+ */
 public class CompanyProductDBO extends Entity implements Serializable {
 
     private Long companyId;

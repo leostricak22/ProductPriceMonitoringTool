@@ -8,10 +8,21 @@ import java.net.URL;
 import java.util.Properties;
 import java.util.Scanner;
 
+/**
+ * FetchFromAPI class.
+ * Contains method for fetching data from API.
+ */
 public class FetchFromAPI {
 
     private FetchFromAPI() {}
 
+    /**
+     * Fetch data from API.
+     * @param url URL of the API.
+     * @return JSON string.
+     * @throws IOException If an I/O error occurs.
+     * @throws UnsuccessfulHTTPResponseCode If HTTP response code is not 200.
+     */
     public static String getJSON(URL url) throws IOException, UnsuccessfulHTTPResponseCode {
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");

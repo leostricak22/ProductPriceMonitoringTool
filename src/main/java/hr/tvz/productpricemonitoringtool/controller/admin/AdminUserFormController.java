@@ -30,6 +30,11 @@ public class AdminUserFormController {
 
     private final UserFileRepository userFileRepository = new UserFileRepository();
 
+    /**
+     * Initializes the view.
+     * If the user is present, fills the form with the user data.
+     * @param user Optional user to edit
+     */
     public void initialize(Optional<User> user) {
         roleComboBox.getItems().setAll(Role.values());
 
@@ -46,6 +51,10 @@ public class AdminUserFormController {
         }
     }
 
+    /**
+     * Handles the form submit.
+     * Validates the input and saves the user to the database.
+     */
     public void handleSubmit() {
         String validationMessage = validateInput();
         if(!validationMessage.isEmpty()) {
@@ -89,6 +98,10 @@ public class AdminUserFormController {
         }
     }
 
+    /**
+     * Validates the input.
+     * @return Error message if the input is not valid, empty string otherwise
+     */
     public String validateInput() {
         if (nameTextField.getText().isEmpty()) {
             return "Name field must be filled!";

@@ -11,6 +11,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * FetchProductsByFilterThread class.
+ * Thread class for fetching products by filter.
+ */
 public class FetchProductsByFilterThread implements Runnable {
 
     private final FilterSearch filterSearch;
@@ -23,6 +27,10 @@ public class FetchProductsByFilterThread implements Runnable {
         this.products = products;
     }
 
+    /**
+     * Run method.
+     * Fetches products by filter.
+     */
     @Override
     public void run() {
         try {

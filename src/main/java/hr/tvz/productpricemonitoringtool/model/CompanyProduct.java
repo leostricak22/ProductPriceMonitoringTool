@@ -3,6 +3,10 @@ package hr.tvz.productpricemonitoringtool.model;
 import java.io.*;
 import java.time.LocalDateTime;
 
+/**
+ * Company product model.
+ * Represents the company product in the model.
+ */
 public class CompanyProduct extends Entity implements Serializable {
 
     private Product product;

@@ -7,6 +7,10 @@ import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Audit log manager.
+ * Manages the audit logs in the model.
+ */
 public class AuditLogManager {
 
     private static final String FILE_PATH = "files/dat/audit_log.dat";
@@ -16,12 +20,28 @@ public class AuditLogManager {
 
     private AuditLogManager() {}
 
+    /**
+     * Logs a change.
+     * @param field the field that was changed
+     * @param oldValue the old value
+     * @param newValue the new value
+     * @param user the user that made the change
+     * @param <T> the type of the old value
+     * @param <U> the type of the new value
+     */
     public static <T, U> void logChange(String field, T oldValue, U newValue, User user) {
         AuditLog<T, U> entry = new AuditLog<>(field, oldValue, newValue, user);
         logs.add(entry);
         save();
     }
 
+    /**
+     * Saves the logs to a file.
+     * If an error occurs, logs the error.
+     * If the file does not exist, creates a new file.
+     * If the file exists, overwrites the file.
+     * If the file is not writable, logs an error.
+     */
     private static void save() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(FILE_PATH))) {
             oos.writeObject(logs);
@@ -30,6 +50,11 @@ public class AuditLogManager {
         }
     }
 
+    /**
+     * Loads the logs from a file.
+     * If an error occurs, logs the error.
+     * If the file does not exist, logs a warning.
+     */
     public static void load() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(FILE_PATH))) {
             List<AuditLog<?, ?>> loadedLogs = (List<AuditLog<?, ?>>) ois.readObject();
@@ -39,6 +64,10 @@ public class AuditLogManager {
         }
     }
 
+    /**
+     * Gets the logs.
+     * @return the logs
+     */
     public static List<AuditLog<?, ?>> getLogs() {
         return logs;
     }

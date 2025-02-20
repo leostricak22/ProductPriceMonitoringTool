@@ -12,6 +12,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * FetchProductsByCategoriesThread class.
+ * Thread class for fetching products by categories.
+ */
 public class FetchProductsByCategoriesThread implements Runnable {
 
     private static final Logger logger = LoggerFactory.getLogger(FetchProductsByCategoriesThread.class);
@@ -33,6 +37,11 @@ public class FetchProductsByCategoriesThread implements Runnable {
         this.success = success;
     }
 
+    /**
+     * Run method.
+     * Fetches products by categories.
+     * Sorts products and categories by name.
+     */
     @Override
     public void run() {
         try {

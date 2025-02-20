@@ -10,10 +10,26 @@ import java.math.BigDecimal;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+/**
+ * GeocodeAPI class.
+ * Contains method for fetching address from longitude and latitude.
+ */
 public class GeocodeAPI {
 
     private GeocodeAPI() {}
 
+    /**
+     * Fetch address from longitude and latitude.
+     * @param latitude Latitude.
+     *                 Latitude of the location.
+     * @param longitude Longitude.
+     *                  Longitude of the location.
+     * @return Address.
+     *         Address object.
+     * @throws IOException If an I/O error occurs.
+     * @throws UnsuccessfulHTTPResponseCode If HTTP response code is not 200.
+     * @throws URISyntaxException If URI syntax error occurs.
+     */
     public static Address fetchAddressFromLonAndLat(BigDecimal latitude, BigDecimal longitude) throws IOException, UnsuccessfulHTTPResponseCode, URISyntaxException {
         String jsonString = FetchFromAPI.getJSON(new URI(String.format(
                 "%s/reverse?lon=%s&lat=%s&format=json&addressdetails=1",

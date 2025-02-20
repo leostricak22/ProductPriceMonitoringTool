@@ -17,6 +17,18 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Controller for the user edit view.
+ * Handles the form for editing user information.
+ * Validates the input and saves the user to the database.
+ * @see User
+ * @see UserFileRepository
+ * @see AlertDialog
+ * @see SceneLoader
+ * @see Session
+ * @see Constants
+ * @see FileUtil
+ */
 public class UserEditController {
 
     @FXML public Circle userProfilePictureCircle;
@@ -33,6 +45,10 @@ public class UserEditController {
 
     private final UserFileRepository userFileRepository = new UserFileRepository();
 
+    /**
+     * Initializes the view.
+     * Sets the user information and profile picture.
+     */
     public void initialize() {
         user = Session.getLoggedInUser().orElseThrow(() -> new AuthenticationException("No user is logged in."));
         image = Session.getUserProfilePicture();
@@ -50,6 +66,10 @@ public class UserEditController {
         }
     }
 
+    /**
+     * Handles the profile picture pick button.
+     * Picks a new profile picture for the user.
+     */
     public void handlePickProfilePicture() {
         if (user.getRole().equals(Role.CUSTOMER))
             return;
@@ -64,6 +84,10 @@ public class UserEditController {
         isImageChanged = true;
     }
 
+    /**
+     * Handles the edit user button.
+     * Edits the user information and saves it to the database.
+     */
     public void handleEdtUser() {
         user.setName(nameTextField.getText());
 
@@ -78,10 +102,17 @@ public class UserEditController {
         SceneLoader.loadScene("user_edit", "Edit User");
     }
 
+    /**
+     * Handles the edit password button.
+     */
     public void handleUserEditPasswordRedirect() {
         SceneLoader.loadScene("user_edit_password", "Edit Password");
     }
 
+    /**
+     * Handles the logout button.
+     * Logs out the user and redirects to the login view.
+     */
     public void handleLogout() {
         Session.logout();
         SceneLoader.loadScene("login", "Login");

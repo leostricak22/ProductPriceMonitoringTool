@@ -22,6 +22,20 @@ import java.util.*;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Controller for the product add view.
+ * Handles the form for adding products.
+ * Validates the input and saves the product to the database.
+ * @see Category
+ * @see Product
+ * @see CompanyProduct
+ * @see Price
+ * @see CategoryRepository
+ * @see ProductRepository
+ * @see AlertDialog
+ * @see Session
+ * @see Constants
+ */
 public class ProductAddController {
 
     @FXML public GridPane mainPane;
@@ -40,11 +54,20 @@ public class ProductAddController {
     private final CategoryRepository categoryRepository = new CategoryRepository();
     private final ProductRepository productRepository = new ProductRepository();
 
+    /**
+     * Initializes the view.
+     * Sets the default image and hides the remove image label.
+     */
     public void initialize() {
         productImageView.setImage(new Image(Constants.NO_IMAGE_URL));
         removePickedImageLabel.setVisible(false);
     }
 
+    /**
+     * Handles the image pick button.
+     * Opens the file picker and sets the image to the product image view.
+     * Sets the image changed flag to true.
+     */
     public void handleImagePick() {
         Image image;
         Optional<File> selectedFileOptional = FileUtil.pickFile(List.of("*.jpg", "*.jpeg", "*.png"));
@@ -58,12 +81,22 @@ public class ProductAddController {
         removePickedImageLabel.setVisible(true);
     }
 
+    /**
+     * Handles the remove picked image button.
+     * Sets the product image view to the default image.
+     * Sets the image changed flag to false.
+     */
     public void handleRemovePickedImage() {
         productImageView.setImage(new Image(Constants.NO_IMAGE_URL));
         isImageChanged = false;
         removePickedImageLabel.setVisible(false);
     }
 
+    /**
+     * Handles the add product button.
+     * Validates the input and saves the product to the database.
+     * Redirects to the company products list view.
+     */
     public void handleAddProduct() {
         if (Session.getSelectedCompany().isEmpty()) {
             AlertDialog.showErrorDialog("No company selected. Please select company first.");
@@ -109,6 +142,12 @@ public class ProductAddController {
         }
     }
 
+    /**
+     * Validates the form data.
+     * Checks if the name, category, and price fields are filled.
+     * Checks if the price is a positive number.
+     * @return the error message if the validation fails
+     */
     private String validateFormData() {
         if (nameTextField.getText().trim().isEmpty())
             return "Name field must be filled!";
@@ -122,6 +161,11 @@ public class ProductAddController {
         return "";
     }
 
+    /**
+     * Handles the select category button.
+     * Opens the category add popup window.
+     * Sets the selected category and the category hierarchy label.
+     */
     public void handleSelectCategory() {
         Optional<FXMLLoader> loader = SceneLoader.loadPopupScene("product_category_add", "Add category");
 

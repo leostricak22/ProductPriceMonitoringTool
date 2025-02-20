@@ -13,6 +13,14 @@ import javafx.stage.Stage;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+/**
+ * Controller for the product search filter view.
+ * Handles the form for filtering products.
+ * Validates the input and sets the filter search object.
+ * @see FilterSearch
+ * @see AlertDialog
+ * @see SceneLoader
+ */
 public class ProductSearchFilterController {
 
     @FXML public TextField priceFromTextField;
@@ -21,10 +29,17 @@ public class ProductSearchFilterController {
 
     private FilterSearch filterSearch = new FilterSearch();
 
+    /**
+     * Initializes the view.
+     */
     public void initialize() {
         radiusLabel.setText("");
     }
 
+    /**
+     * Handles the location radius button.
+     * Opens the location radius popup.
+     */
     public void handleLocationRadius() {
         Optional<FXMLLoader> loader = SceneLoader.loadPopupScene("map_radius", "Location Radius");
         if (loader.isEmpty()) {
@@ -43,6 +58,11 @@ public class ProductSearchFilterController {
         radiusLabel.setText("Companies in radius: " + filterSearch.getCompaniesInRadius().get().size());
     }
 
+    /**
+     * Handles the apply filter button.
+     * Validates the input and sets the filter search object.
+     * Closes the popup.
+     */
     public void handleApplyFilter() {
         String validationMessage = validateInput();
 
@@ -60,6 +80,10 @@ public class ProductSearchFilterController {
         stage.close();
     }
 
+    /**
+     * Validates the input.
+     * @return the validation message
+     */
     public String validateInput() {
         if (!ValidationUtil.isPositiveBigDecimal(priceFromTextField.getText()) && !priceFromTextField.getText().isEmpty()) {
             return "Price From field must be a positive number.";
@@ -72,6 +96,10 @@ public class ProductSearchFilterController {
         return "";
     }
 
+    /**
+     * Gets the filter search object.
+     * @return the filter search object
+     */
     public FilterSearch getFilterSearch() {
         return filterSearch;
     }

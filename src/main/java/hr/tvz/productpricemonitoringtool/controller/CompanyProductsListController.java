@@ -18,6 +18,15 @@ import javafx.scene.layout.VBox;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controller for the company products list view.
+ * Handles the list of products for a company.
+ * @see CompanyProduct
+ * @see CompanyProductReadRepository
+ * @see AlertDialog
+ * @see Session
+ * @see SceneLoader
+ */
 public class CompanyProductsListController {
 
     @FXML
@@ -25,6 +34,12 @@ public class CompanyProductsListController {
 
     private final CompanyProductReadRepository companyProductReadRepository = new CompanyProductReadRepository();
 
+    /**
+     * Initializes the view.
+     * Fills the list with the products of the selected company.
+     * Redirects to the product details view on product click.
+     * Redirects to the dashboard if no company is selected.
+     */
     public void initialize() {
         if (Session.getSelectedCompany().isEmpty()) {
             AlertDialog.showErrorDialog("Please select a company first.");

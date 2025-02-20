@@ -16,6 +16,15 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Controller for the admin address form view.
+ * Handles the form for adding and editing addresses.
+ * Validates the input and saves the address to the database.
+ * @see Address
+ * @see AddressRepository
+ * @see AlertDialog
+ * @see ValidationUtil
+ */
 public class AdminAddressFormController {
 
     @FXML public TextField roadTextField;
@@ -33,6 +42,11 @@ public class AdminAddressFormController {
 
     private final AddressRepository addressRepository = new AddressRepository();
 
+    /**
+     * Initializes the view.
+     * If the address is present, fills the form with the address data.
+     * @param address Optional address to edit
+     */
     public void initialize(Optional<Address> address) {
         if (address.isPresent()) {
             Address a = address.get();
@@ -52,6 +66,10 @@ public class AdminAddressFormController {
         }
     }
 
+    /**
+     * Handles the submit button action.
+     * Validates the input and saves the address to the database.
+     */
     public void handleSubmit() {
         String validationMessage = validateInput();
 
@@ -87,6 +105,10 @@ public class AdminAddressFormController {
         stage.close();
     }
 
+    /**
+     * Validates the input fields.
+     * @return Error message if the input is invalid, empty string otherwise
+     */
     private String validateInput() {
         if (roadTextField.getText().isEmpty()) {
             return "Road field is empty";

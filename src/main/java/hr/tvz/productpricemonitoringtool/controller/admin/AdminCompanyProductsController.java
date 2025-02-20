@@ -24,6 +24,18 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Controller for the admin company products view.
+ * Handles the company product search and filtering.
+ * @see CompanyProductDBO
+ * @see CompanyProductReadRepository
+ * @see CompanyProductWriteRepository
+ * @see CompanyRepository
+ * @see ProductRepository
+ * @see SearchController
+ * @see AlertDialog
+ * @see PopupSceneLoader
+ */
 public class AdminCompanyProductsController implements SearchController {
 
     @FXML public TextField idTextField;
@@ -50,6 +62,11 @@ public class AdminCompanyProductsController implements SearchController {
     private final ProductRepository productRepository = new ProductRepository();
     private final CompanyRepository companyRepository = new CompanyRepository();
 
+    /**
+     * Initializes the view.
+     * Loads the company products, companies and products.
+     * Sets the cell value factories for the table columns.
+     */
     @Override
     public void initialize() {
         idTableColumn.setCellValueFactory(cellData ->
@@ -91,6 +108,12 @@ public class AdminCompanyProductsController implements SearchController {
         filter();
     }
 
+    /**
+     * Filters the company products based on the input values.
+     * Shows the filter label if any filter is applied.
+     * Sorts the company products by ID.
+     * Shows the filtered company products in the table view.
+     */
     @Override
     public void filter() {
         companyProducts.sort((p1, p2) -> (int) (p1.getId() - p2.getId()));
@@ -116,6 +139,11 @@ public class AdminCompanyProductsController implements SearchController {
                 .toList()));
     }
 
+    /**
+     * Removes the filters and refreshes the table.
+     * Clears the input fields.
+     * Shows the filter label.
+     */
     @Override
     public void removeFilters() {
         idTextField.clear();
@@ -129,6 +157,11 @@ public class AdminCompanyProductsController implements SearchController {
         filter();
     }
 
+    /**
+     * Handles the add new button click.
+     * Loads the company product popup scene.
+     * Refreshes the table.
+     */
     @Override
     public void handleAddNewButtonClick() {
         PopupSceneLoader.loadCompanyProductPopupScene(
@@ -143,6 +176,11 @@ public class AdminCompanyProductsController implements SearchController {
         filter();
     }
 
+    /**
+     * Handles the edit button click.
+     * Loads the company product popup scene with the selected company product.
+     * Shows an error dialog if no company product is selected.
+     */
     @Override
     public void handleEditButtonClick() {
         CompanyProductDBO selectedCompanyProduct = companyProductsTableView.getSelectionModel().getSelectedItem();
@@ -163,6 +201,12 @@ public class AdminCompanyProductsController implements SearchController {
         filter();
     }
 
+    /**
+     * Handles the delete button click.
+     * Deletes the selected company product.
+     * Shows a confirmation dialog before deleting.
+     * Shows an error dialog if no company product is selected.
+     */
     @Override
     public void handleDeleteButtonClick() {
         CompanyProductDBO selectedCompanyProduct = companyProductsTableView.getSelectionModel().getSelectedItem();
@@ -192,6 +236,9 @@ public class AdminCompanyProductsController implements SearchController {
         filter();
     }
 
+    /**
+     * Shows the filter label if any filter is applied.
+     */
     private void showFilterLabel() {
         removeFiltersLabel.setVisible(
                 !idTextField.getText().isEmpty() ||

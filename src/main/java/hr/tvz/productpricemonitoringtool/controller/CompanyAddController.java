@@ -19,6 +19,20 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Controller for the company add view.
+ * Handles the form for adding companies.
+ * Validates the input and saves the company to the database.
+ * @see Company
+ * @see Address
+ * @see AddressRepository
+ * @see CompanyRepository
+ * @see UserCompanyRepository
+ * @see AlertDialog
+ * @see Hash
+ * @see Session
+ * @see SceneLoader
+ */
 public class CompanyAddController {
 
     @FXML public TextField nameTextField;
@@ -31,6 +45,10 @@ public class CompanyAddController {
     private final CompanyRepository companyRepository = new CompanyRepository();
     private final UserCompanyRepository userCompanyRepository = new UserCompanyRepository();
 
+    /**
+     * Initializes the view.
+     * Fills the form with the address data if present.
+     */
     public void handleCreate() {
         String name = nameTextField.getText();
 
@@ -86,11 +104,18 @@ public class CompanyAddController {
         SceneLoader.loadScene("dashboard", "Dashboard");
     }
 
+    /**
+     * Handles the map button action.
+     * Opens the map picker and sets the address.
+     */
     public void handleMapButton() {
         Optional<Address> optionalAddress = MapUtil.handleMapPick(address, addressLabel);
         optionalAddress.ifPresent(addressOptional -> this.address = addressOptional);
     }
 
+    /**
+     * Validates the input.
+     */
     private String validateInput(String name) {
         if(name.trim().isEmpty()) {
             return "Name is required";

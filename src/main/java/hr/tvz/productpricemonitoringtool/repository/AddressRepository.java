@@ -6,6 +6,8 @@ import hr.tvz.productpricemonitoringtool.exception.RepositoryQueryException;
 import hr.tvz.productpricemonitoringtool.model.Address;
 import hr.tvz.productpricemonitoringtool.util.DatabaseUtil;
 import hr.tvz.productpricemonitoringtool.util.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.sql.*;
@@ -15,8 +17,19 @@ import java.util.Set;
 
 import static java.util.Objects.isNull;
 
+/**
+ * AddressRepository class.
+ * Repository class for Address.
+ * Contains methods for finding by id, finding all, saving, updating and deleting addresses.
+ */
 public class AddressRepository extends AbstractRepository<Address> {
 
+    private static final Logger log = LoggerFactory.getLogger(AddressRepository.class);
+
+    /**
+     * Find address by id.
+     * @param id Address id.
+     */
     @Override
     public synchronized Optional<Address> findById(Long id) throws RepositoryAccessException, DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
@@ -38,6 +51,7 @@ public class AddressRepository extends AbstractRepository<Address> {
 
             return Optional.empty();
         } catch (IOException | SQLException e) {
+            log.error("Failed to find address by id: {}", id, e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -45,6 +59,9 @@ public class AddressRepository extends AbstractRepository<Address> {
         }
     }
 
+    /**
+     * Find all addresses.
+     */
     @Override
     public synchronized Set<Address> findAll() throws RepositoryAccessException, DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
@@ -67,6 +84,7 @@ public class AddressRepository extends AbstractRepository<Address> {
 
             return addresses;
         } catch (IOException | SQLException e) {
+            log.error("Failed to find all addresses.", e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -74,6 +92,10 @@ public class AddressRepository extends AbstractRepository<Address> {
         }
     }
 
+    /**
+     * Save addresses.
+     * @param entities Set of addresses.
+     */
     @Override
     public synchronized Set<Address> save(Set<Address> entities) throws RepositoryAccessException, DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
@@ -104,6 +126,7 @@ public class AddressRepository extends AbstractRepository<Address> {
 
             return savedAddresses;
         } catch (IOException | SQLException e) {
+            log.error("Failed to save addresses.", e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -111,6 +134,10 @@ public class AddressRepository extends AbstractRepository<Address> {
         }
     }
 
+    /**
+     * Update address.
+     * @param address Address.
+     */
     public synchronized void update(Address address) throws RepositoryAccessException, DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
 
@@ -134,6 +161,7 @@ public class AddressRepository extends AbstractRepository<Address> {
 
             stmt.executeUpdate();
         } catch (IOException | SQLException e) {
+            log.error("Failed to update address: {}", address, e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -141,6 +169,10 @@ public class AddressRepository extends AbstractRepository<Address> {
         }
     }
 
+    /**
+     * Delete address.
+     * @param address Address.
+     */
     public synchronized void delete(Address address) throws RepositoryAccessException, DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
 
@@ -154,6 +186,7 @@ public class AddressRepository extends AbstractRepository<Address> {
             stmt.setLong(1, address.getId());
             stmt.executeUpdate();
         } catch (IOException | SQLException e) {
+            log.error("Failed to delete address: {}", address, e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -161,6 +194,10 @@ public class AddressRepository extends AbstractRepository<Address> {
         }
     }
 
+    /**
+     * Wait for database connection to be ready.
+     * @throws DatabaseConnectionActiveException Database connection active exception.
+     */
     private synchronized void waitForDatabaseConnectionReady() throws DatabaseConnectionActiveException {
         while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
             try {
@@ -174,6 +211,11 @@ public class AddressRepository extends AbstractRepository<Address> {
         DatabaseUtil.setActiveConnectionWithDatabase(true);
     }
 
+    /**
+     * Save address to batch.
+     * @param stmt PreparedStatement.
+     * @param address Address.
+     */
     private void saveAddressToBatch(PreparedStatement stmt, Address address) throws SQLException {
         stmt.setBigDecimal(1, address.getLongitude());
         stmt.setBigDecimal(2, address.getLatitude());

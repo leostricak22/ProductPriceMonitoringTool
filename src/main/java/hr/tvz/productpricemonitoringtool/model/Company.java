@@ -3,6 +3,10 @@ package hr.tvz.productpricemonitoringtool.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * Company model.
+ * Represents the company in the model.
+ */
 public class Company extends Entity implements Serializable {
 
     private Address address;

@@ -12,10 +12,23 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
+/**
+ * MapUtil class.
+ * Contains methods for map operations.
+ */
 public class MapUtil {
+
+    private static final double EARTH_RADIUS_KM = 6371.0;
 
     private MapUtil() {}
 
+    /**
+     * Method for getting coordinates from map.
+     * @param data Data.
+     *             Data from the map.
+     * @return Coordinates.
+     *         Coordinates object.
+     */
     public static Coordinates getCoordinatesFromMap(String data) {
         String[] dataArray = data.split(" ");
         String longitudeString = dataArray[0];
@@ -37,8 +50,15 @@ public class MapUtil {
                 .build();
     }
 
-    private static final double EARTH_RADIUS_KM = 6371.0;
-
+    /**
+     * Method for calculating distance between two coordinates.
+     * @param coordinates1 Coordinates 1.
+     *                     First coordinates.
+     * @param coordinates2 Coordinates 2.
+     *                     Second coordinates.
+     * @return BigDecimal.
+     *         Distance between two coordinates.
+     */
     public static BigDecimal calculateDistance(Coordinates coordinates1, Coordinates coordinates2) {
         double lat1 = Math.toRadians(coordinates1.getLatitude().doubleValue());
         double lon1 = Math.toRadians(coordinates1.getLongitude().doubleValue());
@@ -58,6 +78,15 @@ public class MapUtil {
         return BigDecimal.valueOf(distance).setScale(2, RoundingMode.HALF_UP);
     }
 
+    /**
+     * Method for handling map pick.
+     * @param address Address.
+     *                Address object.
+     * @param addressLabel Address label.
+     *                     Label for address.
+     * @return Optional.
+     *         Optional object.
+     */
     public static Optional<Address> handleMapPick(Address address, Label addressLabel) {
         Optional<FXMLLoader> loader = PopupSceneLoader.loadMapPickerPopupScene(
                 "map_picker", "Map Picker", Optional.ofNullable(address));

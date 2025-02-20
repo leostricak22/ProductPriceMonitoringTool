@@ -8,21 +8,34 @@ import hr.tvz.productpricemonitoringtool.model.Price;
 import hr.tvz.productpricemonitoringtool.model.Product;
 import hr.tvz.productpricemonitoringtool.model.dbo.CompanyProductDBO;
 import hr.tvz.productpricemonitoringtool.util.DatabaseUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.sql.*;
 
+/**
+ * CompanyProductWriteRepository class.
+ * Repository class for CompanyProduct.
+ * Contains methods for saving, updating and deleting company products.
+ */
 public class CompanyProductWriteRepository {
 
     public static final String COMPANY_PRODUCT_INSERT_QUERY = """
             INSERT INTO "company_product" (company_id, product_id, price) VALUES (?, ?, ?);
         """;
+    private static final Logger log = LoggerFactory.getLogger(CompanyProductWriteRepository.class);
 
+    /**
+     * Wait for database connection to be ready.
+     * @throws DatabaseConnectionActiveException If the database connection is active.
+     */
     private synchronized void waitForDatabaseConnectionReady() throws DatabaseConnectionActiveException {
         while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
             try {
                 wait();
             } catch (InterruptedException e) {
+                log.error("Thread interrupted while waiting for database connection to be ready.", e);
                 Thread.currentThread().interrupt();
                 throw new DatabaseConnectionActiveException(e);
             }
@@ -30,6 +43,10 @@ public class CompanyProductWriteRepository {
         DatabaseUtil.setActiveConnectionWithDatabase(true);
     }
 
+    /**
+     * Save product to companies.
+     * @param product Product.
+     */
     public synchronized void saveProductToCompanies(Product product)
             throws DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
@@ -44,6 +61,7 @@ public class CompanyProductWriteRepository {
             }
             stmt.executeUpdate();
         } catch (SQLException | IOException e) {
+            log.error("Failed to save product to companies.", e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -51,6 +69,12 @@ public class CompanyProductWriteRepository {
         }
     }
 
+    /**
+     * Update price.
+     * @param companyId Company ID.
+     * @param productId Product ID.
+     * @param price Price.
+     */
     public synchronized void updatePrice(Long companyId, Long productId, Price price)
             throws DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
@@ -62,6 +86,7 @@ public class CompanyProductWriteRepository {
             stmt.setBigDecimal(3, price.value());
             stmt.executeUpdate();
         } catch (SQLException | IOException e) {
+            log.error("Failed to update price for company ID: {} and product ID: {}", companyId, productId, e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -69,6 +94,11 @@ public class CompanyProductWriteRepository {
         }
     }
 
+    /**
+     * Save company product.
+     * @param companyProduct Company product.
+     * @return Company product.
+     */
     public synchronized CompanyProduct save(CompanyProduct companyProduct)
             throws DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
@@ -88,6 +118,7 @@ public class CompanyProductWriteRepository {
             }
             return companyProduct;
         } catch (SQLException | IOException e) {
+            log.error("Failed to save company product.", e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -95,6 +126,10 @@ public class CompanyProductWriteRepository {
         }
     }
 
+    /**
+     * Update company product.
+     * @param companyProduct Company product.
+     */
     public synchronized void update(CompanyProductDBO companyProduct)
             throws DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
@@ -111,6 +146,7 @@ public class CompanyProductWriteRepository {
             stmt.setLong(4, companyProduct.getId());
             stmt.executeUpdate();
         } catch (SQLException | IOException e) {
+            log.error("Failed to update company product with ID: {}", companyProduct.getId(), e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -118,6 +154,10 @@ public class CompanyProductWriteRepository {
         }
     }
 
+    /**
+     * Delete company product.
+     * @param id Company product ID.
+     */
     public synchronized void delete(Long id) throws DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
         String query = """
@@ -129,6 +169,7 @@ public class CompanyProductWriteRepository {
             stmt.setLong(1, id);
             stmt.executeUpdate();
         } catch (SQLException | IOException e) {
+            log.error("Failed to delete company product with ID: {}", id, e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);

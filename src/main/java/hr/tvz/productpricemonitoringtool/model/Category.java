@@ -3,6 +3,10 @@ package hr.tvz.productpricemonitoringtool.model;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * Category model.
+ * Represents the category in the model.
+ */
 public class Category extends Entity {
 
     private transient Optional<Category> parentCategory;

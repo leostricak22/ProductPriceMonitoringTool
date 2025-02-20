@@ -28,6 +28,20 @@ import java.math.RoundingMode;
 import java.time.Instant;
 import java.util.*;
 
+/**
+ * Controller for the product search view.
+ * Handles the product search and filtering.
+ * @see Category
+ * @see Product
+ * @see FilterSearch
+ * @see CategoryRepository
+ * @see ProductRepository
+ * @see CompanyProductReadRepository
+ * @see AlertDialog
+ * @see ProgressBarUtil
+ * @see Session
+ * @see Constants
+ */
 public class ProductSearchController {
 
     @FXML public GridPane mainPane;
@@ -45,12 +59,22 @@ public class ProductSearchController {
     private final ProductRepository productRepository = new ProductRepository();
     private final CompanyProductReadRepository companyProductReadRepository = new CompanyProductReadRepository();
 
+    /**
+     * Initializes the view.
+     * Loads the products based on the parent category.
+     * @param parentCategory the parent category
+     */
     public void initialize(Optional<Category> parentCategory) {
         this.parentCategory = parentCategory;
 
         loadProducts();
     }
 
+    /**
+     * Initializes the view.
+     * Loads the products based on the filter search.
+     * @param filterSearch the filter search
+     */
     public void initialize(FilterSearch filterSearch) {
         this.parentCategory = Optional.empty();
         this.filterSearch = filterSearch;
@@ -58,6 +82,11 @@ public class ProductSearchController {
         loadFilteredProducts();
     }
 
+    /**
+     * Loads the products based on the parent category.
+     * Fetches the products from the database.
+     * Handles the progress bar.
+     */
     public void loadProducts() {
         List<Category> categories = new ArrayList<>();
         String hierarchy = "";
@@ -141,6 +170,11 @@ public class ProductSearchController {
         new Thread(task).start();
     }
 
+    /**
+     * Loads the products based on the filter search.
+     * Fetches the products from the database.
+     * Handles the progress bar.
+     */
     private void loadFilteredProducts() {
         categoryHBox.getChildren().clear();
         productsFlowPane.getChildren().clear();
@@ -208,6 +242,10 @@ public class ProductSearchController {
         new Thread(task).start();
     }
 
+    /**
+     * Creates the category section buttons.
+     * @param categories the categories
+     */
     private void createCategorySectionButtons(List<Category> categories) {
         if (parentCategory.isPresent()) {
             Button backButton = new Button("<");
@@ -222,6 +260,10 @@ public class ProductSearchController {
         }
     }
 
+    /**
+     * Adds the product panes to the products flow pane.
+     * @param products the products
+     */
     private void addProductPanes(List<Product> products) {
         products.forEach(product -> {
             Pane productPane = createProductPane(product);
@@ -229,6 +271,11 @@ public class ProductSearchController {
         });
     }
 
+    /**
+     * Creates the product pane.
+     * @param product the product
+     * @return the product pane
+     */
     private GridPane createProductPane(Product product) {
         GridPane pane = new GridPane();
 

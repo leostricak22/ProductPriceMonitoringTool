@@ -17,6 +17,15 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Controller for the product category add view.
+ * Handles the form for adding product categories.
+ * Validates the input and saves the category to the database.
+ * @see Category
+ * @see CategoryRepository
+ * @see AlertDialog
+ * @see Constants
+ */
 public class ProductCategoryAddController {
 
     @FXML public TreeView<Category> categoryTreeView;
@@ -29,6 +38,11 @@ public class ProductCategoryAddController {
     private final CategoryRepository categoryRepository = new CategoryRepository();
     private String categoryHierarchy = "";
 
+    /**
+     * Initializes the view.
+     * Fills the tree view with the categories.
+     * Handles the tree view selection.
+     */
     public void initialize() {
         TreeViewUtil.treeViewStringConverter(categoryTreeView);
 
@@ -52,6 +66,11 @@ public class ProductCategoryAddController {
         );
     }
 
+    /**
+     * Handles the tree view selection.
+     * Sets the category hierarchy label.
+     * @param newItem the selected tree item
+     */
     private void handleTreeItemSelection(TreeItem<Category> newItem) throws DatabaseConnectionActiveException {
         if (isNull(newItem)) {
             return;
@@ -65,6 +84,10 @@ public class ProductCategoryAddController {
         }
     }
 
+    /**
+     * Handles the new category name change.
+     * Sets the category hierarchy label.
+     */
     public void handleNewCategoryNameChange() {
         String textFieldValue = newCategoryNameTextField.getText();
 
@@ -84,6 +107,11 @@ public class ProductCategoryAddController {
         categoryHierarchyLabel.setText(categoryHierarchyLabel.getText() + textFieldValue);
     }
 
+    /**
+     * Handles the reset category hierarchy button.
+     * Clears the new category name text field.
+     * Clears the category hierarchy label.
+     */
     public void handleResetCategoryHierarchy() {
         newCategoryNameTextField.clear();
         resetCategoryHierarchyLabel.setVisible(false);
@@ -92,6 +120,11 @@ public class ProductCategoryAddController {
         categoryTreeView.getSelectionModel().clearSelection();
     }
 
+    /**
+     * Handles the save button.
+     * Validates the input.
+     * Saves the category to the database.
+     */
     public void handleSave() {
         String newCategoryName = newCategoryNameTextField.getText();
         TreeItem<Category> selectedCategoryTreeItem = categoryTreeView.getSelectionModel().getSelectedItem();
@@ -126,10 +159,18 @@ public class ProductCategoryAddController {
         stage.close();
     }
 
+    /**
+     * Gets the saved category.
+     * @return the saved category
+     */
     public Category getSavedCategory() {
         return savedCategory;
     }
 
+    /**
+     * Gets the category hierarchy from the label.
+     * @return the category hierarchy
+     */
     public String getHierarchyFromLabel() {
         return categoryHierarchyLabel.getText();
     }

@@ -18,6 +18,16 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Controller for the admin product form view.
+ * Handles the form for adding and editing products.
+ * Validates the input and saves the product to the database.
+ * @see Product
+ * @see ProductRepository
+ * @see AlertDialog
+ * @see ProductCategoryAddController
+ * @see SceneLoader
+ */
 public class AdminProductFormController {
 
     @FXML public TextField nameTextField;
@@ -30,6 +40,11 @@ public class AdminProductFormController {
 
     private final ProductRepository productRepository = new ProductRepository();
 
+    /**
+     * Initializes the view.
+     * If the product is present, fills the form with the product data.
+     * @param product Optional product to edit
+     */
     public void initialize(Optional<Product> product) {
         if (product.isPresent()) {
             Product p = product.get();
@@ -48,6 +63,11 @@ public class AdminProductFormController {
         selectedCategoryLabel.setText("No category selected");
     }
 
+    /**
+     * Handles the pick category button.
+     * Opens a popup window for adding a new category.
+     * Sets the selected category label.
+     */
     public void handlePickCategory() {
         Optional<FXMLLoader> loader = SceneLoader.loadPopupScene("product_category_add", "Add category");
 
@@ -70,6 +90,11 @@ public class AdminProductFormController {
         }
     }
 
+    /**
+     * Handles the submit button action.
+     * Validates the input and saves the product to the database.
+     * Closes the form window.
+     */
     public void handleSubmit() {
         String validationError = validateFormData();
 
@@ -99,6 +124,10 @@ public class AdminProductFormController {
         }
     }
 
+    /**
+     * Validates the form data.
+     * @return Error message if the input is not valid, empty string otherwise
+     */
     public String validateFormData() {
         if (nameTextField.getText().trim().isEmpty())
             return "Name field must be filled!";

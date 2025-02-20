@@ -11,6 +11,8 @@ import hr.tvz.productpricemonitoringtool.model.dbo.ProductDBO;
 import hr.tvz.productpricemonitoringtool.util.DatabaseUtil;
 import hr.tvz.productpricemonitoringtool.util.ObjectMapper;
 import hr.tvz.productpricemonitoringtool.util.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.sql.*;
@@ -21,11 +23,21 @@ import java.util.Set;
 
 import static java.util.Objects.isNull;
 
+/**
+ * ProductRepository class.
+ * Repository class for Product.
+ * Contains methods for finding by id, finding all, finding all by category, saving, updating and deleting products.
+ */
 public class ProductRepository extends AbstractRepository<Product> {
 
+    private static final Logger log = LoggerFactory.getLogger(ProductRepository.class);
     private final CategoryRepository categoryRepository = new CategoryRepository();
     private final CompanyProductWriteRepository companyProductWriteRepository = new CompanyProductWriteRepository();
 
+    /**
+     * Find product by id.
+     * @param id Product id.
+     */
     @Override
     public Optional<Product> findById(Long id) throws RepositoryAccessException, DatabaseConnectionActiveException {
         return findAll().stream()
@@ -33,6 +45,10 @@ public class ProductRepository extends AbstractRepository<Product> {
                 .findFirst();
     }
 
+    /**
+     * Find product by id without companies.
+     * @param id Product id.
+     */
     public Optional<Product> findByIdWithoutCompanies(Long id) throws DatabaseConnectionActiveException {
         Optional<Product> product = findById(id);
         product.ifPresent(value -> value.setCompanyProducts(new HashSet<>()));
@@ -40,6 +56,9 @@ public class ProductRepository extends AbstractRepository<Product> {
         return product;
     }
 
+    /**
+     * Find all products.
+     */
     @Override
     public synchronized Set<Product> findAll() throws RepositoryAccessException, DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
@@ -55,6 +74,7 @@ public class ProductRepository extends AbstractRepository<Product> {
                 productsDBO.add(ObjectMapper.mapResultSetToProductDBO(resultSet));
             }
         } catch (SQLException | IOException e) {
+            log.error("Failed to find all products.", e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -64,6 +84,10 @@ public class ProductRepository extends AbstractRepository<Product> {
         return ObjectMapper.mapProductDBOToProduct(productsDBO);
     }
 
+    /**
+     * Find all products by category.
+     * @param category Category.
+     */
     public synchronized Set<Product> findAllByCategory(Optional<Category> category) throws RepositoryAccessException, DatabaseConnectionActiveException {
         List<Category> allCategories = categoryRepository.findAllByParentCategoryRecursively(category);
         waitForDatabaseConnectionReady();
@@ -77,24 +101,18 @@ public class ProductRepository extends AbstractRepository<Product> {
         Set<ProductDBO> productsDBO = new HashSet<>();
 
         try (Connection connection = DatabaseUtil.connectToDatabase();
-             PreparedStatement stmt = connection.prepareStatement(query)) {
+             PreparedStatement stmt = connection.prepareStatement(query);) {
 
             for (Category c : allCategories) {
                 stmt.setLong(1, c.getId());
-                stmt.addBatch();
-            }
-
-            ResultSet resultSet = null;
-            int[] batchResults = stmt.executeBatch();
-            for (int batchResult : batchResults) {
-                if (batchResult != Statement.EXECUTE_FAILED) {
-                    resultSet = stmt.getResultSet();
+                try (ResultSet resultSet = stmt.executeQuery()) {
                     while (resultSet.next()) {
                         productsDBO.add(ObjectMapper.mapResultSetToProductDBO(resultSet));
                     }
                 }
             }
         } catch (SQLException | IOException e) {
+            log.error("Failed to find all products by category: {}", category, e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -104,6 +122,10 @@ public class ProductRepository extends AbstractRepository<Product> {
         return ObjectMapper.mapProductDBOToProduct(productsDBO);
     }
 
+    /**
+     * Save product.
+     * @param entities Products.
+     */
     @Override
     public synchronized Set<Product> save(Set<Product> entities) throws RepositoryAccessException, DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
@@ -133,6 +155,7 @@ public class ProductRepository extends AbstractRepository<Product> {
             }
 
         } catch (SQLException | IOException e) {
+            log.error("Failed to save products: {}", entities, e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -151,6 +174,10 @@ public class ProductRepository extends AbstractRepository<Product> {
         return entities;
     }
 
+    /**
+     * Update product.
+     * @param product Product.
+     */
     public synchronized void update(Product product) throws RepositoryAccessException, DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
 
@@ -167,6 +194,7 @@ public class ProductRepository extends AbstractRepository<Product> {
 
             stmt.executeUpdate();
         } catch (SQLException | IOException e) {
+            log.error("Failed to update product: {}", product, e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -182,6 +210,10 @@ public class ProductRepository extends AbstractRepository<Product> {
         }
     }
 
+    /**
+     * Delete product.
+     * @param product Product.
+     */
     public synchronized void delete(Product product) throws RepositoryAccessException, DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
 
@@ -195,6 +227,7 @@ public class ProductRepository extends AbstractRepository<Product> {
 
             stmt.executeUpdate();
         } catch (SQLException | IOException e) {
+            log.error("Failed to delete product: {}", product, e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -206,12 +239,16 @@ public class ProductRepository extends AbstractRepository<Product> {
                         () -> new AuthenticationException("User not logged in")));
     }
 
+    /**
+     * Wait for database connection ready.
+     */
     private synchronized void waitForDatabaseConnectionReady() throws DatabaseConnectionActiveException {
         while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
             try {
                 wait();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
+                log.error("Failed to wait for database connection to be ready.", e);
                 throw new DatabaseConnectionActiveException(e);
             }
         }

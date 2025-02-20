@@ -20,6 +20,15 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Controller for the admin category view.
+ * Handles the category search and filtering.
+ * @see Category
+ * @see CategoryRepository
+ * @see SearchController
+ * @see AlertDialog
+ * @see PopupSceneLoader
+ */
 public class AdminCategoryController implements SearchController {
 
     @FXML public TextField idTextField;
@@ -35,6 +44,11 @@ public class AdminCategoryController implements SearchController {
 
     private final CategoryRepository categoryRepository = new CategoryRepository();
 
+    /**
+     * Initializes the view.
+     * Loads the categories and parent categories.
+     * Sets the cell value factories for the table columns.
+     */
     @Override
     public void initialize() {
         idTableColumn.setCellValueFactory(cellData ->
@@ -61,6 +75,10 @@ public class AdminCategoryController implements SearchController {
         filter();
     }
 
+    /**
+     * Filters the categories based on the input values.
+     * Shows the filter label if any filter is applied.
+     */
     @Override
     public void filter() {
         List<Category> categories = new ArrayList<>();
@@ -86,6 +104,10 @@ public class AdminCategoryController implements SearchController {
                 .toList()));
     }
 
+    /**
+     * Removes the filters and clears the input fields.
+     * Refreshes the table.
+     */
     @Override
     public void removeFilters() {
         idTextField.clear();
@@ -95,12 +117,22 @@ public class AdminCategoryController implements SearchController {
         filter();
     }
 
+    /**
+     * Handles the add new button click.
+     * Loads the category popup scene.
+     * Refreshes the table.
+     */
     @Override
     public void handleAddNewButtonClick() {
         PopupSceneLoader.loadCategoryPopupScene("admin_category_form", "Add category", Optional.empty());
         filter();
     }
 
+    /**
+     * Handles the edit button click.
+     * Loads the category popup scene with the selected category.
+     * Refreshes the table.
+     */
     @Override
     public void handleEditButtonClick() {
         Category selectedCategory = categoryTableView.getSelectionModel().getSelectedItem();
@@ -113,6 +145,11 @@ public class AdminCategoryController implements SearchController {
         filter();
     }
 
+    /**
+     * Handles the delete button click.
+     * Deletes the selected category.
+     * Refreshes the table.
+     */
     @Override
     public void handleDeleteButtonClick() {
         Category selectedCategory = categoryTableView.getSelectionModel().getSelectedItem();
@@ -134,10 +171,13 @@ public class AdminCategoryController implements SearchController {
         filter();
     }
 
+    /**
+     * Shows the filter label if any filter is applied.
+     */
     private void showFilterLabel() {
         removeFiltersLabel.setVisible(
                 !idTextField.getText().isEmpty() ||
-                        !nameTextField.getText().isEmpty() ||
-                        parentCategoryComboBox.getValue() != null);
+                !nameTextField.getText().isEmpty() ||
+                parentCategoryComboBox.getValue() != null);
     }
 }

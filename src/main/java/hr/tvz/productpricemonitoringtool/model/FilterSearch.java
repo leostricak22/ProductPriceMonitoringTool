@@ -4,6 +4,10 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * FilterSearch model.
+ * Represents the filter search in the model.
+ */
 public class FilterSearch {
 
     private Optional<BigDecimal> priceFromValue = Optional.empty();

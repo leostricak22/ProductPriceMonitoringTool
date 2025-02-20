@@ -27,6 +27,17 @@ import java.util.*;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Controller for the product details view.
+ * Handles the product details and company products list.
+ * @see CompanyProduct
+ * @see CompanyProductReadRepository
+ * @see CompanyProductWriteRepository
+ * @see CategoryRepository
+ * @see AlertDialog
+ * @see Session
+ * @see SceneLoader
+ */
 public class ProductDetailsController {
 
     @FXML
@@ -58,7 +69,13 @@ public class ProductDetailsController {
 
     private String sortType = "desc";
     private List<CompanyProduct> companyProducts = new ArrayList<>();
+    private List<CompanyProduct> companyProductsSort = new ArrayList<>();
 
+    /**
+     * Initializes the view.
+     * Fills the product details and company products list.
+     * Redirects to the dashboard if no product is selected.
+     */
     public void initialize() {
         if (Session.getSelectedProduct().isEmpty()) {
             handleUnselectedProductOrCompany();
@@ -76,6 +93,8 @@ public class ProductDetailsController {
         try {
             productCategoryLabel.setText(categoryRepository.findCategoryHierarchy(selectedProduct.getCategory().getId()));
             companyProducts = new ArrayList<>(companyProductReadRepository.findByProductId(selectedProduct.getId(),
+                    CompanyProductRecordType.LATEST_RECORD));
+            companyProductsSort = new ArrayList<>(companyProductReadRepository.findByProductId(selectedProduct.getId(),
                     CompanyProductRecordType.LATEST_RECORD));
         } catch (DatabaseConnectionActiveException e) {
             AlertDialog.showErrorDialog(Constants.TRY_AGAIN_LATER_ERROR_MESSAGE);
@@ -127,20 +146,28 @@ public class ProductDetailsController {
         }
     }
 
+    /**
+     * Handles the company products sort button.
+     * Sorts the company products by price.
+     */
     public void handleCompanySort() {
         if (sortType.equals("asc")) {
             sortType = "desc";
             companyProductsSortButton.setText("Sort by price (asc)");
-            companyProducts.sort((cp1, cp2) -> cp2.getPrice().value().compareTo(cp1.getPrice().value()));
+            companyProductsSort.sort((cp1, cp2) -> cp2.getPrice().value().compareTo(cp1.getPrice().value()));
         } else {
             sortType = "asc";
             companyProductsSortButton.setText("Sort by price (desc)");
-            companyProducts.sort((cp1, cp2) -> cp1.getPrice().value().compareTo(cp2.getPrice().value()));
+            companyProductsSort.sort((cp1, cp2) -> cp1.getPrice().value().compareTo(cp2.getPrice().value()));
         }
 
         fillCompanyProductsVBox();
     }
 
+    /**
+     * Fills the company products list.
+     * Redirects to the company product graph view on product click.
+     */
     public void fillCompanyProductsVBox() {
         companyProductsVBox.getChildren().clear();
 
@@ -165,14 +192,25 @@ public class ProductDetailsController {
         }
     }
 
+    /**
+     * Handles the company product price button.
+     */
     public void handleChangePrice() {
         handleSavePrice("change_product_price");
     }
 
+    /**
+     * Handles the add price button.
+     */
     public void handleAddPrice() {
         handleSavePrice("add_product_price");
     }
 
+    /**
+     * Handles the save price action.
+     * Saves the new price to the database.
+     * @param sceneName the name of the popup scene
+     */
     public void handleSavePrice(String sceneName) {
         Optional<FXMLLoader> loader = SceneLoader.loadPopupScene(sceneName, "Price");
 
@@ -205,11 +243,20 @@ public class ProductDetailsController {
         }
     }
 
+    /**
+     * Handles the unselected product or company.
+     * Redirects to the dashboard.
+     */
     public void handleUnselectedProductOrCompany() {
         AlertDialog.showErrorDialog("Please select a product first.");
         SceneLoader.loadScene(Constants.DASHBOARD_FILE_NAME, Constants.DASHBOARD_TITLE);
     }
 
+    /**
+     * Creates the product line chart.
+     * @param productId the product id
+     * @throws DatabaseConnectionActiveException if the database connection is active
+     */
     public void createProductLineChart(Long productId) throws DatabaseConnectionActiveException {
         companyProducts = new ArrayList<>(companyProductReadRepository.findByProductId(
                 productId,
@@ -259,6 +306,9 @@ public class ProductDetailsController {
         productLineChart.getData().addAll(highestPriceSeries, lowestPriceSeries);
     }
 
+    /**
+     * Hides the company product price.
+     */
     private void hideCompanyProductPrice() {
         companyProductPriceLabel.setVisible(false);
         companyProductPriceTitleLabel.setVisible(false);

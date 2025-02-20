@@ -3,6 +3,12 @@ package hr.tvz.productpricemonitoringtool.model;
 import java.io.*;
 import java.time.LocalDateTime;
 
+/**
+ * Audit log model.
+ * Represents the audit log in the model.
+ * @param <T> the type of the old value
+ * @param <U> the type of the new value
+ */
 public class AuditLog<T, U> implements Serializable {
 
     private final String field;

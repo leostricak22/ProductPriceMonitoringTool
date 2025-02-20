@@ -3,6 +3,10 @@ package hr.tvz.productpricemonitoringtool.model.dbo;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
+/**
+ * User company database object.
+ * Represents the user company in the database.
+ */
 public class UserCompanyDBO implements Serializable {
 
     private Long id;

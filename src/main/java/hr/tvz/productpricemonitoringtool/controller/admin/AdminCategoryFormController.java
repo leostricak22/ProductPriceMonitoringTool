@@ -17,6 +17,16 @@ import java.util.Set;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Controller for the admin category form view.
+ * Handles the form for adding and editing categories.
+ * Validates the input and saves the category to the database.
+ * @see Category
+ * @see CategoryRepository
+ * @see AlertDialog
+ * @see ProductCategoryAddController
+ * @see SceneLoader
+ */
 public class AdminCategoryFormController {
 
     @FXML public Button submitButton;
@@ -27,6 +37,11 @@ public class AdminCategoryFormController {
 
     private final CategoryRepository categoryRepository = new CategoryRepository();
 
+    /**
+     * Initializes the view.
+     * If the category is present, fills the form with the category data.
+     * @param category Optional category to edit
+     */
     public void initialize(Optional<Category> category) {
         if (category.isPresent()) {
             Category c = category.get();
@@ -43,6 +58,11 @@ public class AdminCategoryFormController {
         selectedCategoryLabel.setText("No category selected");
     }
 
+    /**
+     * Handles the pick category button.
+     * Opens the popup window for adding a new category.
+     * Sets the selected category label.
+     */
     public void handlePickCategory() {
         Optional<FXMLLoader> loader = SceneLoader.loadPopupScene("product_category_add", "Add category");
 
@@ -65,6 +85,13 @@ public class AdminCategoryFormController {
         }
     }
 
+    /**
+     * Handles the submit button action.
+     * Validates the input and saves the category to the database.
+     * Closes the window after saving.
+     * Shows an error dialog if the category already exists in the database.
+     * Shows an error dialog if the category is not selected.
+     */
     public void handleSubmit() {
         if (isNull(category)) {
             AlertDialog.showErrorDialog("Category not selected");

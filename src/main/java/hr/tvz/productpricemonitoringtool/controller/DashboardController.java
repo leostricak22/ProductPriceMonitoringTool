@@ -20,6 +20,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Controller for the dashboard view.
+ * Handles the company list and join code.
+ * @see Company
+ * @see User
+ * @see CompanyRepository
+ * @see UserCompanyRepository
+ * @see AlertDialog
+ * @see SceneLoader
+ * @see Session
+ */
 public class DashboardController {
 
     @FXML public FlowPane companyFlowPane;
@@ -29,6 +40,11 @@ public class DashboardController {
     private final CompanyRepository companyRepository = new CompanyRepository();
     private final UserCompanyRepository userCompanyRepository = new UserCompanyRepository();
 
+    /**
+     * Initializes the view.
+     * Fills the list with the companies of the logged in user.
+     * Redirects to the login view if no user is logged in.
+     */
     public void initialize() {
         Session.setSelectedCompany(Optional.empty());
 
@@ -62,10 +78,18 @@ public class DashboardController {
         }
     }
 
+    /**
+     * Handles the add new company button.
+     * Redirects to the company add view.
+     */
     public void handleAddNewCompany() {
         SceneLoader.loadScene("company_add", "Add Company");
     }
 
+    /**
+     * Handles the join company button.
+     * Joins the company with the join code.
+     */
     public void handleJoinCompany() {
         String joinCode = joinCodeTextField.getText();
         joinCodeTextField.clear();

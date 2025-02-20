@@ -6,6 +6,10 @@ import java.util.Objects;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Address model.
+ * Represents the address in the model.
+ */
 public class Address extends Entity implements Serializable {
 
     private BigDecimal latitude;
@@ -153,6 +157,10 @@ public class Address extends Entity implements Serializable {
         }
     }
 
+    /**
+     * Get the formatted address.
+     * @return the address
+     */
     public String getAddress() {
         StringBuilder address = new StringBuilder();
         if (isNull(road) || road.equals("?")) {

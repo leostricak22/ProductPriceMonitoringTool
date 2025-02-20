@@ -1,5 +1,9 @@
 package hr.tvz.productpricemonitoringtool.enumeration;
 
+/**
+ * Enumeration for the role.
+ * Contains the admin, merchant and customer.
+ */
 public enum Role {
     ADMIN,
     MERCHANT,

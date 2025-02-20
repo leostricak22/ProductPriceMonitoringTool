@@ -8,6 +8,12 @@ import hr.tvz.productpricemonitoringtool.model.Entity;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * AbstractRepository class.
+ * Abstract class for all repositories.
+ * Contains abstract methods for finding by id, finding all and saving entities.
+ * @param <T> Entity type.
+ */
 public abstract class AbstractRepository <T extends Entity> {
 
     public abstract Optional<T> findById(Long id) throws RepositoryAccessException, DatabaseConnectionActiveException;

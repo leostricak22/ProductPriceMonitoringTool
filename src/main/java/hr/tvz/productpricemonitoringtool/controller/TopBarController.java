@@ -27,6 +27,21 @@ import javafx.stage.Popup;
 
 import java.util.Optional;
 
+/**
+ * Controller for the top bar view.
+ * Handles the top bar actions.
+ * Redirects to the user edit view.
+ * Handles the search and filter actions.
+ * Handles the notifications popup.
+ * @see FilterSearch
+ * @see PriceNotification
+ * @see StaffNotification
+ * @see CompanyRepository
+ * @see ProductRepository
+ * @see AlertDialog
+ * @see SceneLoader
+ * @see Session
+ */
 public class TopBarController {
 
     @FXML public Circle userProfilePictureCircle;
@@ -42,18 +57,32 @@ public class TopBarController {
 
     private static TopBarController instance;
 
+    /**
+     * Initializes the view.
+     */
     public TopBarController() {
         setInstance(this);
     }
 
+    /**
+     * Gets the instance of the top bar controller.
+     */
     public static TopBarController getInstance() {
         return instance;
     }
 
+    /**
+     * Sets the instance of the top bar controller.
+     */
     public static void setInstance(TopBarController instance) {
         TopBarController.instance = instance;
     }
 
+    /**
+     * Initializes the view.
+     * Sets the user profile picture.
+     * Checks for price and staff changes.
+     */
     public void initialize() {
         Image image = Session.getUserProfilePicture();
         userProfilePictureCircle.setFill(new ImagePattern(image));
@@ -79,10 +108,19 @@ public class TopBarController {
         }
     }
 
+    /**
+     * Handles the user edit redirect.
+     * Redirects to the user edit view.
+     */
     public void handleUserEditRedirect() {
         SceneLoader.loadScene("user_edit", "Edit User");
     }
 
+    /**
+     * Handles the filter action.
+     * Opens the filter popup.
+     * Sets the filter search.
+     */
     public void handleFilter() {
         Optional<FXMLLoader> loader = SceneLoader.loadPopupScene("product_search_filter", "Filter");
         if (loader.isEmpty()) {
@@ -101,6 +139,11 @@ public class TopBarController {
         }
     }
 
+    /**
+     * Handles the search action.
+     * Sets the product name for the search.
+     * Redirects to the product search view.
+     */
     public void handleSearch() {
         filterSearch.setProductName(searchProductsTextField.getText().isEmpty() ?
                 Optional.empty() : Optional.of(searchProductsTextField.getText()));
@@ -112,6 +155,11 @@ public class TopBarController {
         SceneLoader.loadProductSearchScene("product_search", "Search", filterSearch);
     }
 
+    /**
+     * Handles the notifications popup.
+     * Creates the notifications popup.
+     * Sets the notifications.
+     */
     public void handleNotifications() {
         Popup notificationsPopup;
         notificationsPopup = new Popup();
@@ -182,6 +230,12 @@ public class TopBarController {
         }
     }
 
+    /**
+     * Creates a new notification item.
+     * @param notificationBox The notification box.
+     * @param notificationText The notification text.
+     * @param imagePath The image path.
+     */
     private void createNewNotification(VBox notificationBox, String notificationText, String imagePath) {
         HBox notificationItem = new HBox();
         notificationItem.getStyleClass().add("notification-item");
@@ -199,6 +253,11 @@ public class TopBarController {
         notificationBox.getChildren().add(notificationItem);
     }
 
+
+    /**
+     * Creates a no new notifications item.
+     * @param notificationBox The notification box.
+     */
     private void createNoNewNotifications(VBox notificationBox) {
         HBox notificationItem = new HBox();
         notificationItem.getStyleClass().add("notification-item");
@@ -210,6 +269,9 @@ public class TopBarController {
         notificationBox.getChildren().add(notificationItem);
     }
 
+    /**
+     * Changes the notification bell icon.
+     */
     public void changeNotificationBellIcon() {
         notificationIconRectangle.setFill(new ImagePattern(
                 new Image("file:src/main/resources/hr/tvz/productpricemonitoringtool/images/icons/notifications_new.png")));

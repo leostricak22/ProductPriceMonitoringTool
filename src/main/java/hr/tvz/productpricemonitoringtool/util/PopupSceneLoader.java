@@ -16,12 +16,20 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Optional;
 
+/**
+ * PopupSceneLoader class.
+ * Contains methods for loading popup scenes.
+ */
 public class PopupSceneLoader {
 
     private static final Logger logger = LoggerFactory.getLogger(PopupSceneLoader.class);
 
     private PopupSceneLoader() {}
 
+    /**
+     * Method for loading popup scene.
+     * @param fxmlFileName FXML file name.
+     */
     public static Optional<FXMLLoader> loadPopupScene(String fxmlFileName, String title) {
         try {
             FXMLLoader fxmlLoader = FXMLLoaderHelper.fxmlFilePath(fxmlFileName + Constants.SCENE_EXTENSION);
@@ -38,6 +46,10 @@ public class PopupSceneLoader {
         return Optional.empty();
     }
 
+    /**
+     * Method for loading map picker popup scene.
+     * @param fxmlFileName FXML file name.
+     */
     public static Optional<FXMLLoader> loadMapPickerPopupScene(String fxmlFileName, String title, Optional<Address> previousAddress) {
         try {
             FXMLLoader fxmlLoader = FXMLLoaderHelper.fxmlFilePath(fxmlFileName + Constants.SCENE_EXTENSION);
@@ -58,6 +70,10 @@ public class PopupSceneLoader {
         return Optional.empty();
     }
 
+    /**
+     * Method for loading product form popup scene.
+     * @param fxmlFileName FXML file name.
+     */
     public static Optional<FXMLLoader> loadProductFormPopupScene(String fxmlFileName, String title, Optional<Product> product) {
         try {
             FXMLLoader fxmlLoader = FXMLLoaderHelper.fxmlFilePath(fxmlFileName + Constants.SCENE_EXTENSION);
@@ -78,6 +94,10 @@ public class PopupSceneLoader {
         return Optional.empty();
     }
 
+    /**
+     * Method for loading company form popup scene.
+     * @param fxmlFileName FXML file name.
+     */
     public static Optional<FXMLLoader> loadCompanyFormPopupScene(String fxmlFileName, String title, Optional<Company> company) {
         try {
             FXMLLoader fxmlLoader = FXMLLoaderHelper.fxmlFilePath(fxmlFileName + Constants.SCENE_EXTENSION);
@@ -98,6 +118,10 @@ public class PopupSceneLoader {
         return Optional.empty();
     }
 
+    /**
+     * Method for loading user form popup scene.
+     * @param fxmlFileName FXML file name.
+     */
     public static void loadUsersPopupScene(String fxmlFileName, String title, Optional<User> user) {
         try {
             FXMLLoader fxmlLoader = FXMLLoaderHelper.fxmlFilePath(fxmlFileName + Constants.SCENE_EXTENSION);
@@ -114,6 +138,10 @@ public class PopupSceneLoader {
         }
     }
 
+    /**
+     * Method for loading category form popup scene.
+     * @param fxmlFileName FXML file name.
+     */
     public static void loadCategoryPopupScene(String fxmlFileName, String title, Optional<Category> category) {
         try {
             FXMLLoader fxmlLoader = FXMLLoaderHelper.fxmlFilePath(fxmlFileName + Constants.SCENE_EXTENSION);
@@ -130,6 +158,10 @@ public class PopupSceneLoader {
         }
     }
 
+    /**
+     * Method for loading address form popup scene.
+     * @param fxmlFileName FXML file name.
+     */
     public static void loadAddressPopupScene(String fxmlFileName, String title, Optional<Address> address) {
         try {
             FXMLLoader fxmlLoader = FXMLLoaderHelper.fxmlFilePath(fxmlFileName + Constants.SCENE_EXTENSION);
@@ -146,6 +178,10 @@ public class PopupSceneLoader {
         }
     }
 
+    /**
+     * Method for loading company product form popup scene.
+     * @param fxmlFileName FXML file name.
+     */
     public static void loadCompanyProductPopupScene(String fxmlFileName, String title, Optional<CompanyProductDBO> companyProduct) {
         try {
             FXMLLoader fxmlLoader = FXMLLoaderHelper.fxmlFilePath(fxmlFileName + Constants.SCENE_EXTENSION);
@@ -162,6 +198,10 @@ public class PopupSceneLoader {
         }
     }
 
+    /**
+     * Method for loading company users form popup scene.
+     * @param fxmlFileName FXML file name.
+     */
     public static void loadCompanyUsersFormPopupScene(String fxmlFileName, String title, Optional<UserCompanyDBO> userCompany) {
         try {
             FXMLLoader fxmlLoader = FXMLLoaderHelper.fxmlFilePath(fxmlFileName + Constants.SCENE_EXTENSION);
@@ -178,6 +218,9 @@ public class PopupSceneLoader {
         }
     }
 
+    /**
+     * Method for creating a popupStage.
+     */
     private static Stage createPopupStage(String title, Scene scene) {
         Stage popupStage = new Stage();
         popupStage.setTitle(title);
@@ -187,6 +230,10 @@ public class PopupSceneLoader {
         return popupStage;
     }
 
+    /**
+     * Method for loading product company graph popup scene.
+     * @param fxmlFileName FXML file name.
+     */
     public static void loadProductCompanyGraphPopupScene(String fxmlFileName, String title, Company company) {
         try {
             FXMLLoader fxmlLoader = FXMLLoaderHelper.fxmlFilePath(fxmlFileName + Constants.SCENE_EXTENSION);

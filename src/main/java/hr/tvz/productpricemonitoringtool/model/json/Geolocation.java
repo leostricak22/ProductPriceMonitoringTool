@@ -2,6 +2,10 @@ package hr.tvz.productpricemonitoringtool.model.json;
 
 import java.math.BigDecimal;
 
+/**
+ * Geolocation JSON model.
+ * Represents the geolocation in the JSON model.
+ */
 public class Geolocation {
     private AddressGeolocation address;
     private BigDecimal lat;

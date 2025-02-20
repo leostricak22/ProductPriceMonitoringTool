@@ -20,10 +20,18 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
+/**
+ * FileUtil class.
+ * Contains methods for file operations.
+ */
 public class FileUtil {
 
     private FileUtil() {}
 
+    /**
+     * Method for picking file.
+     * @param extensions List of file extensions.
+     */
     public static Optional<File> pickFile(List<String> extensions) {
         FileChooser fileChooser = new FileChooser();
 
@@ -39,6 +47,13 @@ public class FileUtil {
         return Optional.of(selectedFile);
     }
 
+    /**
+     * Method for saving image.
+     * @param sourcePathString Source path.
+     *                         Path of the source image.
+     * @param destinationPathString Destination path.
+     *                              Path of the destination image.
+     */
     public static void saveImage(String sourcePathString, String destinationPathString) {
         try {
             deleteImage(destinationPathString);
@@ -53,6 +68,11 @@ public class FileUtil {
         }
     }
 
+    /**
+     * Method for deleting image.
+     * @param path Path.
+     *             Path of the image.
+     */
     public static void deleteImage(String path) throws IOException {
         path = path.substring(0, path.lastIndexOf("."));
 
@@ -62,6 +82,13 @@ public class FileUtil {
         }
     }
 
+    /**
+     * Method for cropping image to square.
+     * @param image Image.
+     *              Image to be cropped.
+     * @return Image.
+     *         Cropped image.
+     */
     public static Image cropImageToSquare(Image image) {
         double originalWidth = image.getWidth();
         double originalHeight = image.getHeight();

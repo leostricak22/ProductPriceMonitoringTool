@@ -6,6 +6,8 @@ import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.dbo.CompanyDBO;
 import hr.tvz.productpricemonitoringtool.util.DatabaseUtil;
 import hr.tvz.productpricemonitoringtool.util.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.sql.*;
@@ -13,8 +15,19 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+/**
+ * CompanyRepository class.
+ * Repository class for Company.
+ * Contains methods for finding by id, finding all, finding all by user id, saving, updating and deleting companies.
+ */
 public class CompanyRepository extends AbstractRepository<Company> {
 
+    private static final Logger log = LoggerFactory.getLogger(CompanyRepository.class);
+
+    /**
+     * Find company by id.
+     * @param id Company id.
+     */
     @Override
     public Optional<Company> findById(Long id) throws RepositoryAccessException, DatabaseConnectionActiveException {
         return findAll().stream()
@@ -22,6 +35,9 @@ public class CompanyRepository extends AbstractRepository<Company> {
                 .findFirst();
     }
 
+    /**
+     * Find all companies.
+     */
     @Override
     public synchronized Set<Company> findAll() throws RepositoryAccessException, DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
@@ -41,6 +57,7 @@ public class CompanyRepository extends AbstractRepository<Company> {
             }
 
         } catch (IOException | SQLException e) {
+            log.error("Failed to find all companies.", e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -50,6 +67,10 @@ public class CompanyRepository extends AbstractRepository<Company> {
         return ObjectMapper.mapCompanyDBOToCompany(companiesDBO);
     }
 
+    /**
+     * Find all companies by user id.
+     * @param userId User id.
+     */
     public synchronized Set<Company> findAllByUserId(Long userId) throws RepositoryAccessException, DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
 
@@ -72,6 +93,7 @@ public class CompanyRepository extends AbstractRepository<Company> {
             }
 
         } catch (IOException | SQLException e) {
+            log.error("Failed to find all companies by user id: {}", userId, e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -81,6 +103,10 @@ public class CompanyRepository extends AbstractRepository<Company> {
         return ObjectMapper.mapCompanyDBOToCompany(companiesDBO);
     }
 
+    /**
+     * Save companies.
+     * @param entities Companies.
+     */
     @Override
     public synchronized Set<Company> save(Set<Company> entities) throws RepositoryAccessException, DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
@@ -113,6 +139,7 @@ public class CompanyRepository extends AbstractRepository<Company> {
             }
 
         } catch (IOException | SQLException e) {
+            log.error("Failed to save companies: {}", entities, e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -122,6 +149,10 @@ public class CompanyRepository extends AbstractRepository<Company> {
         return savedCompanies;
     }
 
+    /**
+     * Update company.
+     * @param company Company.
+     */
     public synchronized void update(Company company) throws DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
 
@@ -138,6 +169,7 @@ public class CompanyRepository extends AbstractRepository<Company> {
 
             stmt.executeUpdate();
         } catch (IOException | SQLException e) {
+            log.error("Failed to update company: {}", company, e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -145,6 +177,10 @@ public class CompanyRepository extends AbstractRepository<Company> {
         }
     }
 
+    /**
+     * Delete company.
+     * @param company Company.
+     */
     public synchronized void delete(Company company) throws DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
 
@@ -159,6 +195,7 @@ public class CompanyRepository extends AbstractRepository<Company> {
 
             stmt.executeUpdate();
         } catch (IOException | SQLException e) {
+            log.error("Failed to delete company: {}", company, e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -166,11 +203,15 @@ public class CompanyRepository extends AbstractRepository<Company> {
         }
     }
 
+    /**
+     * Wait for database connection to be ready.
+     */
     private synchronized void waitForDatabaseConnectionReady() throws DatabaseConnectionActiveException {
         while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
             try {
                 wait();
             } catch (InterruptedException e) {
+                log.error("Failed to wait for database connection to be ready.", e);
                 Thread.currentThread().interrupt();
                 throw new DatabaseConnectionActiveException(e);
             }

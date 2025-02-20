@@ -5,10 +5,21 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListCell;
 import javafx.util.StringConverter;
 
+/**
+ * ComboBoxUtil class.
+ * Contains method for setting up ComboBox.
+ */
 public class ComboBoxUtil {
 
     private ComboBoxUtil() {}
 
+    /**
+     * ComboBox string converter.
+     * @param comboBox ComboBox.
+     *                 ComboBox to be set up.
+     * @param <T> Entity.
+     *           Entity type.
+     */
     public static <T extends Entity> void comboBoxStringConverter(ComboBox<T> comboBox) {
         comboBox.setCellFactory(cellData -> new ListCell<T>() {
             @Override

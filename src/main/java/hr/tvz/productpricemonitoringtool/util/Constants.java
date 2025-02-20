@@ -2,6 +2,10 @@ package hr.tvz.productpricemonitoringtool.util;
 
 import java.util.List;
 
+/**
+ * Constants class.
+ * Contains application constants.
+ */
 public class Constants {
 
     private Constants() {}

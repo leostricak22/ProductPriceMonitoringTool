@@ -2,6 +2,10 @@ package hr.tvz.productpricemonitoringtool.model.json;
 
 import com.google.gson.annotations.SerializedName;
 
+/**
+ * Address geolocation.
+ * Represents the address geolocation.
+ */
 public class AddressGeolocation {
 
     private String road;

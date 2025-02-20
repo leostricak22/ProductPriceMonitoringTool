@@ -13,7 +13,7 @@ import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public non-sealed class StaffNotification extends Notification implements Serializable {
+public non-sealed class StaffNotification implements Notification, Serializable {
 
     private static final Logger log = LoggerFactory.getLogger(StaffNotification.class);
     protected static List<UserCompanyDBO> deserializedUserCompanyDBOList = new ArrayList<>();
@@ -37,11 +37,21 @@ public non-sealed class StaffNotification extends Notification implements Serial
         StaffNotification.deserializedUserCompanyDBOList = deserializedUserCompanyDBOList;
     }
 
+    /**
+     * Save method.
+     * Saves the new user company records to the file.
+     * Adds the new user company records to the deserialized user company list.
+     */
     @Override
     public void save() {
         deserializedUserCompanyDBOList.addAll(newUserCompanyDBORecords);
         serializeToFile(deserializedUserCompanyDBOList);}
 
+    /**
+     * Serialize to file method.
+     * Serializes the user company to the file.
+     * @param userCompanyDBOS List of user companies.
+     */
     public void serializeToFile(List<UserCompanyDBO> userCompanyDBOS) {
         try {
             File file = new File(Constants.SESSION_SERIALIZATION_FILE_DIRECTORY + Session.getLoggedInUser().get().getId() + "/userCompany.dat");
@@ -55,6 +65,10 @@ public non-sealed class StaffNotification extends Notification implements Serial
         }
     }
 
+    /**
+     * Deserialize from file method.
+     * Deserializes the user company from the file.
+     */
     public void deserializeFromFile() {
         newUserCompanyDBORecords.clear();
 
@@ -71,6 +85,10 @@ public non-sealed class StaffNotification extends Notification implements Serial
         }
     }
 
+    /**
+     * Check staff change method.
+     * Checks the staff change of the user companies.
+     */
     public List<UserCompanyDBO> checkStaffChange() throws DatabaseConnectionActiveException {
         deserializeFromFile();
 

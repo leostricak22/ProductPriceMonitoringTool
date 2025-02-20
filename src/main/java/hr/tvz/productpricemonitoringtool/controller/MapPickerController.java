@@ -19,6 +19,14 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Controller for the map picker view.
+ * Handles the map picker view.
+ * @see Address
+ * @see MapUtil
+ * @see GeocodeAPI
+ * @see AlertDialog
+ */
 public class MapPickerController {
 
     @FXML public WebView webView;
@@ -26,6 +34,11 @@ public class MapPickerController {
 
     private Address address;
 
+    /**
+     * Initializes the view.
+     * Loads the map and sets the marker on the map if the address is present.
+     * @param previousAddress the address to be set on the map
+     */
     public void initialize(Optional<Address> previousAddress) {
         WebEngine webEngine = webView.getEngine();
 
@@ -51,6 +64,10 @@ public class MapPickerController {
         }
     }
 
+    /**
+     * Handles the pick data button.
+     * Closes the view if the address is picked.
+     */
     public void handlePickData() {
         if (isNull(address)) {
             AlertDialog.showErrorDialog("No location picked.");
@@ -61,6 +78,10 @@ public class MapPickerController {
         stage.close();
     }
 
+    /**
+     * Handles the cancel button.
+     * Closes the view.
+     */
     public void findLonAndLatOnMap(String data) throws IOException {
         Coordinates coordinates = MapUtil.getCoordinatesFromMap(data);
 

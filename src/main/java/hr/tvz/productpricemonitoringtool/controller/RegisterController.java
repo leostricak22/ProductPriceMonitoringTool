@@ -15,6 +15,16 @@ import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 
+/**
+ * Controller for the register view.
+ * Handles the registration form.
+ * Validates the input and saves the user to the database.
+ * @see User
+ * @see UserFileRepository
+ * @see AlertDialog
+ * @see SceneLoader
+ * @see Session
+ */
 public class RegisterController {
 
     @FXML public TextField nameTextField;
@@ -27,6 +37,10 @@ public class RegisterController {
 
     Logger logger = LoggerFactory.getLogger(RegisterController.class);
 
+    /**
+     * Handles the registration form.
+     * Validates the input and saves the user to the database.
+     */
     public void handleRegister() {
         String validationMessage = validateInput();
 
@@ -52,6 +66,10 @@ public class RegisterController {
         }
     }
 
+    /**
+     * Validates the input from the registration form.
+     * @return validation message
+     */
     private String validateInput() {
         String name = nameTextField.getText();
         String surname = surnameTextField.getText();
@@ -82,6 +100,9 @@ public class RegisterController {
         return "";
     }
 
+    /**
+     * Handles the login button.
+     */
     public void handleLoginOpen() {
         SceneLoader.loadScene("login", "Login");
     }

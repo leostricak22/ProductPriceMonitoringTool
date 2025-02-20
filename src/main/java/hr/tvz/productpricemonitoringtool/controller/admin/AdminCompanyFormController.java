@@ -18,6 +18,16 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Controller for the admin company form view.
+ * Handles the form for adding and editing companies.
+ * Validates the input and saves the company to the database.
+ * @see Company
+ * @see CompanyRepository
+ * @see AlertDialog
+ * @see Hash
+ * @see MapUtil
+ */
 public class AdminCompanyFormController {
 
     @FXML public TextField nameTextField;
@@ -30,6 +40,11 @@ public class AdminCompanyFormController {
     private final CompanyRepository companyRepository = new CompanyRepository();
     private final AddressRepository addressRepository = new AddressRepository();
 
+    /**
+     * Initializes the view.
+     * If the company is present, fills the form with the company data.
+     * @param company Optional company to edit
+     */
     public void initialize(Optional<Company> company) {
         if(company.isPresent()) {
             Company companyOptional = company.get();
@@ -45,11 +60,20 @@ public class AdminCompanyFormController {
         addressLabel.setText("No address selected");
     }
 
+    /**
+     * Handles the map button.
+     * Opens the map view for picking an address.
+     */
     public void handleMapButton() {
         Optional<Address> optionalAddress = MapUtil.handleMapPick(address, addressLabel);
         optionalAddress.ifPresent(addressOptional -> this.address = addressOptional);
     }
 
+    /**
+     * Handles the submit button.
+     * Validates the input and saves the company to the database.
+     * Closes the form window.
+     */
     public void handleSubmit() {
         String validationMessage = validateInput(nameTextField.getText());
         if(!validationMessage.isEmpty()) {
@@ -84,6 +108,11 @@ public class AdminCompanyFormController {
         stage.close();
     }
 
+    /**
+     * Validates the input.
+     * @param name Company name
+     * @return Error message if the input is invalid
+     */
     private String validateInput(String name) {
         if(name.isEmpty()) {
             return "Name cannot be empty";

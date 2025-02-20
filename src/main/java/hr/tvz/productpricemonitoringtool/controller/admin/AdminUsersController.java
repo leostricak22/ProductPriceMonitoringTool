@@ -17,6 +17,15 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Controller for the admin users view.
+ * Handles the user search and filtering.
+ * @see User
+ * @see UserFileRepository
+ * @see SearchController
+ * @see AlertDialog
+ * @see PopupSceneLoader
+ */
 public class AdminUsersController implements SearchController {
 
     @FXML public TextField idTextField;
@@ -36,6 +45,10 @@ public class AdminUsersController implements SearchController {
 
     private final UserFileRepository userRepository = new UserFileRepository();
 
+    /**
+     * Initializes the view.
+     * Sets the cell value factories for the table columns.
+     */
     @Override
     public void initialize() {
         idTableColumn.setCellValueFactory(cellData ->
@@ -57,6 +70,10 @@ public class AdminUsersController implements SearchController {
         filter();
     }
 
+    /**
+     * Filters the users based on the input values.
+     * Shows the filter label if any of the input fields is not empty.
+     */
     @Override
     public void filter() {
         List<User> users = new ArrayList<>(userRepository.findAll());
@@ -81,6 +98,9 @@ public class AdminUsersController implements SearchController {
                 .toList()));
     }
 
+    /**
+     * Removes the filter values from the input fields.
+     */
     @Override
     public void removeFilters() {
         idTextField.clear();
@@ -92,12 +112,20 @@ public class AdminUsersController implements SearchController {
         filter();
     }
 
+    /**
+     * Handles the add new user button click.
+     * Loads the user form popup scene with empty fields.
+     */
     @Override
     public void handleAddNewButtonClick() {
         PopupSceneLoader.loadUsersPopupScene("admin_user_form", "Add new user", Optional.empty());
         filter();
     }
 
+    /**
+     * Handles the edit button click.
+     * Loads the user form popup scene with the selected user data.
+     */
     @Override
     public void handleEditButtonClick() {
         User selectedUser = userTableView.getSelectionModel().getSelectedItem();
@@ -110,6 +138,10 @@ public class AdminUsersController implements SearchController {
         filter();
     }
 
+    /**
+     * Handles the delete button click.
+     * Deletes the selected user from the database.
+     */
     @Override
     public void handleDeleteButtonClick() {
         User selectedUser = userTableView.getSelectionModel().getSelectedItem();
@@ -127,6 +159,9 @@ public class AdminUsersController implements SearchController {
         filter();
     }
 
+    /**
+     * Shows the filter label if any of the input fields is not empty.
+     */
     private void showFilterLabel() {
         removeFiltersLabel.setVisible(
                 !idTextField.getText().isEmpty() ||

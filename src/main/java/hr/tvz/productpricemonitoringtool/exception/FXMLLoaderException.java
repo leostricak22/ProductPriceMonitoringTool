@@ -1,5 +1,9 @@
 package hr.tvz.productpricemonitoringtool.exception;
 
+/**
+ * Exception for the FXMLLoader.
+ * Thrown when the FXMLLoader fails.
+ */
 public class FXMLLoaderException extends RuntimeException {
     public FXMLLoaderException(String message) {
         super(message);

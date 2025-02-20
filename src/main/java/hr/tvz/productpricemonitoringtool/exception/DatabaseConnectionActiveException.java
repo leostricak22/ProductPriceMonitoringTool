@@ -1,5 +1,9 @@
 package hr.tvz.productpricemonitoringtool.exception;
 
+/**
+ * Exception for the database connection active.
+ * Thrown when the database connection is active.
+ */
 public class DatabaseConnectionActiveException extends Exception {
     public DatabaseConnectionActiveException(String message) {
         super(message);

@@ -26,6 +26,20 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Controller for the admin company users view.
+ * Handles the company user search and filtering.
+ * @see UserCompanyDBO
+ * @see Company
+ * @see User
+ * @see CompanyRepository
+ * @see UserFileRepository
+ * @see UserCompanyRepository
+ * @see SearchController
+ * @see AlertDialog
+ * @see PopupSceneLoader
+ * @see SceneLoader
+ */
 public class AdminCompanyUsersController implements SearchController {
 
     @FXML public TextField idTextField;
@@ -46,6 +60,11 @@ public class AdminCompanyUsersController implements SearchController {
     private final CompanyRepository companyRepository = new CompanyRepository();
     private final UserCompanyRepository userCompanyRepository = new UserCompanyRepository();
 
+    /**
+     * Initializes the view.
+     * Loads the company users and companies.
+     * Sets the cell value factories for the table columns.
+     */
     @Override
     public void initialize() {
         idTableColumn.setCellValueFactory(cellData ->
@@ -75,6 +94,10 @@ public class AdminCompanyUsersController implements SearchController {
         filter();
     }
 
+    /**
+     * Filters the company users based on the input values.
+     * Shows the filter label if any filter is applied.
+     */
     @Override
     public void filter() {
         List<UserCompanyDBO> companyUsers;
@@ -103,6 +126,10 @@ public class AdminCompanyUsersController implements SearchController {
                 .toList()));
     }
 
+    /**
+     * Removes the filters and clears the input fields.
+     * Refreshes the table.
+     */
     @Override
     public void removeFilters() {
         idTextField.clear();
@@ -115,12 +142,20 @@ public class AdminCompanyUsersController implements SearchController {
         filter();
     }
 
+    /**
+     * Handles the add new button click.
+     * Loads the company user form popup scene.
+     */
     @Override
     public void handleAddNewButtonClick() {
         PopupSceneLoader.loadCompanyUsersFormPopupScene("admin_company_staff_form", "Add company user", Optional.empty());
         filter();
     }
 
+    /**
+     * Handles the edit button click.
+     * Loads the company user form popup scene with the selected company user.
+     */
     @Override
     public void handleEditButtonClick() {
         UserCompanyDBO selectedCompanyUser = companyUsersTableView.getSelectionModel().getSelectedItem();
@@ -134,6 +169,10 @@ public class AdminCompanyUsersController implements SearchController {
         filter();
     }
 
+    /**
+     * Handles the delete button click.
+     * Deletes the selected company user.
+     */
     @Override
     public void handleDeleteButtonClick() {
         UserCompanyDBO selectedCompanyUser = companyUsersTableView.getSelectionModel().getSelectedItem();
@@ -157,6 +196,9 @@ public class AdminCompanyUsersController implements SearchController {
         filter();
     }
 
+    /**
+     * Shows the filter label if any filter is applied.
+     */
     private void showFilterLabel() {
         removeFiltersLabel.setVisible(
                 !idTextField.getText().isEmpty() ||

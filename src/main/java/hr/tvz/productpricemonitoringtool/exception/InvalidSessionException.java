@@ -1,5 +1,9 @@
 package hr.tvz.productpricemonitoringtool.exception;
 
+/**
+ * Exception for the invalid session.
+ * Thrown when the session is invalid.
+ */
 public class InvalidSessionException extends Exception {
     public InvalidSessionException(String message) {
         super(message);

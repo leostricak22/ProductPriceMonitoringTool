@@ -12,12 +12,20 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.util.Optional;
 
+/**
+ * SceneLoader class.
+ * Contains methods for loading scenes.
+ */
 public class SceneLoader {
 
     private static final Logger logger = LoggerFactory.getLogger(SceneLoader.class);
 
     private SceneLoader() {}
 
+    /**
+     * Method for loading scene.
+     * @param fxmlFileName FXML file name.
+     */
     public static void loadScene(String fxmlFileName, String title) {
         try {
             FXMLLoader fxmlLoader = FXMLLoaderHelper.fxmlFilePath(fxmlFileName + Constants.SCENE_EXTENSION);
@@ -32,10 +40,23 @@ public class SceneLoader {
         }
     }
 
+    /**
+     * Method for loading popup scene.
+     * @param fxmlFileName FXML file name.
+     * @param title Title.
+     * @return Optional FXMLLoader.
+     *         Optional FXMLLoader object.
+     */
     public static Optional<FXMLLoader> loadPopupScene(String fxmlFileName, String title) {
         return PopupSceneLoader.loadPopupScene(fxmlFileName, title);
     }
 
+    /**
+     * Method for loading product search scene.
+     * @param fxmlFileName FXML file name.
+     * @param title Title.
+     * @param category Category.
+     */
     public static void loadProductSearchScene(String fxmlFileName, String title, Optional<Category> category) {
         try {
             FXMLLoader fxmlLoader = FXMLLoaderHelper.fxmlFilePath(fxmlFileName + Constants.SCENE_EXTENSION);

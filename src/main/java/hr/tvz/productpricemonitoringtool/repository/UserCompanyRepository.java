@@ -7,6 +7,8 @@ import hr.tvz.productpricemonitoringtool.model.User;
 import hr.tvz.productpricemonitoringtool.model.dbo.UserCompanyDBO;
 import hr.tvz.productpricemonitoringtool.util.DatabaseUtil;
 import hr.tvz.productpricemonitoringtool.util.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.sql.*;
@@ -14,8 +16,18 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * UserCompanyRepository class.
+ * Repository class for UserCompany.
+ * Contains methods for finding all users, finding all user company dbo, finding all user company by user id and date, updating and deleting user company.
+ */
 public class UserCompanyRepository {
 
+    private static final Logger log = LoggerFactory.getLogger(UserCompanyRepository.class);
+
+    /**
+     * Add user to company.
+     */
     public synchronized void addUser(Long userId, Long companyId) throws RepositoryAccessException, DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
 
@@ -31,6 +43,7 @@ public class UserCompanyRepository {
 
             stmt.executeUpdate();
         } catch (IOException | SQLException e) {
+            log.error("Failed to add user with ID: {} to company with ID: {}", userId, companyId, e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -38,6 +51,10 @@ public class UserCompanyRepository {
         }
     }
 
+    /**
+     * Find all users.
+     * @param company Company.
+     */
     public synchronized Set<User> findAllUsers(Company company) throws RepositoryAccessException, DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
 
@@ -60,6 +77,7 @@ public class UserCompanyRepository {
             }
 
         } catch (IOException | SQLException e) {
+            log.error("Failed to find all users for company with ID: {}", company.getId(), e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -69,6 +87,9 @@ public class UserCompanyRepository {
         return users;
     }
 
+    /**
+     * Find all user company dbo.
+     */
     public synchronized Set<UserCompanyDBO> findAllUserCompanyDBO() throws DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
 
@@ -88,6 +109,7 @@ public class UserCompanyRepository {
             }
 
         } catch (IOException | SQLException e) {
+            log.error("Failed to find all user company.", e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -97,6 +119,11 @@ public class UserCompanyRepository {
         return userCompanyDBO;
     }
 
+    /**
+     * Find all user company by user id and date.
+     * @param date Date.
+     * @param userId User id.
+     */
     public synchronized Set<UserCompanyDBO> findAllUserCompanyByUserId(LocalDateTime date, Long userId) throws RepositoryAccessException, DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
 
@@ -120,6 +147,7 @@ public class UserCompanyRepository {
             }
 
         } catch (IOException | SQLException e) {
+            log.error("Failed to find all user company by user id: {} and date: {}", userId, date, e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -129,6 +157,9 @@ public class UserCompanyRepository {
         return userCompanyDBO;
     }
 
+    /**
+     * Update user company.
+     */
     public synchronized UserCompanyDBO updateUserCompany(UserCompanyDBO userCompany) throws RepositoryAccessException, DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
 
@@ -145,6 +176,7 @@ public class UserCompanyRepository {
 
             stmt.executeUpdate();
         } catch (IOException | SQLException e) {
+            log.error("Failed to update user company with ID: {}", userCompany.getId(), e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -154,6 +186,9 @@ public class UserCompanyRepository {
         return userCompany;
     }
 
+    /**
+     * Delete user company.
+     */
     public synchronized void deleteUserCompany(UserCompanyDBO userCompany) throws RepositoryAccessException, DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
 
@@ -168,6 +203,7 @@ public class UserCompanyRepository {
 
             stmt.executeUpdate();
         } catch (IOException | SQLException e) {
+            log.error("Failed to delete user company with ID: {}", userCompany.getId(), e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -175,11 +211,15 @@ public class UserCompanyRepository {
         }
     }
 
+    /**
+     * Wait for database connection ready.
+     */
     private synchronized void waitForDatabaseConnectionReady() throws DatabaseConnectionActiveException {
         while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
             try {
                 wait();
             } catch (InterruptedException e) {
+                log.error("Failed to wait for database connection to be ready.", e);
                 Thread.currentThread().interrupt();
                 throw new DatabaseConnectionActiveException(e);
             }

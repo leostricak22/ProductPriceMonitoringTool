@@ -8,6 +8,8 @@ import hr.tvz.productpricemonitoringtool.model.CompanyProduct;
 import hr.tvz.productpricemonitoringtool.model.dbo.CompanyProductDBO;
 import hr.tvz.productpricemonitoringtool.util.DatabaseUtil;
 import hr.tvz.productpricemonitoringtool.util.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -19,7 +21,19 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * CompanyProductReadRepository class.
+ * Repository class for CompanyProduct.
+ * Contains methods for finding by date and company id, finding by product id and company id, finding by product id,
+ * finding by company id and finding all company products.
+ */
 public class CompanyProductReadRepository {
+    private static final Logger log = LoggerFactory.getLogger(CompanyProductReadRepository.class);
+
+    /**
+     * Find by date and company id.
+     * @param date Date.
+     */
     public synchronized Set<CompanyProductDBO> findByDateAndCompanyId(LocalDateTime date, Long companyId)
             throws DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
@@ -39,6 +53,7 @@ public class CompanyProductReadRepository {
                 }
             }
         } catch (SQLException | IOException e) {
+            log.error("Failed to find company products by date: {} and company id: {}", date, companyId, e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -47,6 +62,11 @@ public class CompanyProductReadRepository {
         return companyProductsDBO;
     }
 
+    /**
+     * Find by product id and company id.
+     * @param productId Product id.
+     * @param companyId Company id.
+     */
     public synchronized Set<CompanyProduct> findByProductIdAndCompanyId(Long productId, Long companyId,
             CompanyProductRecordType recordType) throws DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
@@ -74,6 +94,7 @@ public class CompanyProductReadRepository {
                 }
             }
         } catch (SQLException | IOException e) {
+            log.error("Failed to find company products by product id: {} and company id: {}", productId, companyId, e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -90,6 +111,10 @@ public class CompanyProductReadRepository {
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * Find by product id.
+     * @param productId Product id.
+     */
     public synchronized Set<CompanyProduct> findByProductId(Long productId, CompanyProductRecordType recordType)
             throws DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
@@ -118,6 +143,10 @@ public class CompanyProductReadRepository {
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * Find by company id.
+     * @param companyId Company id.
+     */
     public synchronized Set<CompanyProduct> findByCompanyId(Long companyId, CompanyProductRecordType recordType)
             throws DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
@@ -141,6 +170,9 @@ public class CompanyProductReadRepository {
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * Find all company products.
+     */
     public synchronized Set<CompanyProduct> findAll(CompanyProductRecordType recordType)
             throws DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
@@ -164,6 +196,10 @@ public class CompanyProductReadRepository {
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * Company product DBO query.
+     * @param query Query.
+     */
     private synchronized Set<CompanyProductDBO> companyProductDBOQuery(String query) {
         Set<CompanyProductDBO> companyProductsDBO = new HashSet<>();
         try (Connection connection = DatabaseUtil.connectToDatabase();
@@ -173,6 +209,7 @@ public class CompanyProductReadRepository {
                 companyProductsDBO.add(ObjectMapper.mapResultSetToCompanyProductDBO(resultSet));
             }
         } catch (SQLException | IOException e) {
+            log.error("Failed to find all company products.", e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
@@ -181,16 +218,23 @@ public class CompanyProductReadRepository {
         return companyProductsDBO;
     }
 
+    /**
+     * Wait for database connection ready.
+     */
     public synchronized Set<CompanyProductDBO> findAllDBO() throws DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
         return companyProductDBOQuery("SELECT id, company_id, product_id, price, created_at FROM \"company_product\";");
     }
 
+    /**
+     * Wait for database connection ready.
+     */
     private synchronized void waitForDatabaseConnectionReady() throws DatabaseConnectionActiveException {
         while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
             try {
                 wait();
             } catch (InterruptedException e) {
+                log.error("Failed to wait for database connection to be ready.", e);
                 Thread.currentThread().interrupt();
                 throw new DatabaseConnectionActiveException(e);
             }
@@ -198,6 +242,11 @@ public class CompanyProductReadRepository {
         DatabaseUtil.setActiveConnectionWithDatabase(true);
     }
 
+    /**
+     * Id only query.
+     * @param id Id.
+     * @param query Query.
+     */
     private synchronized Set<CompanyProductDBO> idOnlyQuery(Long id, String query) {
         Set<CompanyProductDBO> companyProductsDBO = new HashSet<>();
         try (Connection connection = DatabaseUtil.connectToDatabase();
@@ -209,6 +258,7 @@ public class CompanyProductReadRepository {
                 }
             }
         } catch (SQLException | IOException e) {
+            log.error("Failed to find company products by id: {}", id, e);
             throw new RepositoryAccessException(e);
         } finally {
             DatabaseUtil.setActiveConnectionWithDatabase(false);

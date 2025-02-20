@@ -21,6 +21,14 @@ import java.util.Set;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Controller for the change product price view.
+ * Handles the form for changing the product price.
+ * Validates the input and saves the new price.
+ * @see CompanyProduct
+ * @see CompanyProductReadRepository
+ * @see AlertDialog
+ */
 public class ChangeProductPriceController {
 
     @FXML public TextField oldPriceTextField;
@@ -30,6 +38,10 @@ public class ChangeProductPriceController {
 
     private final CompanyProductReadRepository companyProductReadRepository = new CompanyProductReadRepository();
 
+    /**
+     * Initializes the view.
+     * Fills the form with the old price of the product.
+     */
     public void initialize() {
         Optional<Product> selectedProduct = Session.getSelectedProduct();
         Optional<Company> selectedCompany = Session.getSelectedCompany();
@@ -56,6 +68,10 @@ public class ChangeProductPriceController {
         }
     }
 
+    /**
+     * Handles the form submit.
+     * Validates the input and saves the new price.
+     */
     public void handleSave() {
         if (newPriceTextField.getText().isEmpty()) {
             AlertDialog.showErrorDialog("Please enter new price.");

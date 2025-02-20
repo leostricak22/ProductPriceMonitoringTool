@@ -18,6 +18,15 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Controller for the admin address view.
+ * Handles the address search and filtering.
+ * @see Address
+ * @see AddressRepository
+ * @see SearchController
+ * @see AlertDialog
+ * @see PopupSceneLoader
+ */
 public class AdminAddressController implements SearchController {
 
     @FXML public TextField idTextField;
@@ -41,6 +50,9 @@ public class AdminAddressController implements SearchController {
 
     private final AddressRepository addressRepository = new AddressRepository();
 
+    /**
+     * Initializes the view.
+     */
     @Override
     public void initialize() {
         idTableColumn.setCellValueFactory(cellData ->
@@ -75,6 +87,9 @@ public class AdminAddressController implements SearchController {
         filter();
     }
 
+    /**
+     * Filters the addresses based on the input values.
+     */
     @Override
     public void filter() {
         List<Address> addresses = new ArrayList<>();
@@ -108,6 +123,9 @@ public class AdminAddressController implements SearchController {
                 .toList()));
     }
 
+    /**
+     * Removes the filters and refreshes the table.
+     */
     @Override
     public void removeFilters() {
         idTextField.clear();
@@ -121,12 +139,21 @@ public class AdminAddressController implements SearchController {
         filter();
     }
 
+    /**
+     * Handles the add new button click event.
+     * Opens the address form popup.
+     */
     @Override
     public void handleAddNewButtonClick() {
         PopupSceneLoader.loadAddressPopupScene("admin_address_form", "Add new address", Optional.empty());
         filter();
     }
 
+    /**
+     * Handles the edit button click event.
+     * Opens the address form popup with the selected address.
+     * Shows an error dialog if no address is selected.
+     */
     @Override
     public void handleEditButtonClick() {
         Address selectedAddress = addressTableView.getSelectionModel().getSelectedItem();
@@ -139,6 +166,12 @@ public class AdminAddressController implements SearchController {
         filter();
     }
 
+    /**
+     * Handles the delete button click event.
+     * Deletes the selected address.
+     * Shows a confirmation dialog before deleting.
+     * Shows an error dialog if no address is selected.
+     */
     @Override
     public void handleDeleteButtonClick() {
         Address selectedAddress = addressTableView.getSelectionModel().getSelectedItem();
@@ -160,14 +193,18 @@ public class AdminAddressController implements SearchController {
         filter();
     }
 
+    /**
+     * Shows the remove filters label if any filter is applied.
+     * Hides the label if no filter is applied.
+     */
     private void showFilterLabel() {
         removeFiltersLabel.setVisible(
-        !idTextField.getText().isEmpty() ||
-        !roadTextField.getText().isEmpty() ||
-        !houseNumberTextField.getText().isEmpty() ||
-        !cityTextField.getText().isEmpty() ||
-        !townTextField.getText().isEmpty() ||
-        !villageTextField.getText().isEmpty() ||
-        !countryTextField.getText().isEmpty());
+            !idTextField.getText().isEmpty() ||
+            !roadTextField.getText().isEmpty() ||
+            !houseNumberTextField.getText().isEmpty() ||
+            !cityTextField.getText().isEmpty() ||
+            !townTextField.getText().isEmpty() ||
+            !villageTextField.getText().isEmpty() ||
+            !countryTextField.getText().isEmpty());
     }
 }

@@ -19,7 +19,14 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Set;
 
-
+/**
+ * Controller for the map radius view.
+ * Handles the map radius view.
+ * @see Company
+ * @see CompanyRepository
+ * @see MapUtil
+ * @see AlertDialog
+ */
 public class MapRadiusController {
 
     @FXML public WebView webView;
@@ -30,6 +37,10 @@ public class MapRadiusController {
 
     Set<Company> companiesInRadius = null;
 
+    /**
+     * Initializes the view.
+     * Loads the map and sets the radius on the map.
+     */
     public void initialize() {
         WebEngine webEngine = webView.getEngine();
 
@@ -51,6 +62,10 @@ public class MapRadiusController {
         radiusSlider.valueProperty().addListener((observable, oldValue, newValue) -> handleSliderDragDone(newValue));
     }
 
+    /**
+     * Handles the form submit.
+     * Fetches the data from the map and calculates the companies in the radius.
+     */
     public void onFetchData() {
         WebEngine webEngine = webView.getEngine();
         String data = (String) webEngine.executeScript("sendData()");
@@ -61,6 +76,10 @@ public class MapRadiusController {
         stage.close();
     }
 
+    /**
+     * Handles the slider drag done event.
+     * Updates the radius text field and the map radius.
+     */
     public void handleSliderDragDone(Number newValue) {
         WebEngine webEngine = webView.getEngine();
         if (!radiusTextField.isFocused()) {
@@ -69,6 +88,10 @@ public class MapRadiusController {
         webEngine.executeScript("updateRadius(" + newValue + ")");
     }
 
+    /**
+     * Handles the text view radius update event.
+     * Updates the radius slider and the map radius.
+     */
     public void handleTextViewRadiusUpdate() {
         WebEngine webEngine = webView.getEngine();
 
@@ -82,6 +105,10 @@ public class MapRadiusController {
         webEngine.executeScript("updateRadius(" + radius + ")");
     }
 
+    /**
+     * Fetches the data from the map and calculates the companies in the radius.
+     * @param data The data from the map.
+     */
     public void findLonAndLatOnMap(String data) {
         Coordinates coordinates = MapUtil.getCoordinatesFromMap(data);
 
@@ -115,6 +142,9 @@ public class MapRadiusController {
         this.companiesInRadius = companiesInRadiusSet;
     }
 
+    /**
+     * Returns the companies in the radius.
+     */
     public Set<Company> getCompaniesInRadius() {
         return companiesInRadius;
     }

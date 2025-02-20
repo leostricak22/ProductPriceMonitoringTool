@@ -2,6 +2,10 @@ package hr.tvz.productpricemonitoringtool.model.dbo;
 
 import hr.tvz.productpricemonitoringtool.model.Entity;
 
+/**
+ * Company database object.
+ * Represents the company in the database.
+ */
 public class CompanyDBO extends Entity {
 
     private final Long addressId;

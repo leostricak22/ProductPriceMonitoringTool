@@ -26,6 +26,17 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Controller for the admin company product form view.
+ * Handles the form for adding and editing company products.
+ * Validates the input and saves the company product to the database.
+ * @see CompanyProduct
+ * @see CompanyProductDBO
+ * @see CompanyProductWriteRepository
+ * @see CompanyRepository
+ * @see ProductRepository
+ * @see AlertDialog
+ */
 public class AdminCompanyProductFormController {
 
     @FXML public ComboBox<Company> companyComboBox;
@@ -39,6 +50,11 @@ public class AdminCompanyProductFormController {
     private final CompanyRepository companyRepository = new CompanyRepository();
     private final ProductRepository productRepository = new ProductRepository();
 
+    /**
+     * Initializes the view.
+     * If the company product is present, fills the form with the company product data.
+     * @param companyProduct Optional company product to edit
+     */
     public void initialize(Optional<CompanyProductDBO> companyProduct) {
         ComboBoxUtil.comboBoxStringConverter(companyComboBox);
         ComboBoxUtil.comboBoxStringConverter(productComboBox);
@@ -71,6 +87,10 @@ public class AdminCompanyProductFormController {
         }
     }
 
+    /**
+     * Handles the submit button action.
+     * Validates the input and saves the company product to the database.
+     */
     public void handleSubmit() {
         String validationMessage = validateInput();
 
@@ -104,6 +124,10 @@ public class AdminCompanyProductFormController {
         }
     }
 
+    /**
+     * Validates the input.
+     * @return Error message if the input is not valid, empty string otherwise
+     */
     public String validateInput() {
         if (isNull(companyComboBox.getValue())) {
             return "Company is required";

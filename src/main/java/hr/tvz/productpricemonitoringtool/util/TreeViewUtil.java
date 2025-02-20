@@ -11,10 +11,19 @@ import javafx.scene.control.TreeView;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * TreeViewUtil class.
+ */
 public class TreeViewUtil {
 
     private TreeViewUtil() {}
 
+    /**
+     * Method for setting string converter for tree view.
+     * @param treeView Tree view.
+     *                 Tree view object.
+     * @param <T> Type of entity.
+     */
     public static <T extends Entity> void treeViewStringConverter(TreeView<T> treeView) {
         treeView.setCellFactory(tv -> new TreeCell<>() {
             @Override
@@ -29,6 +38,14 @@ public class TreeViewUtil {
         });
     }
 
+    /**
+     * Method for populating category tree view.
+     * @param treeView Tree view.
+     *                 Tree view object.
+     * @param categoryRepository Category repository.
+     *                           Category repository object.
+     * @throws DatabaseConnectionActiveException If database connection is active.
+     */
     public static void populateCategoryTreeView(TreeView<Category> treeView, CategoryRepository categoryRepository) throws DatabaseConnectionActiveException {
         List<Category> allCategories = categoryRepository.findAllByParentCategoryRecursively(Optional.empty());
         allCategories.sort((c1, c2) -> c1.getName().compareTo(c2.getName()));
@@ -49,6 +66,15 @@ public class TreeViewUtil {
         treeView.setShowRoot(false);
     }
 
+    /**
+     * Method for building tree item.
+     * @param category Category.
+     *                 Category object.
+     * @param allCategories All categories.
+     *                      List of all categories.
+     * @return Tree item.
+     *         Tree item object.
+     */
     private static TreeItem<Category> buildTreeItem(Category category, List<Category> allCategories) {
         TreeItem<Category> treeItem = new TreeItem<>(category);
         treeItem.setExpanded(true);

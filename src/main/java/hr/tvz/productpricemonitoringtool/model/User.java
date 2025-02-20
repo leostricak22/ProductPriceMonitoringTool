@@ -5,6 +5,10 @@ import hr.tvz.productpricemonitoringtool.enumeration.Role;
 import java.io.Serializable;
 import java.util.Set;
 
+/**
+ * User model.
+ * Represents the user in the model.
+ */
 public class User extends Entity  implements Serializable {
 
     private String surname;

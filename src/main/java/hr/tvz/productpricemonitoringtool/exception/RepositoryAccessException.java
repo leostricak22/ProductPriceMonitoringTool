@@ -1,5 +1,9 @@
 package hr.tvz.productpricemonitoringtool.exception;
 
+/**
+ * Exception for the repository access.
+ * Thrown when the repository access fails.
+ */
 public class RepositoryAccessException extends RuntimeException {
     public RepositoryAccessException(String message) {
         super(message);

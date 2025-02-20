@@ -10,6 +10,14 @@ import hr.tvz.productpricemonitoringtool.util.Session;
 import javafx.fxml.FXML;
 import javafx.scene.control.PasswordField;
 
+/**
+ * Controller for the user edit password view.
+ * Handles the form for editing user password.
+ * Validates the input and saves the user to the database.
+ * @see User
+ * @see UserFileRepository
+ * @see AlertDialog
+ */
 public class UserEditPasswordController {
 
     @FXML public PasswordField passwordField;
@@ -17,6 +25,10 @@ public class UserEditPasswordController {
 
     UserFileRepository userFileRepository = new UserFileRepository();
 
+    /**
+     * Handles the password change form.
+     * Validates the input and saves the user to the database.
+     */
     public void handleEditPassword() {
         User user = Session.getLoggedInUser().orElseThrow(() -> new AuthenticationException("No user is logged in."));
 
@@ -37,6 +49,10 @@ public class UserEditPasswordController {
         SceneLoader.loadScene("user_edit", "Edit user");
     }
 
+    /**
+     * Validates the input.
+     * @param password the password
+     */
     private String validateInput(String password, String confirmPassword) {
         if (password.trim().length() < 8) {
             return "Password must be at least 8 characters long.";

@@ -19,6 +19,17 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Controller for the company edit view.
+ * Handles the form for editing companies.
+ * Validates the input and saves the company to the database.
+ * @see Company
+ * @see Address
+ * @see AddressRepository
+ * @see CompanyRepository
+ * @see UserFileRepository
+ * @see AlertDialog
+ */
 public class CompanyEditController {
 
     @FXML public Label sectionTitleLabel;
@@ -32,6 +43,10 @@ public class CompanyEditController {
     private final CompanyRepository companyRepository = new CompanyRepository();
     private final UserFileRepository userFileRepository = new UserFileRepository();
 
+    /**
+     * Initializes the view.
+     * Fills the form with the company data if present.
+     */
     public void initialize() {
         Company company = Session.getSelectedCompany().orElseThrow(() ->
                 new AuthenticationException("Company is not selected"));
@@ -43,6 +58,10 @@ public class CompanyEditController {
         addressLabel.setText(address.getAddress());
     }
 
+    /**
+     * Handles the form submit.
+     * Validates the input and saves the company to the database.
+     */
     public void handleEdit() {
         String name = nameTextField.getText();
 
@@ -91,11 +110,20 @@ public class CompanyEditController {
         SceneLoader.loadScene("company_dashboard", "Dashboard");
     }
 
+    /**
+     * Handles the address creation.
+     * Opens the address form and saves the created address.
+     */
     public void handleMapButton() {
         Optional<Address> optionalAddress = MapUtil.handleMapPick(address, addressLabel);
         optionalAddress.ifPresent(addressOptional -> this.address = addressOptional);
     }
 
+    /**
+     * Validates the input.
+     * @param name Company name
+     * @return Error message if the input is not valid
+     */
     private String validateInput(String name) {
         if(name.trim().isEmpty()) {
             return "Name is required";
@@ -107,6 +135,10 @@ public class CompanyEditController {
         return "";
     }
 
+    /**
+     * Gets the selected company.
+     * @return Selected company
+     */
     private Company getCompany() {
         return Session.getSelectedCompany().orElseThrow(() ->
                 new AuthenticationException("Company is not selected"));

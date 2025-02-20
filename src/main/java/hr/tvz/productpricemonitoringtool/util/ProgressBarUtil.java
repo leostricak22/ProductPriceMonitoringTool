@@ -6,6 +6,10 @@ import javafx.scene.layout.StackPane;
 
 import java.math.BigDecimal;
 
+/**
+ * ProgressBarUtil class.
+ * Contains methods for creating, updating and removing progress bar.
+ */
 public class ProgressBarUtil {
 
     private ProgressBar progressBar;
@@ -17,6 +21,9 @@ public class ProgressBarUtil {
         create();
     }
 
+    /**
+     * Method for creating progress bar.
+     */
     public void create() {
         progressBarStackPane = new StackPane();
         progressBarStackPane.setPrefSize(Constants.SCENE_WIDTH, Constants.SCENE_HEIGHT);
@@ -30,14 +37,27 @@ public class ProgressBarUtil {
         GridPane.setColumnSpan(progressBarStackPane, 2);
     }
 
+    /**
+     * Method for updating progress bar.
+     * @param progress Progress.
+     */
     public void update(BigDecimal progress) {
         progressBar.setProgress(progress.doubleValue());
     }
 
+    /**
+     * Method for removing progress bar.
+     */
     public void remove() {
         mainPane.getChildren().remove(progressBarStackPane);
     }
 
+    /**
+     * Method for imitating progress counter.
+     * @param counter Counter.
+     * @return BigDecimal.
+     *         Imitated progress counter.
+     */
     public static BigDecimal imitateProgressCounter(BigDecimal counter) {
         if(counter.compareTo(BigDecimal.valueOf(30)) < 0)
             return counter.add(BigDecimal.valueOf(1));

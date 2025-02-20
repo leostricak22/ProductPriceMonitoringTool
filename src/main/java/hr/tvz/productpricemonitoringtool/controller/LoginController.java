@@ -13,6 +13,15 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
+/**
+ * Controller for the login view.
+ * Handles the login form.
+ * @see User
+ * @see UserFileRepository
+ * @see AlertDialog
+ * @see SceneLoader
+ * @see Session
+ */
 public class LoginController  {
 
     @FXML public TextField emailTextField;
@@ -21,6 +30,10 @@ public class LoginController  {
     private static final Logger logger = LoggerFactory.getLogger(LoginController.class);
     private final UserFileRepository userFileRepository = new UserFileRepository();
 
+    /**
+     * Handles the login form.
+     * Validates the input and logs the user in.
+     */
     public void handleLogin() {
         String email = emailTextField.getText();
         String password = passwordPasswordField.getText();
@@ -37,10 +50,18 @@ public class LoginController  {
         SceneLoader.loadScene("dashboard", "Dashboard");
     }
 
+    /**
+     * Handles the register button.
+     * Redirects to the register view.
+     */
     public void handleRegisterOpen() {
         SceneLoader.loadScene("register", "Register");
     }
 
+    /**
+     * Handles the continue as guest button.
+     * Logs the user in as a guest.
+     */
     public void handleContinueAsGuest() {
         Session.setLoggedInUser(Session.getGuestUser());
         SceneLoader.loadScene("dashboard", "Dashboard");

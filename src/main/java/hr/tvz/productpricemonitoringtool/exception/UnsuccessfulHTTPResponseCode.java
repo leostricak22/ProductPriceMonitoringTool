@@ -1,5 +1,9 @@
 package hr.tvz.productpricemonitoringtool.exception;
 
+/**
+ * Exception for the unsuccessful HTTP response code.
+ * Thrown when the HTTP response code is unsuccessful.
+ */
 public class UnsuccessfulHTTPResponseCode extends Exception {
     public UnsuccessfulHTTPResponseCode(String message) {
         super(message);

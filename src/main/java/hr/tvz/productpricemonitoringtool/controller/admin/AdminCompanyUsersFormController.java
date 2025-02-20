@@ -16,6 +16,17 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Controller for the admin company users form view.
+ * Handles the form for adding and editing company users.
+ * Validates the input and saves the company user to the database.
+ * @see Company
+ * @see CompanyRepository
+ * @see User
+ * @see UserFileRepository
+ * @see UserCompanyRepository
+ * @see AlertDialog
+ */
 public class AdminCompanyUsersFormController {
 
     @FXML public ComboBox<Company> companyComboBox;
@@ -28,6 +39,11 @@ public class AdminCompanyUsersFormController {
     private final UserFileRepository userFileRepository = new UserFileRepository();
     private final UserCompanyRepository userCompanyRepository = new UserCompanyRepository();
 
+    /**
+     * Initializes the view.
+     * If the company user is present, fills the form with the company user data.
+     * @param userCompany Optional company user to edit
+     */
     public void initialize(Optional<UserCompanyDBO> userCompany) {
         ComboBoxUtil.comboBoxStringConverter(companyComboBox);
         ComboBoxUtil.comboBoxStringConverter(userComboBox);
@@ -58,6 +74,10 @@ public class AdminCompanyUsersFormController {
         }
     }
 
+    /**
+     * Handles the submit button action.
+     * Validates the input and saves the company user to the database.
+     */
     public void handleSubmit() {
         String validationMessage = validateInput();
 
@@ -84,6 +104,10 @@ public class AdminCompanyUsersFormController {
         }
     }
 
+    /**
+     * Validates the input.
+     * @return Error message if the input is not valid
+     */
     public String validateInput() {
         if (isNull(companyComboBox.getValue())) {
             return "Company is required";

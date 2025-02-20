@@ -22,6 +22,15 @@ import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Controller for the admin company view.
+ * Handles the company search and filtering.
+ * @see Company
+ * @see CompanyRepository
+ * @see SearchController
+ * @see AlertDialog
+ * @see PopupSceneLoader
+ */
 public class AdminCompanyController implements SearchController {
 
     @FXML
@@ -51,6 +60,11 @@ public class AdminCompanyController implements SearchController {
     private final CompanyRepository companyRepository = new CompanyRepository();
     private final AddressRepository addressRepository = new AddressRepository();
 
+    /**
+     * Initializes the view.
+     * Loads the companies and addresses.
+     * Sets the cell value factories for the table columns.
+     */
     @Override
     public void initialize() {
         idTableColumn.setCellValueFactory(cellData ->
@@ -77,6 +91,10 @@ public class AdminCompanyController implements SearchController {
         filter();
     }
 
+    /**
+     * Filters the companies based on the input values.
+     * Shows the filter label if any filter is applied.
+     */
     @Override
     public void filter() {
         companyTableView.getItems().clear();
@@ -106,6 +124,10 @@ public class AdminCompanyController implements SearchController {
                 .toList()));
     }
 
+    /**
+     * Removes the filters and clears the input fields.
+     * Refreshes the table.
+     */
     @Override
     public void removeFilters() {
         idTextField.clear();
@@ -116,6 +138,10 @@ public class AdminCompanyController implements SearchController {
         filter();
     }
 
+    /**
+     * Handles the add new button click.
+     * Opens the popup window for adding a new company.
+     */
     @Override
     public void handleAddNewButtonClick() {
         PopupSceneLoader.loadCompanyFormPopupScene(
@@ -123,6 +149,10 @@ public class AdminCompanyController implements SearchController {
         filter();
     }
 
+    /**
+     * Handles the edit button click.
+     * Opens the popup window for editing the selected company.
+     */
     @Override
     public void handleEditButtonClick() {
         Company selectedCompany = companyTableView.getSelectionModel().getSelectedItem();
@@ -136,6 +166,10 @@ public class AdminCompanyController implements SearchController {
         filter();
     }
 
+    /**
+     * Handles the delete button click.
+     * Deletes the selected company.
+     */
     @Override
     public void handleDeleteButtonClick() {
         Company selectedCompany = companyTableView.getSelectionModel().getSelectedItem();
@@ -157,11 +191,14 @@ public class AdminCompanyController implements SearchController {
         filter();
     }
 
+    /**
+     * Shows the filter label if any filter is applied.
+     */
     private void showFilterLabel() {
         removeFiltersLabel.setVisible(
                 !idTextField.getText().isEmpty() ||
-                        !nameTextField.getText().isEmpty() ||
-                        !joinCodeTextField.getText().isEmpty() ||
-                        !isNull(addressComboBox.getValue()));
+                !nameTextField.getText().isEmpty() ||
+                !joinCodeTextField.getText().isEmpty() ||
+                !isNull(addressComboBox.getValue()));
     }
 }

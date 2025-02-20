@@ -16,6 +16,10 @@ import java.io.File;
 import java.util.HashSet;
 import java.util.Optional;
 
+/**
+ * Session class.
+ * Contains methods for managing user session.
+ */
 public class Session {
 
     private static final Logger log = LoggerFactory.getLogger(Session.class);
@@ -25,6 +29,10 @@ public class Session {
 
     private Session() {}
 
+    /**
+     * Method for setting logged in user.
+     * @param user User.
+     */
     public static void setLoggedInUser(User user) {
         loggedInUser = Optional.of(user);
         CheckNotificationsThread.start();
@@ -61,6 +69,10 @@ public class Session {
         return selectedProduct;
     }
 
+    /**
+     * Method for getting user profile picture.
+     * @return Image.
+     */
     public static Image getUserProfilePicture() {
         if (loggedInUser.isEmpty()) {
             throw new AuthenticationException("No user is logged in.");
@@ -80,6 +92,11 @@ public class Session {
                 new Image("file:files/user/default_profile_picture.png"));
     }
 
+    /**
+     * Method for getting guest user.
+     * @return User.
+     *         Guest user.
+     */
     public static User getGuestUser() {
         return new User.Builder(0L, "Customer")
                 .role(Role.CUSTOMER)
@@ -87,6 +104,9 @@ public class Session {
                 .build();
     }
 
+    /**
+     * Method for logging out.
+     */
     public static void logout() {
         loggedInUser = Optional.empty();
         selectedCompany = Optional.empty();

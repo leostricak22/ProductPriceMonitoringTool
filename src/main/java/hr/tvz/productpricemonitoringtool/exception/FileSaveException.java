@@ -1,5 +1,9 @@
 package hr.tvz.productpricemonitoringtool.exception;
 
+/**
+ * Exception for the file save.
+ * Thrown when the file save fails.
+ */
 public class FileSaveException extends RuntimeException {
   public FileSaveException(String message) {
     super(message);

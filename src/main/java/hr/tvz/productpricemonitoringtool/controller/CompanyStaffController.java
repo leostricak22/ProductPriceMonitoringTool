@@ -19,6 +19,14 @@ import javafx.scene.control.TableView;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Controller for the company staff view.
+ * Handles the company staff list and join code.
+ * @see User
+ * @see UserCompanyRepository
+ * @see AlertDialog
+ * @see Session
+ */
 public class CompanyStaffController {
 
     @FXML public Button showCodeButton;
@@ -34,6 +42,11 @@ public class CompanyStaffController {
 
     private final UserCompanyRepository userCompanyRepository = new UserCompanyRepository();
 
+    /**
+     * Initializes the view.
+     * Fills the table with the company staff.
+     * Hides the join code.
+     */
     public void initialize() {
         codeLabel.setVisible(false);
         copyCodeLabel.setVisible(false);
@@ -71,6 +84,10 @@ public class CompanyStaffController {
         }
     }
 
+    /**
+     * Handles the show code button.
+     * Shows or hides the join code.
+     */
     public void handleShowCode() {
         if (codeLabel.isVisible()) {
             codeLabel.setVisible(false);
@@ -92,6 +109,10 @@ public class CompanyStaffController {
         showCodeButton.setText("Hide code");
     }
 
+    /**
+     * Handles the copy code label.
+     * Copies the join code to the clipboard.
+     */
     public void handleCopyCode() {
         if (!codeLabel.isVisible()) {
             return;

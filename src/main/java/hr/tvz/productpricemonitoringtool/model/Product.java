@@ -10,6 +10,10 @@ import java.util.Set;
 
 import static java.util.Objects.isNull;
 
+/**
+ * Product model.
+ * Represents the product in the model.
+ */
 public class Product extends Entity implements Serializable {
 
     private Category category;
@@ -90,6 +94,11 @@ public class Product extends Entity implements Serializable {
         }
     }
 
+    /**
+     * Get image of the product.
+     * @return Image of the product.
+     * If the image does not exist, return the default image.
+     */
     public Image getImage() {
         for (String extension : Constants.IMAGE_EXTENSIONS) {
             String filePath = "files/product/" + super.id + extension.substring(1);

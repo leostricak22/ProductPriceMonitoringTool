@@ -7,10 +7,18 @@ import javafx.application.Application;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
+/**
+ * Main class of the application.
+ * Starts the application and loads the login scene.
+ */
 public class ProductPriceMonitoringToolApplication extends Application {
 
     private static Stage mainStage;
 
+    /**
+     * Starts the application and loads the login scene.
+     * @param stage Stage of the application.
+     */
     @Override
     public void start(Stage stage) {
         AuditLogManager.load();
@@ -22,18 +30,31 @@ public class ProductPriceMonitoringToolApplication extends Application {
         stage.show();
     }
 
+    /**
+     * Main method of the application.
+     * @param args Arguments of the application.
+     */
     public static void main(String[] args) {
         launch();
     }
 
+    /**
+     * Gets the main stage of the application.
+     */
     public static Stage getMainStage() {
         return mainStage;
     }
 
+    /**
+     * Sets the main stage of the application.
+     */
     public static void setMainStage(Stage stage) {
         mainStage = stage;
     }
 
+    /**
+     * Sets the configuration of the stage.
+     */
     public static void setStageConfiguration(Stage stage) {
         stage.setTitle("Product Price Monitoring Tool");
         stage.setWidth(Constants.SCENE_WIDTH);
