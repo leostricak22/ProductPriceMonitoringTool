@@ -1,5 +1,6 @@
 package hr.tvz.productpricemonitoringtool.main;
 
+import hr.tvz.productpricemonitoringtool.model.AuditLogManager;
 import hr.tvz.productpricemonitoringtool.util.Constants;
 import hr.tvz.productpricemonitoringtool.util.SceneLoader;
 import javafx.application.Application;
@@ -12,6 +13,8 @@ public class ProductPriceMonitoringToolApplication extends Application {
 
     @Override
     public void start(Stage stage) {
+        AuditLogManager.load();
+
         setMainStage(stage);
         setStageConfiguration(stage);
         SceneLoader.loadScene("login", "Login");

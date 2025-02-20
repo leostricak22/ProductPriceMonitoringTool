@@ -1,12 +1,15 @@
 package hr.tvz.productpricemonitoringtool.repository;
 
+import hr.tvz.productpricemonitoringtool.exception.AuthenticationException;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.exception.RepositoryAccessException;
+import hr.tvz.productpricemonitoringtool.model.AuditLogManager;
 import hr.tvz.productpricemonitoringtool.model.Category;
 import hr.tvz.productpricemonitoringtool.model.Product;
 import hr.tvz.productpricemonitoringtool.model.dbo.ProductDBO;
 import hr.tvz.productpricemonitoringtool.util.DatabaseUtil;
 import hr.tvz.productpricemonitoringtool.util.ObjectMapper;
+import hr.tvz.productpricemonitoringtool.util.Session;
 
 import java.io.IOException;
 import java.sql.*;
@@ -154,6 +157,9 @@ public class ProductRepository extends AbstractRepository<Product> {
         }
 
         for (Product product : entities) {
+            AuditLogManager.logChange("Product", "-", product.toString(),
+                    Session.getLoggedInUser().orElseThrow(
+                            () -> new AuthenticationException("User not logged in")));
             if (!isNull(product.getCompanyProducts())) {
                 companyProductRepository.saveProductToCompanies(product);
             }
@@ -178,6 +184,8 @@ public class ProductRepository extends AbstractRepository<Product> {
         UPDATE "product" SET name = ?, category_id = ?, description = ? WHERE id = ?;
         """;
 
+        Product oldProduct = new Product(product);
+
         try (Connection connection = DatabaseUtil.connectToDatabase();
              PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, product.getName());
@@ -193,7 +201,13 @@ public class ProductRepository extends AbstractRepository<Product> {
             notifyAll();
         }
 
-        companyProductRepository.saveProductToCompanies(product);
+        AuditLogManager.logChange("Product", oldProduct.toString(), product.toString(),
+                Session.getLoggedInUser().orElseThrow(
+                        () -> new AuthenticationException("User not logged in")));
+
+        if (!isNull(product.getCompanyProducts()) && !product.getCompanyProducts().isEmpty()) {
+            companyProductRepository.saveProductToCompanies(product);
+        }
     }
 
     public synchronized void delete(Product product) throws RepositoryAccessException, DatabaseConnectionActiveException {
@@ -212,6 +226,8 @@ public class ProductRepository extends AbstractRepository<Product> {
         DELETE FROM "product" WHERE id = ?;
         """;
 
+        Product oldProduct = new Product(product);
+
         try (Connection connection = DatabaseUtil.connectToDatabase();
              PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setLong(1, product.getId());
@@ -223,5 +239,9 @@ public class ProductRepository extends AbstractRepository<Product> {
             DatabaseUtil.setActiveConnectionWithDatabase(false);
             notifyAll();
         }
+
+        AuditLogManager.logChange("Product", oldProduct.toString(), "-",
+                Session.getLoggedInUser().orElseThrow(
+                        () -> new AuthenticationException("User not logged in")));
     }
 }

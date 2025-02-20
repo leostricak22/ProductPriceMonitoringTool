@@ -119,4 +119,10 @@ public class MenuController {
                 "admin_company_staff",
                 "Admin Company Staff");
     }
+
+    public void handleAuditLogRedirect() {
+        SceneLoader.loadScene(
+                "audit_log",
+                "Audit Log");
+    }
 }

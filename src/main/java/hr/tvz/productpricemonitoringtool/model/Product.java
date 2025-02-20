@@ -21,6 +21,13 @@ public class Product extends Entity implements Serializable {
         this.description = builder.description;
     }
 
+    public Product(Product product) {
+        super(product.getId(), product.getName());
+        this.category = product.getCategory();
+        this.companyProducts = product.getCompanyProducts();
+        this.description = product.getDescription();
+    }
+
     public Category getCategory() {
         return category;
     }
@@ -94,5 +101,14 @@ public class Product extends Entity implements Serializable {
 
         return FileUtil.cropImageToSquare(
                 new Image(Constants.NO_IMAGE_URL));
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "category=" + category.getName() +
+                ", companyProducts=" + companyProducts.size() +
+                ", description='" + description + '\'' +
+                '}';
     }
 }

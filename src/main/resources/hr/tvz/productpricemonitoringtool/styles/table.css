@@ -3,8 +3,12 @@
     -fx-padding: 5px 10px;
 }
 
+.table-view .column-header-background {
+    -fx-background-color: #7284b3;
+}
+
 .table-view .column-header {
-    -fx-background-color: transparent;
+    -fx-background-color: #7284b3;
 }
 
 .table-view .column-header .label {

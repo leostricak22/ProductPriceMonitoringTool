@@ -51,6 +51,7 @@
                 <MenuItem onAction="#handleAdminAddressRedirect" text="Address" />
                 <MenuItem onAction="#handleAdminCompanyProductsRedirect" text="Company products" />
                 <MenuItem onAction="#handleAdminCompanyStaffRedirect" text="Company staff" />
+                <MenuItem onAction="#handleAuditLogRedirect" text="Audit logs" />
             </items>
         </MenuButton>
 

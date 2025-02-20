@@ -81,7 +81,7 @@ public class AdminProductFormController {
                     .build();
 
             try {
-                if (productEdit.isPresent()) {
+                if (!isNull(productEdit) && productEdit.isPresent()) {
                     product.setId(productEdit.get().getId());
                     product.setCompanyProducts(productEdit.get().getCompanyProducts());
                     productRepository.update(product);

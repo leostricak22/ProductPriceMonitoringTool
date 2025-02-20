@@ -12,12 +12,14 @@ module hr.tvz.productpricemonitoringtool {
     requires java.sql;
     requires com.google.gson;
     requires jbcrypt;
+    requires java.desktop;
 
     opens hr.tvz.productpricemonitoringtool to javafx.fxml;
     opens hr.tvz.productpricemonitoringtool.util to javafx.web;
     exports hr.tvz.productpricemonitoringtool.main;
     exports hr.tvz.productpricemonitoringtool.controller;
-    opens hr.tvz.productpricemonitoringtool.model to com.google.gson;
+    opens hr.tvz.productpricemonitoringtool.model to com.google.gson, javafx.base;
     opens hr.tvz.productpricemonitoringtool.model.json to com.google.gson;
     exports hr.tvz.productpricemonitoringtool.controller.admin;
+    opens hr.tvz.productpricemonitoringtool.controller.admin to javafx.fxml;
 }
