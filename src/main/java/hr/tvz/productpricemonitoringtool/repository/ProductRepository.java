@@ -1,5 +1,6 @@
 package hr.tvz.productpricemonitoringtool.repository;
 
+import hr.tvz.productpricemonitoringtool.enumeration.LogChangeField;
 import hr.tvz.productpricemonitoringtool.exception.AuthenticationException;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.exception.RepositoryAccessException;
@@ -76,13 +77,21 @@ public class ProductRepository extends AbstractRepository<Product> {
         Set<ProductDBO> productsDBO = new HashSet<>();
 
         try (Connection connection = DatabaseUtil.connectToDatabase();
-             var stmt = connection.prepareStatement(query)) {
+             PreparedStatement stmt = connection.prepareStatement(query)) {
 
             for (Category c : allCategories) {
                 stmt.setLong(1, c.getId());
-                ResultSet resultSet = stmt.executeQuery();
-                while (resultSet.next()) {
-                    productsDBO.add(ObjectMapper.mapResultSetToProductDBO(resultSet));
+                stmt.addBatch();
+            }
+
+            ResultSet resultSet = null;
+            int[] batchResults = stmt.executeBatch();
+            for (int batchResult : batchResults) {
+                if (batchResult != Statement.EXECUTE_FAILED) {
+                    resultSet = stmt.getResultSet();
+                    while (resultSet.next()) {
+                        productsDBO.add(ObjectMapper.mapResultSetToProductDBO(resultSet));
+                    }
                 }
             }
         } catch (SQLException | IOException e) {
@@ -103,13 +112,18 @@ public class ProductRepository extends AbstractRepository<Product> {
 
         try (Connection connection = DatabaseUtil.connectToDatabase();
              PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+
             for (Product p : entities) {
                 stmt.setString(1, p.getName());
                 stmt.setLong(2, p.getCategory().getId());
                 stmt.setString(3, p.getDescription());
+                stmt.addBatch();
+            }
 
-                stmt.executeUpdate();
-                try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+            stmt.executeBatch();
+
+            try (ResultSet generatedKeys = stmt.getGeneratedKeys()) {
+                for (Product p : entities) {
                     if (generatedKeys.next()) {
                         p.setId(generatedKeys.getLong(1));
                     } else {
@@ -117,6 +131,7 @@ public class ProductRepository extends AbstractRepository<Product> {
                     }
                 }
             }
+
         } catch (SQLException | IOException e) {
             throw new RepositoryAccessException(e);
         } finally {
@@ -125,7 +140,7 @@ public class ProductRepository extends AbstractRepository<Product> {
         }
 
         for (Product product : entities) {
-            AuditLogManager.logChange("Product", "-", product.toString(),
+            AuditLogManager.logChange(LogChangeField.PRODUCT.toString(), "-", product,
                     Session.getLoggedInUser().orElseThrow(
                             () -> new AuthenticationException("User not logged in")));
             if (!isNull(product.getCompanyProducts())) {
@@ -158,9 +173,9 @@ public class ProductRepository extends AbstractRepository<Product> {
             notifyAll();
         }
 
-        AuditLogManager.logChange("Product", oldProduct.toString(), product.toString(),
+        AuditLogManager.logChange(LogChangeField.PRODUCT.toString(), oldProduct, product.toString(),
                 Session.getLoggedInUser().orElseThrow(
-                        () -> new AuthenticationException("User not logged in")));
+                        () -> new AuthenticationException("User not loggedin")));
 
         if (!isNull(product.getCompanyProducts()) && !product.getCompanyProducts().isEmpty()) {
             companyProductWriteRepository.saveProductToCompanies(product);
@@ -186,7 +201,7 @@ public class ProductRepository extends AbstractRepository<Product> {
             notifyAll();
         }
 
-        AuditLogManager.logChange("Product", oldProduct.toString(), "-",
+        AuditLogManager.logChange(LogChangeField.PRODUCT.toString(), oldProduct, "-",
                 Session.getLoggedInUser().orElseThrow(
                         () -> new AuthenticationException("User not logged in")));
     }

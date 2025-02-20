@@ -1,6 +1,7 @@
 package hr.tvz.productpricemonitoringtool.repository;
 
 import hr.tvz.productpricemonitoringtool.enumeration.CompanyProductRecordType;
+import hr.tvz.productpricemonitoringtool.enumeration.FindingObject;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.exception.RepositoryAccessException;
 import hr.tvz.productpricemonitoringtool.model.CompanyProduct;
@@ -81,7 +82,7 @@ public class CompanyProductReadRepository {
         return companyProductsDBO.stream()
                 .map(companyProductDBO -> {
                     try {
-                        return ObjectMapper.mapCompanyProductDBOToCompanyProduct(companyProductDBO, "product");
+                        return ObjectMapper.mapCompanyProductDBOToCompanyProduct(companyProductDBO, FindingObject.PRODUCT.getValue());
                     } catch (DatabaseConnectionActiveException e) {
                         throw new RepositoryAccessException(e);
                     }

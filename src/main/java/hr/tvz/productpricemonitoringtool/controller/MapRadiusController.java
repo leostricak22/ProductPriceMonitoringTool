@@ -6,15 +6,12 @@ import hr.tvz.productpricemonitoringtool.model.Coordinates;
 import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
 import hr.tvz.productpricemonitoringtool.util.*;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import netscape.javascript.JSObject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -102,7 +99,7 @@ public class MapRadiusController {
         }
 
         BigDecimal radius = new BigDecimal(radiusTextField.getText());
-        Set<Company> companiesInRadius = new HashSet<>();
+        Set<Company> companiesInRadiusSet = new HashSet<>();
         for (Company company : companies) {
             Coordinates companyCoordinates = new Coordinates.Builder()
                     .latitude(company.getAddress().getLatitude())
@@ -111,11 +108,11 @@ public class MapRadiusController {
 
             BigDecimal distance = MapUtil.calculateDistance(coordinates, companyCoordinates);
             if (distance.compareTo(radius) <= 0) {
-                companiesInRadius.add(company);
+                companiesInRadiusSet.add(company);
             }
         }
 
-        this.companiesInRadius = companiesInRadius;
+        this.companiesInRadius = companiesInRadiusSet;
     }
 
     public Set<Company> getCompaniesInRadius() {

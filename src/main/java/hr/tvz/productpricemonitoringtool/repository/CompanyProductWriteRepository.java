@@ -10,14 +10,14 @@ import hr.tvz.productpricemonitoringtool.model.dbo.CompanyProductDBO;
 import hr.tvz.productpricemonitoringtool.util.DatabaseUtil;
 
 import java.io.IOException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class CompanyProductWriteRepository {
 
-    // Wait until no other thread is active, then mark the connection active.
+    public static final String COMPANY_PRODUCT_INSERT_QUERY = """
+            INSERT INTO "company_product" (company_id, product_id, price) VALUES (?, ?, ?);
+        """;
+
     private synchronized void waitForDatabaseConnectionReady() throws DatabaseConnectionActiveException {
         while (Boolean.TRUE.equals(DatabaseUtil.isActiveConnectionWithDatabase())) {
             try {
@@ -33,9 +33,7 @@ public class CompanyProductWriteRepository {
     public synchronized void saveProductToCompanies(Product product)
             throws DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
-        String query = """
-            INSERT INTO "company_product" (company_id, product_id, price) VALUES (?, ?, ?);
-        """;
+        String query = COMPANY_PRODUCT_INSERT_QUERY;
         try (Connection connection = DatabaseUtil.connectToDatabase();
              PreparedStatement stmt = connection.prepareStatement(query)) {
             for (CompanyProduct companyProduct : product.getCompanyProducts()) {
@@ -56,9 +54,7 @@ public class CompanyProductWriteRepository {
     public synchronized void updatePrice(Long companyId, Long productId, Price price)
             throws DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
-        String query = """
-            INSERT INTO "company_product" (company_id, product_id, price) VALUES (?, ?, ?);
-        """;
+        String query = COMPANY_PRODUCT_INSERT_QUERY;
         try (Connection connection = DatabaseUtil.connectToDatabase();
              PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setLong(1, companyId);
@@ -76,11 +72,9 @@ public class CompanyProductWriteRepository {
     public synchronized CompanyProduct save(CompanyProduct companyProduct)
             throws DatabaseConnectionActiveException {
         waitForDatabaseConnectionReady();
-        String query = """
-            INSERT INTO "company_product" (company_id, product_id, price) VALUES (?, ?, ?);
-        """;
+        String query = COMPANY_PRODUCT_INSERT_QUERY;
         try (Connection connection = DatabaseUtil.connectToDatabase();
-             PreparedStatement stmt = connection.prepareStatement(query, PreparedStatement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
             stmt.setLong(1, companyProduct.getCompany().getId());
             stmt.setLong(2, companyProduct.getProduct().getId());
             stmt.setBigDecimal(3, companyProduct.getPrice().value());

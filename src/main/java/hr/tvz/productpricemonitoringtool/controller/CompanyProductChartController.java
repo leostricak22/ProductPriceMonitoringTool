@@ -6,7 +6,6 @@ import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.CompanyProduct;
 import hr.tvz.productpricemonitoringtool.model.Product;
 import hr.tvz.productpricemonitoringtool.repository.CompanyProductReadRepository;
-import hr.tvz.productpricemonitoringtool.repository.CompanyProductWriteRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
 import hr.tvz.productpricemonitoringtool.util.SceneLoader;
 import hr.tvz.productpricemonitoringtool.util.Session;
@@ -26,7 +25,6 @@ public class CompanyProductChartController {
     @FXML public LineChart<String, BigDecimal> productPriceLineChart;
     @FXML public Label chartNameLabel;
 
-    private final CompanyProductWriteRepository companyProductWriteRepository = new CompanyProductWriteRepository();
     private final CompanyProductReadRepository companyProductReadRepository = new CompanyProductReadRepository();
 
     public void initialize(Company company) {

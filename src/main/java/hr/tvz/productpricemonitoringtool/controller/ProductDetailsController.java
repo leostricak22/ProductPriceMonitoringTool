@@ -9,10 +9,7 @@ import hr.tvz.productpricemonitoringtool.model.Product;
 import hr.tvz.productpricemonitoringtool.repository.CategoryRepository;
 import hr.tvz.productpricemonitoringtool.repository.CompanyProductReadRepository;
 import hr.tvz.productpricemonitoringtool.repository.CompanyProductWriteRepository;
-import hr.tvz.productpricemonitoringtool.util.AlertDialog;
-import hr.tvz.productpricemonitoringtool.util.PopupSceneLoader;
-import hr.tvz.productpricemonitoringtool.util.SceneLoader;
-import hr.tvz.productpricemonitoringtool.util.Session;
+import hr.tvz.productpricemonitoringtool.util.*;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.chart.LineChart;
@@ -81,8 +78,8 @@ public class ProductDetailsController {
             companyProducts = new ArrayList<>(companyProductReadRepository.findByProductId(selectedProduct.getId(),
                     CompanyProductRecordType.LATEST_RECORD));
         } catch (DatabaseConnectionActiveException e) {
-            AlertDialog.showErrorDialog("Please try again later.");
-            SceneLoader.loadScene("dashboard", "Dashboard");
+            AlertDialog.showErrorDialog(Constants.TRY_AGAIN_LATER_ERROR_MESSAGE);
+            SceneLoader.loadScene(Constants.DASHBOARD_FILE_NAME, Constants.DASHBOARD_TITLE);
         }
 
         BigDecimal lowestPrice = companyProducts.stream()
@@ -126,7 +123,7 @@ public class ProductDetailsController {
             createProductLineChart(selectedProduct.getId());
         } catch (DatabaseConnectionActiveException e) {
             AlertDialog.showErrorDialog("Please try again later.");
-            SceneLoader.loadScene("dashboard", "Dashboard");
+            SceneLoader.loadScene(Constants.DASHBOARD_FILE_NAME, Constants.DASHBOARD_TITLE);
         }
     }
 
@@ -210,7 +207,7 @@ public class ProductDetailsController {
 
     public void handleUnselectedProductOrCompany() {
         AlertDialog.showErrorDialog("Please select a product first.");
-        SceneLoader.loadScene("dashboard", "Dashboard");
+        SceneLoader.loadScene(Constants.DASHBOARD_FILE_NAME, Constants.DASHBOARD_TITLE);
     }
 
     public void createProductLineChart(Long productId) throws DatabaseConnectionActiveException {

@@ -1,13 +1,13 @@
 package hr.tvz.productpricemonitoringtool.controller.admin;
 
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
-import hr.tvz.productpricemonitoringtool.exception.RepositoryAccessException;
 import hr.tvz.productpricemonitoringtool.exception.RepositoryQueryException;
 import hr.tvz.productpricemonitoringtool.model.*;
 import hr.tvz.productpricemonitoringtool.model.dbo.UserCompanyDBO;
 import hr.tvz.productpricemonitoringtool.repository.*;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
 import hr.tvz.productpricemonitoringtool.util.ComboBoxUtil;
+import hr.tvz.productpricemonitoringtool.util.Constants;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.stage.Stage;
@@ -36,7 +36,7 @@ public class AdminCompanyUsersFormController {
             companyComboBox.getItems().setAll(companyRepository.findAll());
             userComboBox.getItems().setAll(userFileRepository.findAll());
         } catch (DatabaseConnectionActiveException e) {
-            AlertDialog.showErrorDialog("Error fetching data");
+            AlertDialog.showErrorDialog(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
             return;
         }
 
@@ -44,11 +44,11 @@ public class AdminCompanyUsersFormController {
             UserCompanyDBO cp = userCompany.get();
 
             try {
-                companyComboBox.setValue(companyRepository.findById(cp.getCompanyId()).orElseThrow(() -> new RepositoryQueryException("Error fetching data")));
+                companyComboBox.setValue(companyRepository.findById(cp.getCompanyId()).orElseThrow(() -> new RepositoryQueryException(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE)));
                 userComboBox.setValue(userFileRepository.findById(cp.getUserId()).orElse(null));
                 submitButton.setText("Edit");
             } catch (DatabaseConnectionActiveException e) {
-                AlertDialog.showErrorDialog("Error fetching data");
+                AlertDialog.showErrorDialog(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
                 return;
             }
 

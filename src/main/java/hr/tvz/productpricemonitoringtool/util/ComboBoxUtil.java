@@ -7,8 +7,11 @@ import javafx.util.StringConverter;
 
 public class ComboBoxUtil {
 
+    private ComboBoxUtil() {}
+
     public static <T extends Entity> void comboBoxStringConverter(ComboBox<T> comboBox) {
         comboBox.setCellFactory(cellData -> new ListCell<T>() {
+            @Override
             public void updateItem(T object, boolean empty) {
                 super.updateItem(object, empty);
 

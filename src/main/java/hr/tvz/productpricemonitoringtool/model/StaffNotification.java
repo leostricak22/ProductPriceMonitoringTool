@@ -3,24 +3,39 @@ package hr.tvz.productpricemonitoringtool.model;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.exception.SerializationException;
 import hr.tvz.productpricemonitoringtool.model.dbo.UserCompanyDBO;
-import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
 import hr.tvz.productpricemonitoringtool.repository.UserCompanyRepository;
 import hr.tvz.productpricemonitoringtool.util.Constants;
 import hr.tvz.productpricemonitoringtool.util.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public non-sealed class StaffNotification extends Notification  implements Serializable {
+public non-sealed class StaffNotification extends Notification implements Serializable {
 
-    public static List<UserCompanyDBO> deserializedUserCompanyDBOList = new ArrayList<>();
-    public static List<UserCompanyDBO> newUserCompanyDBORecords = new ArrayList<>();
+    private static final Logger log = LoggerFactory.getLogger(StaffNotification.class);
+    protected static List<UserCompanyDBO> deserializedUserCompanyDBOList = new ArrayList<>();
+    protected static List<UserCompanyDBO> newUserCompanyDBORecords = new ArrayList<>();
 
-    private static final CompanyRepository companyRepository = new CompanyRepository();
-    private final UserCompanyRepository userCompanyRepository = new UserCompanyRepository();
+    private final transient UserCompanyRepository userCompanyRepository = new UserCompanyRepository();
 
-    public StaffNotification() {}
+    public StaffNotification() {
+        log.info("Staff Notification");
+    }
+
+    public static List<UserCompanyDBO> getNewUserCompanyDBORecords() {
+        return newUserCompanyDBORecords;
+    }
+
+    public static void setNewUserCompanyDBORecords(List<UserCompanyDBO> newUserCompanyDBORecords) {
+        StaffNotification.newUserCompanyDBORecords = newUserCompanyDBORecords;
+    }
+
+    public static void setDeserializedUserCompanyDBOList(List<UserCompanyDBO> deserializedUserCompanyDBOList) {
+        StaffNotification.deserializedUserCompanyDBOList = deserializedUserCompanyDBOList;
+    }
 
     @Override
     public void save() {
@@ -49,7 +64,7 @@ public non-sealed class StaffNotification extends Notification  implements Seria
         }
 
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
-            deserializedUserCompanyDBOList = (List<UserCompanyDBO>) in.readObject();
+            setDeserializedUserCompanyDBOList((List<UserCompanyDBO>) in.readObject());
             deserializedUserCompanyDBOList.sort(Comparator.comparing(UserCompanyDBO::getCreatedAt));
         } catch (IOException | ClassNotFoundException ex) {
             throw new SerializationException("Error while serializing company product to file");
@@ -75,7 +90,7 @@ public non-sealed class StaffNotification extends Notification  implements Seria
                     company.getId()).stream().toList());
         }
 
-        newUserCompanyDBORecords = userCompanyDBOS;
+        setNewUserCompanyDBORecords(userCompanyDBOS);
         return userCompanyDBOS;
     }
 }

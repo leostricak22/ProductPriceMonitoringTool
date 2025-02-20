@@ -4,22 +4,30 @@ import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveExcep
 import hr.tvz.productpricemonitoringtool.exception.SerializationException;
 import hr.tvz.productpricemonitoringtool.model.dbo.CompanyProductDBO;
 import hr.tvz.productpricemonitoringtool.repository.CompanyProductReadRepository;
-import hr.tvz.productpricemonitoringtool.repository.CompanyProductWriteRepository;
 import hr.tvz.productpricemonitoringtool.util.Constants;
 import hr.tvz.productpricemonitoringtool.util.Session;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public non-sealed class PriceNotification extends Notification  implements Serializable {
+public non-sealed class PriceNotification extends Notification {
 
-    public static List<CompanyProductDBO> deserializedCompanyProductDBOList = new ArrayList<>();
-    public static List<CompanyProductDBO> newCompanyProductRecords = new ArrayList<>();
+    private static final Logger log = LoggerFactory.getLogger(PriceNotification.class);
+    protected static List<CompanyProductDBO> deserializedCompanyProductDBOList = new ArrayList<>();
+    protected static List<CompanyProductDBO> newCompanyProductRecords = new ArrayList<>();
 
     private final CompanyProductReadRepository companyProductReadRepository = new CompanyProductReadRepository();
 
-    public PriceNotification() {}
+    public PriceNotification() {
+        log.info("Price Notification");
+    }
+
+    public static List<CompanyProductDBO> getNewCompanyProductRecords() {
+        return newCompanyProductRecords;
+    }
 
     @Override
     public void save() {
@@ -49,11 +57,19 @@ public non-sealed class PriceNotification extends Notification  implements Seria
         }
 
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(file))) {
-            deserializedCompanyProductDBOList = (List<CompanyProductDBO>) in.readObject();
+            setDeserializedCompanyProductDBOList((List<CompanyProductDBO>) in.readObject());
             deserializedCompanyProductDBOList.sort(Comparator.comparing(CompanyProductDBO::getCreatedAt));
         } catch (IOException | ClassNotFoundException ex) {
             throw new SerializationException("Error while serializing company product to file");
         }
+    }
+
+    public static void setNewCompanyProductRecords(List<CompanyProductDBO> newCompanyProductRecords) {
+        PriceNotification.newCompanyProductRecords = newCompanyProductRecords;
+    }
+
+    public static void setDeserializedCompanyProductDBOList(List<CompanyProductDBO> deserializedCompanyProductDBOList) {
+        PriceNotification.deserializedCompanyProductDBOList = deserializedCompanyProductDBOList;
     }
 
     public List<CompanyProductDBO> checkPriceChange() throws DatabaseConnectionActiveException {
@@ -73,7 +89,7 @@ public non-sealed class PriceNotification extends Notification  implements Seria
                             company.getId()).stream().toList());
         }
 
-        newCompanyProductRecords = companyProducts;
+        setNewCompanyProductRecords(companyProducts);
         return companyProducts;
     }
 }

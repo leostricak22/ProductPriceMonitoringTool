@@ -3,7 +3,6 @@ package hr.tvz.productpricemonitoringtool.controller;
 import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveException;
 import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.User;
-import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
 import hr.tvz.productpricemonitoringtool.repository.UserCompanyRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
 import hr.tvz.productpricemonitoringtool.util.ClipboardUtil;
@@ -33,7 +32,6 @@ public class CompanyStaffController {
     @FXML public TableColumn<User, String> staffEmailTableColumn;
     @FXML public TableColumn<User, String> staffRoleTableColumn;
 
-    private final CompanyRepository companyRepository = new CompanyRepository();
     private final UserCompanyRepository userCompanyRepository = new UserCompanyRepository();
 
     public void initialize() {

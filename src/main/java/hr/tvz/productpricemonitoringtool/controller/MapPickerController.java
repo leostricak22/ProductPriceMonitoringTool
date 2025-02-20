@@ -14,6 +14,7 @@ import netscape.javascript.JSObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Optional;
 
 import static java.util.Objects.isNull;
@@ -68,6 +69,8 @@ public class MapPickerController {
             pickedLocationTextField.setText(address.getAddress());
         } catch (UnsuccessfulHTTPResponseCode e) {
             AlertDialog.showErrorDialog("Error fetching address from provided longitude and latitude.");
+        } catch (URISyntaxException e) {
+            AlertDialog.showErrorDialog("Error creating URI from provided longitude and latitude.");
         }
     }
 

@@ -27,13 +27,13 @@ public class CheckNotificationsThread {
                         PriceNotification priceNotification = new PriceNotification();
 
                         priceNotification.checkPriceChange();
-                        if (!PriceNotification.newCompanyProductRecords.isEmpty()) {
+                        if (!PriceNotification.getNewCompanyProductRecords().isEmpty()) {
                             Platform.runLater(() -> TopBarController.getInstance().changeNotificationBellIcon());
                         }
 
                         StaffNotification staffNotification = new StaffNotification();
                         staffNotification.checkStaffChange();
-                        if (!StaffNotification.newUserCompanyDBORecords.isEmpty()) {
+                        if (!StaffNotification.getNewUserCompanyDBORecords().isEmpty()) {
                             Platform.runLater(() -> TopBarController.getInstance().changeNotificationBellIcon());
                         }
                     } catch (DatabaseConnectionActiveException e) {

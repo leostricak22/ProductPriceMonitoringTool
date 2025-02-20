@@ -1,12 +1,11 @@
 package hr.tvz.productpricemonitoringtool.model;
 
-import java.io.Serializable;
 import java.util.Objects;
 import java.util.Optional;
 
-public class Category extends Entity implements Serializable {
+public class Category extends Entity {
 
-    private Optional<Category> parentCategory;
+    private transient Optional<Category> parentCategory;
 
     private Category(Builder builder) {
         super(builder.id, builder.name);

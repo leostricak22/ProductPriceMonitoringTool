@@ -5,7 +5,6 @@ import hr.tvz.productpricemonitoringtool.exception.DatabaseConnectionActiveExcep
 import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.CompanyProduct;
 import hr.tvz.productpricemonitoringtool.repository.CompanyProductReadRepository;
-import hr.tvz.productpricemonitoringtool.repository.CompanyProductWriteRepository;
 import hr.tvz.productpricemonitoringtool.util.*;
 import javafx.fxml.FXML;
 import javafx.geometry.Pos;
@@ -24,7 +23,6 @@ public class CompanyProductsListController {
     @FXML
     public VBox itemListVbox;
 
-    private final CompanyProductWriteRepository companyProductWriteRepository = new CompanyProductWriteRepository();
     private final CompanyProductReadRepository companyProductReadRepository = new CompanyProductReadRepository();
 
     public void initialize() {

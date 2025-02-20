@@ -9,10 +9,7 @@ import hr.tvz.productpricemonitoringtool.repository.CompanyProductReadRepository
 import hr.tvz.productpricemonitoringtool.repository.CompanyProductWriteRepository;
 import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
 import hr.tvz.productpricemonitoringtool.repository.ProductRepository;
-import hr.tvz.productpricemonitoringtool.util.AlertDialog;
-import hr.tvz.productpricemonitoringtool.util.ComboBoxUtil;
-import hr.tvz.productpricemonitoringtool.util.PopupSceneLoader;
-import hr.tvz.productpricemonitoringtool.util.SceneLoader;
+import hr.tvz.productpricemonitoringtool.util.*;
 import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -87,7 +84,7 @@ public class AdminCompanyProductsController implements SearchController {
         try {
             companyProducts = new ArrayList<>(companyProductReadRepository.findAllDBO());
         } catch (DatabaseConnectionActiveException e) {
-            AlertDialog.showErrorDialog("Error while loading company products.");
+            AlertDialog.showErrorDialog(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
             return;
         }
 
@@ -140,7 +137,7 @@ public class AdminCompanyProductsController implements SearchController {
         try {
             companyProducts = new ArrayList<>(companyProductReadRepository.findAllDBO());
         } catch (DatabaseConnectionActiveException e) {
-            AlertDialog.showErrorDialog("Error while loading company products.");
+            AlertDialog.showErrorDialog("Error while loading company products");
             return;
         }
         filter();

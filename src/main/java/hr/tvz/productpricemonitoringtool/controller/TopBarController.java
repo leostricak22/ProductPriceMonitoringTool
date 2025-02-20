@@ -25,7 +25,6 @@ import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Popup;
 
-import java.util.HashSet;
 import java.util.Optional;
 
 public class TopBarController {
@@ -44,11 +43,15 @@ public class TopBarController {
     private static TopBarController instance;
 
     public TopBarController() {
-        instance = this;
+        setInstance(this);
     }
 
     public static TopBarController getInstance() {
         return instance;
+    }
+
+    public static void setInstance(TopBarController instance) {
+        TopBarController.instance = instance;
     }
 
     public void initialize() {
@@ -63,12 +66,12 @@ public class TopBarController {
 
         try {
             priceNotification.checkPriceChange();
-            if (!PriceNotification.newCompanyProductRecords.isEmpty()) {
+            if (!PriceNotification.getNewCompanyProductRecords().isEmpty()) {
                 changeNotificationBellIcon();
             }
 
             staffNotification.checkStaffChange();
-            if (!StaffNotification.newUserCompanyDBORecords.isEmpty()) {
+            if (!StaffNotification.getNewUserCompanyDBORecords().isEmpty()) {
                 changeNotificationBellIcon();
             }
         } catch (DatabaseConnectionActiveException e) {
@@ -117,7 +120,7 @@ public class TopBarController {
         VBox notificationBox = new VBox();
         notificationBox.getStyleClass().add("notification-box");
 
-        PriceNotification.newCompanyProductRecords
+        PriceNotification.getNewCompanyProductRecords()
                 .forEach(companyProductRecord -> {
                     try {
                         createNewNotification(notificationBox,
@@ -130,7 +133,7 @@ public class TopBarController {
                     }
                 });
 
-        StaffNotification.newUserCompanyDBORecords
+        StaffNotification.getNewUserCompanyDBORecords()
                 .forEach(userCompanyDBO -> {
                     try {
                         createNewNotification(notificationBox,
@@ -149,8 +152,8 @@ public class TopBarController {
         StaffNotification staffNotification = new StaffNotification();
         staffNotification.save();
 
-        if (PriceNotification.newCompanyProductRecords.isEmpty() &&
-                StaffNotification.newUserCompanyDBORecords.isEmpty()) {
+        if (PriceNotification.getNewCompanyProductRecords().isEmpty() &&
+                StaffNotification.getNewUserCompanyDBORecords().isEmpty()) {
             createNoNewNotifications(notificationBox);
         }
 

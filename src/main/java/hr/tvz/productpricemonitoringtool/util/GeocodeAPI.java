@@ -7,16 +7,17 @@ import hr.tvz.productpricemonitoringtool.model.json.Geolocation;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URL;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class GeocodeAPI {
 
     private GeocodeAPI() {}
 
-    public static Address fetchAddressFromLonAndLat(BigDecimal latitude, BigDecimal longitude) throws IOException, UnsuccessfulHTTPResponseCode {
-        String jsonString = FetchFromAPI.getJSON(new URL(String.format(
+    public static Address fetchAddressFromLonAndLat(BigDecimal latitude, BigDecimal longitude) throws IOException, UnsuccessfulHTTPResponseCode, URISyntaxException {
+        String jsonString = FetchFromAPI.getJSON(new URI(String.format(
                 "%s/reverse?lon=%s&lat=%s&format=json&addressdetails=1",
-                Constants.GEOLOCATION_API_URL, longitude, latitude)));
+                Constants.GEOLOCATION_API_URL, longitude, latitude)).toURL());
 
         Gson gson = new Gson();
         Geolocation geolocation = gson.fromJson(jsonString, Geolocation.class);

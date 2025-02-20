@@ -88,16 +88,7 @@ public class AddressRepository extends AbstractRepository<Address> {
             PreparedStatement stmt = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
             for (Address address : entities) {
-                stmt.setBigDecimal(1, address.getLongitude());
-                stmt.setBigDecimal(2, address.getLatitude());
-                stmt.setString(3, isNull(address.getRoad()) ? "?" : address.getRoad());
-                stmt.setString(4, isNull(address.getHouseNumber()) ? "?" : address.getHouseNumber());
-                stmt.setString(5, isNull(address.getCity()) ? "?" : address.getCity());
-                stmt.setString(6, isNull(address.getTown()) ? "?" : address.getTown());
-                stmt.setString(7, isNull(address.getVillage()) ? "?" : address.getVillage());
-                stmt.setString(8, isNull(address.getCountry()) ? "?" : address.getCountry());
-
-                stmt.addBatch();
+                saveAddressToBatch(stmt, address);
             }
 
             stmt.executeBatch();
@@ -181,5 +172,17 @@ public class AddressRepository extends AbstractRepository<Address> {
         }
 
         DatabaseUtil.setActiveConnectionWithDatabase(true);
+    }
+
+    private void saveAddressToBatch(PreparedStatement stmt, Address address) throws SQLException {
+        stmt.setBigDecimal(1, address.getLongitude());
+        stmt.setBigDecimal(2, address.getLatitude());
+        stmt.setString(3, isNull(address.getRoad()) ? "?" : address.getRoad());
+        stmt.setString(4, isNull(address.getHouseNumber()) ? "?" : address.getHouseNumber());
+        stmt.setString(5, isNull(address.getCity()) ? "?" : address.getCity());
+        stmt.setString(6, isNull(address.getTown()) ? "?" : address.getTown());
+        stmt.setString(7, isNull(address.getVillage()) ? "?" : address.getVillage());
+        stmt.setString(8, isNull(address.getCountry()) ? "?" : address.getCountry());
+        stmt.addBatch();
     }
 }

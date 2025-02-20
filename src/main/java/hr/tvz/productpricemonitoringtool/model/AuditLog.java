@@ -6,8 +6,8 @@ import java.time.LocalDateTime;
 public class AuditLog<T, U> implements Serializable {
 
     private final String field;
-    private final T oldValue;
-    private final U newValue;
+    private final transient T oldValue;
+    private final transient U newValue;
     private final User user;
     private final LocalDateTime timestamp;
 

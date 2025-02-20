@@ -7,9 +7,10 @@ import hr.tvz.productpricemonitoringtool.model.Company;
 import hr.tvz.productpricemonitoringtool.model.Product;
 import hr.tvz.productpricemonitoringtool.model.StaffNotification;
 import hr.tvz.productpricemonitoringtool.model.User;
-import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
 import hr.tvz.productpricemonitoringtool.thread.CheckNotificationsThread;
 import javafx.scene.image.Image;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.HashSet;
@@ -17,6 +18,7 @@ import java.util.Optional;
 
 public class Session {
 
+    private static final Logger log = LoggerFactory.getLogger(Session.class);
     private static Optional<User> loggedInUser = Optional.empty();
     private static Optional<Company> selectedCompany = Optional.empty();
     private static Optional<Product> selectedProduct = Optional.empty();
@@ -31,7 +33,7 @@ public class Session {
             StaffNotification staffNotification = new StaffNotification();
             staffNotification.checkStaffChange();
         } catch (DatabaseConnectionActiveException e) {
-            throw new RuntimeException(e);
+            log.error("Failed to check staff changes.");
         }
     }
 

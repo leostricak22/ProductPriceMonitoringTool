@@ -13,6 +13,7 @@ import hr.tvz.productpricemonitoringtool.repository.CompanyRepository;
 import hr.tvz.productpricemonitoringtool.repository.ProductRepository;
 import hr.tvz.productpricemonitoringtool.util.AlertDialog;
 import hr.tvz.productpricemonitoringtool.util.ComboBoxUtil;
+import hr.tvz.productpricemonitoringtool.util.Constants;
 import hr.tvz.productpricemonitoringtool.util.ValidationUtil;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -46,7 +47,7 @@ public class AdminCompanyProductFormController {
             companyComboBox.getItems().setAll(companyRepository.findAll());
             productComboBox.getItems().setAll(productRepository.findAll());
         } catch (DatabaseConnectionActiveException e) {
-            AlertDialog.showErrorDialog("Error fetching data");
+            AlertDialog.showErrorDialog(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
             return;
         }
 
@@ -54,10 +55,10 @@ public class AdminCompanyProductFormController {
             CompanyProductDBO cp = companyProduct.get();
 
             try {
-                companyComboBox.setValue(companyRepository.findById(cp.getCompanyId()).orElseThrow(() -> new RepositoryQueryException("Error fetching data")));
-                productComboBox.setValue(productRepository.findById(cp.getProductId()).orElseThrow(() -> new RepositoryAccessException("Error fetching data")));
+                companyComboBox.setValue(companyRepository.findById(cp.getCompanyId()).orElseThrow(() -> new RepositoryQueryException(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE)));
+                productComboBox.setValue(productRepository.findById(cp.getProductId()).orElseThrow(() -> new RepositoryAccessException(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE)));
             } catch (DatabaseConnectionActiveException e) {
-                AlertDialog.showErrorDialog("Error fetching data");
+                AlertDialog.showErrorDialog(Constants.DATABASE_ACTIVE_CONNECTION_ERROR_MESSAGE);
                 return;
             }
 

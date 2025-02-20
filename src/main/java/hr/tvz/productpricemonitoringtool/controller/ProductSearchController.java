@@ -8,7 +8,6 @@ import hr.tvz.productpricemonitoringtool.model.FilterSearch;
 import hr.tvz.productpricemonitoringtool.model.Product;
 import hr.tvz.productpricemonitoringtool.repository.CategoryRepository;
 import hr.tvz.productpricemonitoringtool.repository.CompanyProductReadRepository;
-import hr.tvz.productpricemonitoringtool.repository.CompanyProductWriteRepository;
 import hr.tvz.productpricemonitoringtool.repository.ProductRepository;
 import hr.tvz.productpricemonitoringtool.thread.FetchProductsByCategoriesThread;
 import hr.tvz.productpricemonitoringtool.thread.FetchProductsByFilterThread;
@@ -44,7 +43,6 @@ public class ProductSearchController {
 
     private final CategoryRepository categoryRepository = new CategoryRepository();
     private final ProductRepository productRepository = new ProductRepository();
-    private final CompanyProductWriteRepository companyProductWriteRepository = new CompanyProductWriteRepository();
     private final CompanyProductReadRepository companyProductReadRepository = new CompanyProductReadRepository();
 
     public void initialize(Optional<Category> parentCategory) {

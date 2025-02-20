@@ -45,4 +45,8 @@ public class Constants {
             "files/session/userCompany.dat";
     public static final String SESSION_SERIALIZATION_FILE_DIRECTORY =
             "files/session/";
+
+    public static final String TRY_AGAIN_LATER_ERROR_MESSAGE = "Please try again later.";
+    public static final String DASHBOARD_TITLE = "Dashboard";
+    public static final String DASHBOARD_FILE_NAME = "dashboard";
 }
