@@ -127,6 +127,12 @@ public class UserFileRepository extends AbstractRepository<User> {
         }
     }
 
+    public Optional<User> findByEmail(String email) {
+        return findAll().stream()
+                .filter(user -> user.getEmail().equals(email))
+                .findFirst();
+    }
+
     private Long findNextId() {
         return findAll().stream()
                 .map(User::getId)

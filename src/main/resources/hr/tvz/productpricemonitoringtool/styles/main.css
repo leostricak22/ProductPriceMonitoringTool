@@ -126,7 +126,6 @@
     -fx-background-color: #393939;
 }
 
-/* Style the DatePicker text field */
 .date-picker {
     -fx-font-size: 14px;
     -fx-background-color: #f4f4f4;
@@ -134,12 +133,10 @@
     -fx-border-radius: 5px;
 }
 
-/* Change the appearance when the DatePicker is hovered */
 .date-picker:hover {
     -fx-background-color: #e0e0e0;
 }
 
-/* Style the DatePicker popup (calendar) */
 .date-picker .arrow-button {
     -fx-background-color: #ddd;
     -fx-border-radius: 5px;
@@ -149,7 +146,6 @@
     -fx-background-color: #bbb;
 }
 
-/* Style the calendar cells */
 .date-picker-popup .month-year-pane {
     -fx-background-color: #526997;
     -fx-text-fill: white;
